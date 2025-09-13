@@ -159,6 +159,14 @@ const EventFeed = () => {
               <Button 
                 variant="ghost" 
                 className="text-slate-300 hover:text-white"
+                onClick={() => navigate('/marketplace')}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Marketplace
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="text-slate-300 hover:text-white"
                 onClick={() => navigate('/dashboard/fan')}
               >
                 Dashboard
