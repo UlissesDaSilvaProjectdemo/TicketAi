@@ -6,7 +6,7 @@ import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { 
   Ticket, User, Calendar, Wallet, TrendingUp, QrCode, Download, 
-  Share2, ArrowRight, Clock, MapPin, Star
+  Share2, ArrowRight, Clock, MapPin, Star, DollarSign
 } from 'lucide-react';
 import { mockTickets, mockUser } from '../mock';
 import { useToast } from '../hooks/use-toast';
