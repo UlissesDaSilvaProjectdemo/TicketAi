@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Ticket, Search, TrendingUp, TrendingDown, Calendar, MapPin, Users, Flame, ArrowLeft, Filter, ShoppingCart } from 'lucide-react';
+import { Ticket, Search, TrendingUp, TrendingDown, Calendar, MapPin, Users, Flame, ArrowLeft, Filter, ShoppingCart, DollarSign } from 'lucide-react';
 import { mockEvents } from '../mock';
 
 const EventFeed = () => {
