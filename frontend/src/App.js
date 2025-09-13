@@ -12,6 +12,8 @@ import Checkout from "./pages/Checkout";
 import Success from "./pages/Success";
 import DashboardFan from "./pages/DashboardFan";
 import DashboardInvestor from "./pages/DashboardInvestor";
+import Marketplace from "./pages/Marketplace";
+import SellTicket from "./pages/SellTicket";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/events" element={<EventFeed />} />
           <Route path="/event/:id" element={<EventDetails />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/sell-ticket" element={<SellTicket />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/success" element={<Success />} />
           <Route path="/dashboard/fan" element={<DashboardFan />} />

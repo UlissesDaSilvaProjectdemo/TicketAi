@@ -6,7 +6,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { 
   Ticket, ArrowLeft, Calendar, MapPin, Clock, Users, TrendingUp, TrendingDown, 
-  Flame, Shield, Star, ChevronRight 
+  Flame, Shield, Star, ChevronRight, ShoppingCart, DollarSign, Eye 
 } from 'lucide-react';
 import { mockEvents } from '../mock';
 import { useToast } from '../hooks/use-toast';
@@ -99,6 +99,14 @@ const EventDetails = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                className="text-slate-300 hover:text-white"
+                onClick={() => navigate('/marketplace')}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Marketplace
+              </Button>
               <Button 
                 variant="ghost" 
                 className="text-slate-300 hover:text-white"
@@ -205,6 +213,52 @@ const EventDetails = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Marketplace Preview */}
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center justify-between">
+                  <span>Secondary Market</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white"
+                    onClick={() => navigate('/marketplace')}
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
+                    View All Listings
+                  </Button>
+                </CardTitle>
+                <CardDescription className="text-slate-300">
+                  Tickets being resold by other users
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+                    <div>
+                      <div className="text-white font-medium">VIP Section • Row A</div>
+                      <div className="text-slate-400 text-sm">Seller: Alex M. (4.9⭐)</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-white font-semibold">$380</div>
+                      <div className="text-green-400 text-sm">+18.8%</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+                    <div>
+                      <div className="text-white font-medium">General Admission</div>
+                      <div className="text-slate-400 text-sm">Seller: Jordan L. (4.6⭐)</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-white font-semibold">$165</div>
+                      <div className="text-green-400 text-sm">+10.0%</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Purchase Panel */}
@@ -283,15 +337,26 @@ const EventDetails = () => {
                   </div>
                 </div>
 
-                {/* Purchase Button */}
-                <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-lg py-6"
-                  onClick={handlePurchase}
-                  disabled={getSelectedTicketAvailable() === 0}
-                >
-                  {getSelectedTicketAvailable() === 0 ? 'Sold Out' : 'Buy Tickets'}
-                  <ChevronRight className="ml-2 h-5 w-5" />
-                </Button>
+                {/* Action Buttons */}
+                <div className="space-y-3">
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-lg py-6"
+                    onClick={handlePurchase}
+                    disabled={getSelectedTicketAvailable() === 0}
+                  >
+                    {getSelectedTicketAvailable() === 0 ? 'Sold Out' : 'Buy Tickets'}
+                    <ChevronRight className="ml-2 h-5 w-5" />
+                  </Button>
+
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-green-600 text-green-400 hover:bg-green-600 hover:text-white py-6"
+                    onClick={() => navigate('/marketplace')}
+                  >
+                    <ShoppingCart className="mr-2 h-5 w-5" />
+                    Buy from Marketplace
+                  </Button>
+                </div>
 
                 {/* Security Badge */}
                 <div className="flex items-center justify-center space-x-2 text-slate-400 text-sm mt-4">
