@@ -99,6 +99,14 @@ const LandingPage = () => {
             </Button>
             <Button 
               size="lg" 
+              className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
+              onClick={() => navigate('/sell-ticket')}
+            >
+              <DollarSign className="mr-2 h-5 w-5" />
+              Sell Your Tickets
+            </Button>
+            <Button 
+              size="lg" 
               variant="outline" 
               className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-6"
               onClick={() => navigate('/events')}
