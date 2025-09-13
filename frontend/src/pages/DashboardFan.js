@@ -148,6 +148,20 @@ const DashboardFan = () => {
                 Browse Events
               </Button>
               <Button 
+                variant="ghost" 
+                className="text-slate-300 hover:text-white"
+                onClick={() => navigate('/marketplace')}
+              >
+                Marketplace
+              </Button>
+              <Button 
+                className="bg-green-600 hover:bg-green-700"
+                onClick={() => navigate('/sell-ticket')}
+              >
+                <DollarSign className="mr-2 h-4 w-4" />
+                Sell Tickets
+              </Button>
+              <Button 
                 variant="outline" 
                 className="border-slate-600 text-slate-300 hover:bg-slate-800"
               >
