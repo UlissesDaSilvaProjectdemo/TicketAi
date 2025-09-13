@@ -49,6 +49,13 @@ const LandingPage = () => {
                 Browse Events
               </Button>
               <Button 
+                variant="ghost" 
+                className="text-slate-300 hover:text-white"
+                onClick={() => navigate('/marketplace')}
+              >
+                Marketplace
+              </Button>
+              <Button 
                 variant="outline" 
                 className="border-slate-600 text-slate-300 hover:bg-slate-800"
                 onClick={() => navigate('/auth')}
