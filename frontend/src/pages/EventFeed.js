@@ -165,6 +165,13 @@ const EventFeed = () => {
                 Marketplace
               </Button>
               <Button 
+                className="bg-green-600 hover:bg-green-700"
+                onClick={() => navigate('/sell-ticket')}
+              >
+                <DollarSign className="mr-2 h-4 w-4" />
+                Sell Tickets
+              </Button>
+              <Button 
                 variant="ghost" 
                 className="text-slate-300 hover:text-white"
                 onClick={() => navigate('/dashboard/fan')}
