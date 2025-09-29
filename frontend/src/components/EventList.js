@@ -13,8 +13,30 @@ const API = `${BACKEND_URL}/api`;
 const EventList = ({ events }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [sourceFilter, setSourceFilter] = useState('All');
+  const [displayEvents, setDisplayEvents] = useState(events);
+  const [searchResults, setSearchResults] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const categories = ['All', ...new Set(events.map(event => event.category))];
+  const sources = ['All', 'Local Events', 'TicketMaster'];
+
+  useEffect(() => {
+    setDisplayEvents(events);
+  }, [events]);
+
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+    setDisplayEvents(results.events || []);
+  };
+
+  const resetToAllEvents = () => {
+    setSearchResults(null);
+    setDisplayEvents(events);
+    setSearchTerm('');
+    setSelectedCategory('All');
+    setSourceFilter('All');
+  };
 
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
