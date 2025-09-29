@@ -175,20 +175,31 @@ class AISearchEngine:
             chat = LlmChat(
                 api_key=self.llm_key,
                 session_id=f"search-{uuid.uuid4()}",
-                system_message="You are an AI assistant that helps users find relevant events. Analyze search intent and rank events by relevance."
+                system_message="You are an AI assistant that helps users find relevant events. Format your response with clear structure and proper HTML formatting for better readability."
             ).with_model("openai", "gpt-4o-mini")
             
             user_message = UserMessage(
                 text=f"User search: '{request.query}'\nLocation: {request.location or 'Any'}\n"
-                     f"Events:\n{events_text}\n\nRank top {min(request.max_results, 10)} most relevant events with explanations."
+                     f"Events:\n{events_text}\n\n"
+                     f"Please analyze and rank the top {min(request.max_results, 5)} most relevant events. "
+                     f"Format your response with clear HTML structure using:\n"
+                     f"- <h3> for event names\n"
+                     f"- <p> for separate paragraphs\n"
+                     f"- <strong> for important details like prices and locations\n"
+                     f"- <br> for line breaks\n"
+                     f"- Organize each event recommendation in a clear, separate section\n"
+                     f"Make it easy to read with proper spacing and emphasis on key details."
             )
             
             ai_response = await chat.send_message(user_message)
+            
+            # Format the AI response for better readability
+            formatted_response = self._format_ai_response(ai_response)
             ranked_events = events[:request.max_results]
             
             return {
                 "events": [event.dict() for event in ranked_events],
-                "ai_analysis": ai_response,
+                "ai_analysis": formatted_response,
                 "search_interpretation": f"Analyzed '{request.query}' and found {len(ranked_events)} relevant events",
                 "total_found": len(ranked_events)
             }
@@ -196,6 +207,58 @@ class AISearchEngine:
         except Exception as e:
             logging.error(f"AI ranking error: {str(e)}")
             return await self._simple_search(request, events)
+    
+    def _format_ai_response(self, response: str) -> str:
+        """Format AI response for better readability"""
+        try:
+            # If the response doesn't already contain HTML, add basic formatting
+            if "<h3>" not in response and "<p>" not in response:
+                # Split by numbered items (1., 2., etc.)
+                import re
+                parts = re.split(r'(\d+\.\s*)', response)
+                
+                formatted_parts = []
+                for i, part in enumerate(parts):
+                    if re.match(r'\d+\.\s*', part):
+                        continue  # Skip the number part
+                    elif i > 0 and part.strip():
+                        # This is an event description
+                        lines = part.strip().split('\n')
+                        if lines:
+                            # Extract event name (usually the first strong element)
+                            event_text = lines[0].strip()
+                            if '**' in event_text:
+                                event_text = event_text.replace('**', '')
+                                event_name = event_text.split(' - ')[0].strip()
+                                formatted_parts.append(f"<h3 style='color: #1976d2; margin: 20px 0 10px 0;'>{event_name}</h3>")
+                            
+                            # Format the rest of the content
+                            remaining = '\n'.join(lines[1:]) if len(lines) > 1 else lines[0]
+                            
+                            # Replace **text** with <strong>text</strong>
+                            remaining = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', remaining)
+                            
+                            # Add paragraphs
+                            paragraphs = remaining.split('\n\n')
+                            for paragraph in paragraphs:
+                                if paragraph.strip():
+                                    formatted_parts.append(f"<p style='margin: 10px 0; line-height: 1.6;'>{paragraph.strip()}</p>")
+                
+                if formatted_parts:
+                    return '<div style="font-family: Arial, sans-serif;">' + '\n'.join(formatted_parts) + '</div>'
+            
+            # If already formatted or formatting failed, clean up basic markdown
+            response = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', response)
+            response = response.replace('\n\n', '</p><p style="margin: 15px 0; line-height: 1.6;">')
+            response = f'<div style="font-family: Arial, sans-serif;"><p style="margin: 15px 0; line-height: 1.6;">{response}</p></div>'
+            
+            return response
+            
+        except Exception as e:
+            logging.error(f"Error formatting AI response: {str(e)}")
+            # Fallback: just replace **text** with <strong>text</strong> and add line breaks
+            response = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', response)
+            return f'<div style="font-family: Arial, sans-serif; line-height: 1.6;">{response}</div>'
     
     async def _simple_search(self, request: AISearchRequest, events: List[Event]) -> Dict:
         query_lower = request.query.lower()
