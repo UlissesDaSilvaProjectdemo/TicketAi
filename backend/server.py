@@ -12,9 +12,16 @@ import uuid
 from datetime import datetime, timezone
 from passlib.context import CryptContext
 import jwt
-import qrcode
-from io import BytesIO
-import base64
+try:
+    import qrcode
+    from io import BytesIO
+    import base64
+    QR_AVAILABLE = True
+except ImportError:
+    QR_AVAILABLE = False
+    import base64
+    from io import BytesIO
+
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 import secrets
 
