@@ -121,6 +121,7 @@ function App() {
                 element={user ? <UserDashboard /> : <Navigate to="/" />} 
               />
               <Route path="/recommendations" element={<RecommendationsPage />} />
+              <Route path="/search-results" element={<SearchResultsPage />} />
             </Routes>
           </main>
           {showAuth && <AuthModal />}
