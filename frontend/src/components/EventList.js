@@ -132,11 +132,11 @@ const EventList = ({ events }) => {
         <div className="flex-1">
           <input
             type="text"
-            placeholder="Search events, locations, or descriptions..."
+            placeholder="Filter current events by name, description, or location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="form-input w-full"
-            data-testid="search-events"
+            data-testid="filter-events"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -152,6 +152,39 @@ const EventList = ({ events }) => {
             </Button>
           ))}
         </div>
+        <div className="flex flex-wrap gap-2">
+          {sources.map(source => (
+            <Button
+              key={source}
+              onClick={() => setSourceFilter(source)}
+              variant={sourceFilter === source ? "default" : "outline"}
+              size="sm"
+              data-testid={`source-filter-${source.toLowerCase().replace(' ', '-')}`}
+            >
+              {source}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Results Count */}
+      <div className="flex justify-between items-center">
+        <p className="text-gray-600" data-testid="results-count">
+          {searchResults ? 
+            `Showing ${filteredEvents.length} AI search results` :
+            `Showing ${filteredEvents.length} of ${events.length} events`
+          }
+        </p>
+        {searchResults && (
+          <Button 
+            onClick={resetToAllEvents}
+            variant="outline" 
+            size="sm"
+            data-testid="clear-search-btn"
+          >
+            Clear Search
+          </Button>
+        )}
       </div>
 
       {/* Events Grid */}
