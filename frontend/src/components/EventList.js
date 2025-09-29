@@ -283,24 +283,47 @@ const EventList = ({ events }) => {
 
                 {/* Action Buttons */}
                 <div className="flex space-x-3 pt-4">
-                  <Link to={`/events/${event.id}`} className="flex-1">
-                    <Button 
-                      variant="outline" 
-                      className="w-full btn-secondary"
-                      data-testid={`view-event-btn-${event.id}`}
-                    >
-                      View Details
-                    </Button>
-                  </Link>
-                  <Link to={`/book/${event.id}`} className="flex-1">
-                    <Button 
-                      className="w-full btn-primary"
-                      disabled={event.available_tickets === 0}
-                      data-testid={`book-ticket-btn-${event.id}`}
-                    >
-                      {event.available_tickets === 0 ? 'Sold Out' : 'Book Ticket'}
-                    </Button>
-                  </Link>
+                  {event.source === 'ticketmaster' ? (
+                    <>
+                      <Button
+                        onClick={() => window.open(event.external_url || 'https://www.ticketmaster.com', '_blank')}
+                        variant="outline"
+                        className="flex-1 btn-secondary"
+                        data-testid={`view-ticketmaster-btn-${event.id}`}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View on TicketMaster
+                      </Button>
+                      <Button
+                        onClick={() => window.open(event.external_url || 'https://www.ticketmaster.com', '_blank')}
+                        className="flex-1 btn-primary"
+                        data-testid={`buy-ticketmaster-btn-${event.id}`}
+                      >
+                        Buy on TicketMaster
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to={`/events/${event.id}`} className="flex-1">
+                        <Button 
+                          variant="outline" 
+                          className="w-full btn-secondary"
+                          data-testid={`view-event-btn-${event.id}`}
+                        >
+                          View Details
+                        </Button>
+                      </Link>
+                      <Link to={`/book/${event.id}`} className="flex-1">
+                        <Button 
+                          className="w-full btn-primary"
+                          disabled={event.available_tickets === 0}
+                          data-testid={`book-ticket-btn-${event.id}`}
+                        >
+                          {event.available_tickets === 0 ? 'Sold Out' : 'Book Ticket'}
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </CardContent>
             </Card>
