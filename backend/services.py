@@ -505,5 +505,4 @@ class NotificationService:
             return True
         except Exception as e:
             logging.error(f"Failed to create notification: {str(e)}")
-            return False</content>
-    </file>
+            return False
