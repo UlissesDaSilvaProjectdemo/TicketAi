@@ -748,7 +748,13 @@ async def get_recommendations(request: RecommendationRequest, current_user: Opti
             text=f"User preferences: {request.user_preferences}\n"
                  f"Location: {request.location or 'Any'}\n{history_text}\n\n"
                  f"Available events:\n{events_text}\n\n"
-                 f"Recommend the top 5 events with detailed explanations considering user's preferences and history."
+                 f"Based on the user's preferences and history, recommend the top 5 events with detailed explanations. "
+                 f"Please format your response with clear HTML structure for better readability:\n"
+                 f"- Use <h3> tags for event names with styling\n"
+                 f"- Use <p> tags for separate paragraphs\n"
+                 f"- Use <strong> for important details like prices, locations, and dates\n"
+                 f"- Create clear sections for each recommendation\n"
+                 f"- Make it easy to read with proper spacing and emphasis on key information"
         )
         
         response = await chat.send_message(user_message)
