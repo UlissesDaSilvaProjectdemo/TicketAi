@@ -185,9 +185,11 @@ const RecommendationsPage = () => {
                 <h3 className="font-semibold text-purple-900 mb-2" data-testid="ai-explanation-title">
                   AI Analysis
                 </h3>
-                <p className="text-purple-800 leading-relaxed" data-testid="ai-explanation-text">
-                  {aiExplanation}
-                </p>
+                <div 
+                  className="text-purple-800 leading-relaxed ai-response-content" 
+                  data-testid="ai-explanation-text"
+                  dangerouslySetInnerHTML={{ __html: aiExplanation }}
+                />
               </div>
             </div>
           </CardContent>
