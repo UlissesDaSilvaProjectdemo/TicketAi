@@ -115,16 +115,12 @@ class RecommendationRequest(BaseModel):
 
 # Authentication Functions
 def verify_password(plain_password, hashed_password):
-    # Truncate password to 72 bytes for bcrypt compatibility
-    if isinstance(plain_password, str):
-        plain_password = plain_password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
-    return pwd_context.verify(plain_password, hashed_password)
+    # Simple hash verification for testing
+    return hashlib.sha256(plain_password.encode()).hexdigest() == hashed_password
 
 def get_password_hash(password):
-    # Truncate password to 72 bytes for bcrypt compatibility
-    if isinstance(password, str):
-        password = password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
-    return pwd_context.hash(password)
+    # Simple hash for testing
+    return hashlib.sha256(password.encode()).hexdigest()
 
 def create_access_token(data: dict):
     to_encode = data.copy()
