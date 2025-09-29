@@ -140,17 +140,25 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 
 # Utility Functions
 def generate_qr_code(data: str) -> str:
-    qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(data)
-    qr.make(fit=True)
+    if QR_AVAILABLE:
+        try:
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(data)
+            qr.make(fit=True)
+            
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = BytesIO()
+            img.save(buffer, format='PNG')
+            buffer.seek(0)
+            
+            img_base64 = base64.b64encode(buffer.read()).decode()
+            return f"data:image/png;base64,{img_base64}"
+        except Exception as e:
+            logging.warning(f"QR code generation failed: {e}")
     
-    img = qr.make_image(fill_color="black", back_color="white")
-    buffer = BytesIO()
-    img.save(buffer, format='PNG')
-    buffer.seek(0)
-    
-    img_base64 = base64.b64encode(buffer.read()).decode()
-    return f"data:image/png;base64,{img_base64}"
+    # Fallback: return a simple placeholder image
+    placeholder = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+    return f"data:image/png;base64,{placeholder}"
 
 # Routes
 @api_router.get("/")
