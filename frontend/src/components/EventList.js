@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Calendar, MapPin, DollarSign, Users } from 'lucide-react';
+import { Calendar, MapPin, DollarSign, Users, ExternalLink, Sparkles } from 'lucide-react';
+import AISearchBar from './AISearchBar';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const EventList = ({ events }) => {
   const [searchTerm, setSearchTerm] = useState('');
