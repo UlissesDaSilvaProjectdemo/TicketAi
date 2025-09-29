@@ -146,9 +146,11 @@ const SearchResultsPage = () => {
                 <h3 className="font-semibold text-purple-900 mb-2" data-testid="ai-analysis-title">
                   AI Search Analysis
                 </h3>
-                <p className="text-purple-800 leading-relaxed" data-testid="ai-analysis-text">
-                  {results.ai_analysis}
-                </p>
+                <div 
+                  className="text-purple-800 leading-relaxed ai-response-content" 
+                  data-testid="ai-analysis-text"
+                  dangerouslySetInnerHTML={{ __html: results.ai_analysis }}
+                />
               </div>
             </div>
           </CardContent>
