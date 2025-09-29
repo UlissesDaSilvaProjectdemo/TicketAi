@@ -38,13 +38,22 @@ const EventList = ({ events }) => {
     setSourceFilter('All');
   };
 
-  const filteredEvents = events.filter(event => {
+  const filteredEvents = displayEvents.filter(event => {
     const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          event.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || event.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesSource = sourceFilter === 'All' || 
+                         (sourceFilter === 'Local Events' && event.source !== 'ticketmaster') ||
+                         (sourceFilter === 'TicketMaster' && event.source === 'ticketmaster');
+    return matchesSearch && matchesCategory && matchesSource;
   });
+
+  const getSourceBadge = (source) => {
+    return source === 'ticketmaster' ? 
+      { text: 'TicketMaster', class: 'bg-blue-100 text-blue-800' } :
+      { text: 'Local Event', class: 'bg-green-100 text-green-800' };
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
