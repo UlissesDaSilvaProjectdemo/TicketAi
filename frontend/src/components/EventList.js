@@ -223,7 +223,16 @@ const EventList = ({ events }) => {
                     {event.category}
                   </Badge>
                 </div>
-                <div className="absolute top-4 right-4">
+                <div className="absolute top-4 right-4 space-y-2">
+                  {event.source === 'ticketmaster' ? (
+                    <Badge className="bg-blue-100 text-blue-800" data-testid={`event-source-${event.id}`}>
+                      TicketMaster
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-green-100 text-green-800" data-testid={`event-source-${event.id}`}>
+                      Local Event
+                    </Badge>
+                  )}
                   <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
                     <span className="text-sm font-semibold text-gray-900">
                       ${event.price}
