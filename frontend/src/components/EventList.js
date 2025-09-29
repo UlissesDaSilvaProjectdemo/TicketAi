@@ -117,9 +117,11 @@ const EventList = ({ events }) => {
                   <h3 className="font-semibold text-purple-900 mb-2" data-testid="search-ai-analysis-title">
                     AI Search Analysis
                   </h3>
-                  <p className="text-purple-800 leading-relaxed" data-testid="search-ai-analysis-text">
-                    {searchResults.ai_analysis}
-                  </p>
+                  <div 
+                    className="text-purple-800 leading-relaxed ai-response-content" 
+                    data-testid="search-ai-analysis-text"
+                    dangerouslySetInnerHTML={{ __html: searchResults.ai_analysis }}
+                  />
                 </div>
               </div>
             </CardContent>
