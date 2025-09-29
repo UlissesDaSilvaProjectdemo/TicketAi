@@ -77,16 +77,55 @@ const EventList = ({ events }) => {
             <span className="text-gradient block">Events</span>
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed mb-8">
-            Find and book tickets for the most exciting events in your area. 
+            Find and book tickets for the most exciting events from local venues and TicketMaster. 
             Powered by AI to match you with perfect experiences.
           </p>
-          <Link to="/recommendations">
-            <Button className="btn-primary btn-lg" data-testid="get-ai-recommendations-btn">
-              Get AI Recommendations
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/recommendations">
+              <Button className="btn-primary btn-lg" data-testid="get-ai-recommendations-btn">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Get AI Recommendations
+              </Button>
+            </Link>
+            <Button 
+              onClick={resetToAllEvents}
+              variant="outline" 
+              className="btn-secondary btn-lg"
+              data-testid="browse-all-events-btn"
+            >
+              Browse All Events
             </Button>
-          </Link>
+          </div>
         </div>
       </div>
+
+      {/* AI Search Section */}
+      <div className="mb-8">
+        <AISearchBar onResults={handleSearchResults} isMainSearch={true} />
+      </div>
+
+      {/* Search Results Analysis */}
+      {searchResults?.ai_analysis && (
+        <div className="mb-8">
+          <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <Sparkles className="w-4 h-4 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-purple-900 mb-2" data-testid="search-ai-analysis-title">
+                    AI Search Analysis
+                  </h3>
+                  <p className="text-purple-800 leading-relaxed" data-testid="search-ai-analysis-text">
+                    {searchResults.ai_analysis}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Search and Filter */}
       <div className="glass p-6 rounded-2xl space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
