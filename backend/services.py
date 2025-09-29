@@ -1,5 +1,3 @@
-<file>
-      <absolute_file_name>/app/backend/services.py</absolute_file_name>
 from fastapi import BackgroundTasks, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from sendgrid import SendGridAPIClient
