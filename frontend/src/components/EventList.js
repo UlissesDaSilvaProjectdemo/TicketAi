@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Calendar, MapPin, DollarSign, Users, ExternalLink, Sparkles } from 'lucide-react';
-import AISearchBar from './AISearchBar';
+import { Calendar, MapPin, DollarSign, Users, ExternalLink, Sparkles, TrendingUp } from 'lucide-react';
+import SmartSearch from './SmartSearch';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
