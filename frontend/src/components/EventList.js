@@ -40,6 +40,15 @@ const EventList = ({ events }) => {
     setSourceFilter('All');
   };
 
+  const fetchTrendingEvents = async () => {
+    try {
+      const response = await axios.get(`${API}/recommendations/trending?limit=5`);
+      setTrendingEvents(response.data.trending_events || []);
+    } catch (error) {
+      console.error('Error fetching trending events:', error);
+    }
+  };
+
   const filteredEvents = displayEvents.filter(event => {
     const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
