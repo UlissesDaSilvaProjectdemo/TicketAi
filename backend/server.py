@@ -46,6 +46,13 @@ social_service = SocialService(db)
 resale_service = ResaleService(db)
 notification_service = NotificationService(db, email_service)
 
+# Initialize AI services
+embedding_service = EmbeddingService(os.environ.get('EMERGENT_LLM_KEY'))
+vector_search_engine = VectorSearchEngine(embedding_service)
+behavior_tracker = UserBehaviorTracker(db)
+recommendation_engine = PersonalizedRecommendationEngine(vector_search_engine, behavior_tracker, db)
+smart_search_engine = SmartSearchEngine(vector_search_engine, behavior_tracker, recommendation_engine, os.environ.get('EMERGENT_LLM_KEY'))
+
 # Create the main app
 app = FastAPI(title="TicketAI API", description="Complete AI-Powered Ticketing Platform with Advanced Features")
 api_router = APIRouter(prefix="/api")
