@@ -17,12 +17,14 @@ const EventList = ({ events }) => {
   const [displayEvents, setDisplayEvents] = useState(events);
   const [searchResults, setSearchResults] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [trendingEvents, setTrendingEvents] = useState([]);
 
   const categories = ['All', ...new Set(events.map(event => event.category))];
   const sources = ['All', 'Local Events', 'TicketMaster'];
 
   useEffect(() => {
     setDisplayEvents(events);
+    fetchTrendingEvents();
   }, [events]);
 
   const handleSearchResults = (results) => {
