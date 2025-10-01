@@ -20,6 +20,10 @@ from emergentintegrations.payments.stripe.checkout import StripeCheckout, Checko
 import secrets
 from models import *
 from services import EmailService, PaymentService, SocialService, ResaleService, NotificationService
+from ai_engine import (
+    EmbeddingService, VectorSearchEngine, UserBehaviorTracker, 
+    PersonalizedRecommendationEngine, SmartSearchEngine, SearchContext, UserBehavior
+)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
