@@ -403,6 +403,138 @@ async def login(user_data: UserLogin):
     access_token = create_access_token(data={"sub": user["email"]})
     return {"access_token": access_token, "token_type": "bearer", "user": UserResponse(**user)}
 
+# Enhanced AI Search Routes
+@api_router.post("/search/smart")
+async def smart_search(
+    request: AISearchRequest,
+    current_user: Optional[User] = Depends(get_optional_current_user),
+    background_tasks: BackgroundTasks = BackgroundTasks()
+):
+    """Advanced semantic search with personalization and context understanding"""
+    try:
+        # Create search context
+        search_context = SearchContext(
+            query=request.query,
+            location=request.location,
+            date_range=request.date_range,
+            category=request.category,
+            price_range=None,
+            user_id=current_user.id if current_user else None,
+            session_id=str(uuid.uuid4())
+        )
+        
+        # Track search behavior
+        if current_user:
+            behavior = UserBehavior(
+                user_id=current_user.id,
+                action_type='search',
+                query=request.query,
+                session_id=search_context.session_id,
+                context={'location': request.location, 'category': request.category}
+            )
+            background_tasks.add_task(behavior_tracker.track_behavior, behavior)
+        
+        # Get all events for context
+        local_events = await db.events.find().to_list(100)
+        tm_events = await ticketmaster_client.search_events({"keyword": request.query, "size": 20})
+        all_events = [Event(**event_data) for event_data in local_events] + tm_events
+        
+        # Perform smart search
+        search_results = await smart_search_engine.smart_search(search_context, all_events)
+        
+        # Convert results to include full event data
+        enriched_results = []
+        for result in search_results['results']:
+            if 'event' in result:
+                enriched_results.append(result['event'].dict())
+            else:
+                # Find event in our data
+                event_id = result['event_id']
+                for event in all_events:
+                    if event.id == event_id:
+                        enriched_results.append(event.dict())
+                        break
+        
+        return {
+            'events': enriched_results,
+            'ai_analysis': search_results['ai_explanation'],
+            'search_interpretation': search_results['search_query'],
+            'total_found': search_results['total_found'],
+            'intent_analysis': search_results['intent']
+        }
+        
+    except Exception as e:
+        logging.error(f"Error in smart search: {str(e)}")
+        return {
+            'events': [],
+            'ai_analysis': "Smart search temporarily unavailable. Please try again.",
+            'search_interpretation': request.query,
+            'total_found': 0,
+            'intent_analysis': {}
+        }
+
+@api_router.post("/search/autocomplete")
+async def search_autocomplete(
+    query: str,
+    current_user: Optional[User] = Depends(get_optional_current_user)
+):
+    """Intelligent search autocomplete with personalized suggestions"""
+    try:
+        suggestions = []
+        
+        # Get recent searches
+        if current_user:
+            recent_searches = await db.user_behaviors.find({
+                'user_id': current_user.id,
+                'action_type': 'search',
+                'query': {'$regex': f'^{query}', '$options': 'i'}
+            }).sort('timestamp', -1).limit(3).to_list(3)
+            
+            for search in recent_searches:
+                suggestions.append({
+                    'text': search['query'],
+                    'type': 'recent_search',
+                    'icon': 'clock'
+                })
+        
+        # Get popular searches that match query
+        popular_queries = [
+            "music concerts this weekend",
+            "tech conferences next month",
+            "art exhibitions near me",
+            "sports events tonight",
+            "free events this week",
+            "comedy shows downtown",
+            "outdoor festivals summer"
+        ]
+        
+        matching_popular = [q for q in popular_queries if query.lower() in q.lower()]
+        for q in matching_popular[:3]:
+            suggestions.append({
+                'text': q,
+                'type': 'popular_search',
+                'icon': 'trending'
+            })
+        
+        # Get event name suggestions
+        events = await db.events.find({
+            'name': {'$regex': query, '$options': 'i'}
+        }).limit(3).to_list(3)
+        
+        for event in events:
+            suggestions.append({
+                'text': event['name'],
+                'type': 'event_name',
+                'icon': 'event',
+                'event_id': event['id']
+            })
+        
+        return {'suggestions': suggestions[:8]}
+        
+    except Exception as e:
+        logging.error(f"Error in autocomplete: {str(e)}")
+        return {'suggestions': []}
+
 # Enhanced Event Routes
 @api_router.get("/events", response_model=List[Event])
 async def get_events(
