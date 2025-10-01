@@ -617,11 +617,131 @@ async def ai_semantic_search(request: AISearchRequest):
     return await ai_search_engine.semantic_search(request)
 
 @api_router.get("/events/{event_id}", response_model=Event)
-async def get_event(event_id: str):
+async def get_event(
+    event_id: str, 
+    current_user: Optional[User] = Depends(get_optional_current_user),
+    background_tasks: BackgroundTasks = BackgroundTasks()
+):
     event = await db.events.find_one({"id": event_id})
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
+    
+    # Track event view
+    if current_user:
+        behavior = UserBehavior(
+            user_id=current_user.id,
+            action_type='view',
+            event_id=event_id,
+            session_id=str(uuid.uuid4())
+        )
+        background_tasks.add_task(behavior_tracker.track_behavior, behavior)
+    
     return Event(**event)
+
+# Enhanced Recommendations Route
+@api_router.post("/recommendations/personalized")
+async def get_personalized_recommendations(
+    request: RecommendationRequest, 
+    current_user: Optional[User] = Depends(get_optional_current_user)
+):
+    """Get AI-powered personalized recommendations"""
+    try:
+        if current_user:
+            # Get personalized recommendations
+            recommendations = await recommendation_engine.get_recommendations(
+                current_user.id, 
+                limit=10,
+                context={'preferences': request.user_preferences, 'location': request.location}
+            )
+            
+            # Get full event data for recommendations
+            recommended_events = []
+            for rec in recommendations:
+                event = await db.events.find_one({"id": rec['event_id']})
+                if event:
+                    event_obj = Event(**event)
+                    event_dict = event_obj.dict()
+                    event_dict['recommendation_score'] = rec['score']
+                    event_dict['recommendation_reason'] = rec['reason']
+                    event_dict['recommendation_type'] = rec['type']
+                    recommended_events.append(event_dict)
+            
+            return {
+                'recommendations': recommended_events,
+                'personalized': True,
+                'user_id': current_user.id,
+                'total_found': len(recommended_events)
+            }
+        else:
+            # Fallback to general recommendations for anonymous users
+            return await get_recommendations(request, current_user)
+            
+    except Exception as e:
+        logging.error(f"Error getting personalized recommendations: {str(e)}")
+        # Fallback to general recommendations
+        return await get_recommendations(request, current_user)
+
+@api_router.get("/recommendations/trending")
+async def get_trending_recommendations(limit: int = 10):
+    """Get trending events based on user interactions"""
+    try:
+        # Get trending events from the recommendation engine
+        recommendations = await recommendation_engine._get_trending_recommendations(limit)
+        
+        # Get full event data
+        trending_events = []
+        for rec in recommendations:
+            event = await db.events.find_one({"id": rec['event_id']})
+            if event:
+                event_obj = Event(**event)
+                event_dict = event_obj.dict()
+                event_dict['trend_score'] = rec['score']
+                event_dict['trend_reason'] = rec['reason']
+                trending_events.append(event_dict)
+        
+        return {
+            'trending_events': trending_events,
+            'total_found': len(trending_events),
+            'period': '7 days'
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting trending recommendations: {str(e)}")
+        return {'trending_events': [], 'total_found': 0, 'period': '7 days'}
+
+# User Behavior Analytics
+@api_router.get("/analytics/user-behavior")
+async def get_user_behavior_analytics(current_user: User = Depends(get_current_user)):
+    """Get user behavior analytics and insights"""
+    try:
+        preferences = await behavior_tracker.get_user_preferences(current_user.id)
+        similar_users = await behavior_tracker.get_similar_users(current_user.id, 5)
+        
+        # Get recent behavior summary
+        recent_behaviors = await db.user_behaviors.find({
+            'user_id': current_user.id
+        }).sort('timestamp', -1).limit(20).to_list(20)
+        
+        behavior_summary = {}
+        for behavior in recent_behaviors:
+            action_type = behavior['action_type']
+            behavior_summary[action_type] = behavior_summary.get(action_type, 0) + 1
+        
+        return {
+            'user_preferences': preferences,
+            'similar_users_count': len(similar_users),
+            'recent_behavior_summary': behavior_summary,
+            'total_interactions': preferences.get('total_interactions', 0)
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting user behavior analytics: {str(e)}")
+        return {
+            'user_preferences': {},
+            'similar_users_count': 0,
+            'recent_behavior_summary': {},
+            'total_interactions': 0
+        }
 
 # Admin/Organizer Event Management
 @api_router.post("/admin/events", response_model=Event)
