@@ -1042,35 +1042,68 @@ async def get_recommendations(request: RecommendationRequest, current_user: Opti
             "message": "Showing highly-rated events"
         }
 
-# Background Tasks
+# Background Tasks and Startup
 @app.on_event("startup")
 async def startup_event():
-    """Initialize the application"""
+    """Initialize the application and AI components"""
     # Create sample events
     existing_events = await db.events.find().to_list(1)
     if not existing_events:
         sample_events = [
             EventCreate(
                 name="Tech Conference 2025",
-                description="Annual technology conference featuring the latest innovations in AI, blockchain, and software development.",
+                description="Annual technology conference featuring the latest innovations in AI, blockchain, and software development. Network with industry leaders and discover cutting-edge solutions.",
                 date=datetime(2025, 3, 15, 9, 0, 0),
                 location="San Francisco, CA",
                 price=299.99,
                 total_tickets=500,
                 category="Technology",
                 image_url="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
-                tags=["ai", "blockchain", "networking"]
+                tags=["ai", "blockchain", "networking", "innovation"]
             ),
             EventCreate(
                 name="Summer Music Festival",
-                description="Three-day outdoor music festival featuring emerging artists and established performers.",
+                description="Three-day outdoor music festival featuring emerging artists and established performers. Enjoy live music, food trucks, and an unforgettable atmosphere under the stars.",
                 date=datetime(2025, 7, 20, 18, 0, 0),
                 location="Austin, TX",
                 price=199.99,
                 total_tickets=2000,
                 category="Music",
                 image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
-                tags=["music", "outdoor", "festival"]
+                tags=["music", "outdoor", "festival", "live"]
+            ),
+            EventCreate(
+                name="Contemporary Art Exhibition",
+                description="Exclusive gallery opening featuring contemporary artists from around the world. Experience thought-provoking installations and meet the artists behind the work.",
+                date=datetime(2025, 2, 10, 19, 0, 0),
+                location="New York, NY",
+                price=75.00,
+                total_tickets=150,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800",
+                tags=["art", "contemporary", "gallery", "culture"]
+            ),
+            EventCreate(
+                name="Startup Pitch Competition",
+                description="Watch innovative startups pitch their ideas to top investors. Network with entrepreneurs, investors, and industry professionals in this exciting competition format.",
+                date=datetime(2025, 4, 5, 18, 30, 0),
+                location="Chicago, IL",
+                price=50.00,
+                total_tickets=300,
+                category="Business",
+                image_url="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800",
+                tags=["startup", "pitch", "investors", "networking"]
+            ),
+            EventCreate(
+                name="Outdoor Adventure Race",
+                description="Challenge yourself in this exciting outdoor adventure race featuring running, cycling, and obstacle courses. Perfect for fitness enthusiasts and adventure seekers.",
+                date=datetime(2025, 5, 15, 8, 0, 0),
+                location="Denver, CO",
+                price=125.00,
+                total_tickets=800,
+                category="Sports",
+                image_url="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800",
+                tags=["sports", "outdoor", "adventure", "fitness"]
             )
         ]
         
@@ -1080,11 +1113,32 @@ async def startup_event():
                 available_tickets=event_data.total_tickets,
                 source="local",
                 is_featured=True,
-                average_rating=4.5
+                average_rating=4.2 + (len(event_data.tags) * 0.1)  # Vary ratings slightly
             )
+            
+            # Save to database
             await db.events.insert_one(event.dict())
+            
+            # Index in vector search engine
+            await vector_search_engine.index_event(event)
         
-        logging.info("Sample events created successfully")
+        logging.info("Sample events created and indexed successfully")
+    else:
+        # Index existing events
+        existing_events = await db.events.find().to_list(100)
+        for event_data in existing_events:
+            event = Event(**event_data)
+            await vector_search_engine.index_event(event)
+        
+        logging.info(f"Indexed {len(existing_events)} existing events")
+    
+    # Index TicketMaster events
+    tm_events = await ticketmaster_client.search_events({"size": 10})
+    for tm_event in tm_events:
+        await vector_search_engine.index_event(tm_event)
+    
+    logging.info(f"Indexed {len(tm_events)} TicketMaster events")
+    logging.info("AI-powered search and personalization system initialized successfully")
 
 # Include router
 app.include_router(api_router)
