@@ -110,10 +110,55 @@ const EventList = ({ events }) => {
         </div>
       </div>
 
-      {/* AI Search Section */}
+      {/* AI Smart Search Section */}
       <div className="mb-8">
-        <AISearchBar onResults={handleSearchResults} isMainSearch={true} />
+        <SmartSearch onResults={handleSearchResults} isMainSearch={true} />
       </div>
+
+      {/* Trending Events Section */}
+      {trendingEvents.length > 0 && !searchResults && (
+        <div className="mb-8">
+          <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-orange-900 flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2" />
+                  Trending Events
+                </h3>
+                <Badge className="bg-orange-100 text-orange-800">
+                  Hot Right Now 🔥
+                </Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {trendingEvents.slice(0, 3).map((event) => (
+                  <div
+                    key={event.id}
+                    className="bg-white rounded-lg p-4 shadow-sm border border-orange-100 hover:shadow-md transition-shadow"
+                  >
+                    <h4 className="font-semibold text-gray-900 mb-2 line-clamp-1">
+                      {event.name}
+                    </h4>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">{event.category}</span>
+                      <span className="font-bold text-orange-600">${event.price}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xs text-orange-600">
+                        {event.trend_reason}
+                      </span>
+                      <Link to={`/events/${event.id}`}>
+                        <Button size="sm" className="btn-primary">
+                          View
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Search Results Analysis */}
       {searchResults?.ai_analysis && (
