@@ -277,10 +277,14 @@ class AISearchEngine:
         
         for event in events:
             score = 0
-            if query_lower in event.name.lower(): score += 10
-            if query_lower in event.description.lower(): score += 5
-            if request.category and request.category.lower() in event.category.lower(): score += 8
-            if request.location and request.location.lower() in event.location.lower(): score += 6
+            if query_lower in event.name.lower():
+                score += 10
+            if query_lower in event.description.lower():
+                score += 5
+            if request.category and request.category.lower() in event.category.lower():
+                score += 8
+            if request.location and request.location.lower() in event.location.lower():
+                score += 6
             
             if score > 0:
                 scored_events.append((score, event))
