@@ -1046,74 +1046,244 @@ async def get_recommendations(request: RecommendationRequest, current_user: Opti
 @app.on_event("startup")
 async def startup_event():
     """Initialize the application and AI components"""
-    # Create sample events
+    # Create sample events including UK festivals
     existing_events = await db.events.find().to_list(1)
     if not existing_events:
-        sample_events = [
+        uk_festivals_2025 = [
+            # Music Festivals October 2025
+            EventCreate(
+                name="Country Club Festival",
+                description="A celebration of country music featuring performances from top country artists and emerging talent. Experience the best of country music in Birmingham.",
+                date=datetime(2025, 10, 4, 19, 0, 0),
+                location="Birmingham, UK",
+                price=89.99,
+                total_tickets=5000,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+                tags=["country", "music", "festival", "uk", "birmingham"]
+            ),
+            EventCreate(
+                name="K-Music Festival",
+                description="A festival showcasing contemporary Korean music and culture across various London venues. Discover the vibrant world of K-pop, indie Korean music, and cultural performances.",
+                date=datetime(2025, 10, 15, 18, 0, 0),
+                location="Various venues, London, UK",
+                price=65.00,
+                total_tickets=3000,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800",
+                tags=["korean", "k-pop", "culture", "london", "contemporary"]
+            ),
+            EventCreate(
+                name="Swanage Blues Festival",
+                description="A long-standing blues festival in the beautiful seaside town of Swanage, featuring a stellar lineup of renowned blues artists from the UK and beyond.",
+                date=datetime(2025, 10, 3, 19, 30, 0),
+                location="Swanage, Dorset, UK",
+                price=125.00,
+                total_tickets=2500,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+                tags=["blues", "festival", "dorset", "seaside", "traditional"]
+            ),
+            EventCreate(
+                name="Twisterella Festival",
+                description="A dynamic one-day festival featuring emerging indie and alternative bands. Discover the next generation of British music talent in Middlesbrough.",
+                date=datetime(2025, 10, 11, 14, 0, 0),
+                location="Middlesbrough, UK",
+                price=45.00,
+                total_tickets=1500,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800",
+                tags=["indie", "alternative", "emerging", "bands", "middlesbrough"]
+            ),
+            EventCreate(
+                name="Keep It Country Festival (North)",
+                description="A celebration of country music featuring top artists like Morgan Wallen and Chapel Hart. Experience authentic country music in Newcastle's premier venue.",
+                date=datetime(2025, 10, 26, 19, 0, 0),
+                location="O2 City Hall, Newcastle Upon Tyne, UK",
+                price=95.00,
+                total_tickets=2000,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+                tags=["country", "morgan wallen", "chapel hart", "newcastle", "o2"]
+            ),
+            EventCreate(
+                name="London Piano Festival",
+                description="A prestigious festival celebrating the piano with performances from world-renowned pianists. Experience classical excellence in the heart of London.",
+                date=datetime(2025, 10, 10, 19, 30, 0),
+                location="London, UK",
+                price=75.00,
+                total_tickets=800,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=800",
+                tags=["piano", "classical", "london", "prestigious", "concert"]
+            ),
+            # Music Festivals November 2025
+            EventCreate(
+                name="London Festival of Baroque Music",
+                description="A week-long celebration of Baroque music featuring performances by Arcangelo and Iestyn Davies at the beautiful Smith Square Hall.",
+                date=datetime(2025, 11, 4, 19, 30, 0),
+                location="Smith Square Hall, London, UK",
+                price=55.00,
+                total_tickets=600,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800",
+                tags=["baroque", "classical", "arcangelo", "iestyn davies", "historical"]
+            ),
+            EventCreate(
+                name="Wimbledon International Music Festival",
+                description="A comprehensive festival offering concerts, talks, and workshops across various genres. Three weeks of musical excellence in Wimbledon.",
+                date=datetime(2025, 11, 8, 19, 0, 0),
+                location="Wimbledon, London, UK",
+                price=40.00,
+                total_tickets=1200,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+                tags=["international", "workshops", "talks", "wimbledon", "diverse"]
+            ),
+            # Art Festivals October 2025
+            EventCreate(
+                name="BFI London Film Festival",
+                description="Celebrates world cinema with premieres, filmmaker Q&As, and screenings across London. The UK's premier film festival showcasing international talent.",
+                date=datetime(2025, 10, 10, 18, 0, 0),
+                location="Various venues, London, UK",
+                price=25.00,
+                total_tickets=50000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1489599019892-ee891ac64c07?w=800",
+                tags=["film", "cinema", "premieres", "international", "screenings"]
+            ),
+            EventCreate(
+                name="The Other Art Fair London",
+                description="A vibrant fair showcasing over 175 independent artists with immersive installations and performances. Discover emerging talent in contemporary art.",
+                date=datetime(2025, 10, 10, 10, 0, 0),
+                location="London, UK",
+                price=15.00,
+                total_tickets=8000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800",
+                tags=["contemporary", "independent", "installations", "emerging", "galleries"]
+            ),
+            EventCreate(
+                name="Frieze London & Frieze Masters",
+                description="Leading contemporary art fairs featuring works from renowned international artists and prestigious galleries. The pinnacle of the art world calendar.",
+                date=datetime(2025, 10, 16, 11, 0, 0),
+                location="London, UK",
+                price=35.00,
+                total_tickets=12000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800",
+                tags=["contemporary", "prestigious", "galleries", "international", "masters"]
+            ),
+            EventCreate(
+                name="Cheltenham Literature Festival",
+                description="Features renowned authors, poets, and emerging voices with ticketed events and free family activities. A celebration of literature and storytelling.",
+                date=datetime(2025, 10, 12, 14, 0, 0),
+                location="Cheltenham, South West, UK",
+                price=20.00,
+                total_tickets=5000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800",
+                tags=["literature", "authors", "poets", "family", "storytelling"]
+            ),
+            EventCreate(
+                name="1-54 Contemporary African Art Fair",
+                description="A fair dedicated to contemporary African art, featuring leading and emerging artists from across the African continent and diaspora.",
+                date=datetime(2025, 10, 17, 10, 0, 0),
+                location="London, UK",
+                price=18.00,
+                total_tickets=3000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800",
+                tags=["african", "contemporary", "diaspora", "cultural", "emerging"]
+            ),
+            EventCreate(
+                name="Brighton Early Music Festival - LOVE",
+                description="A festival celebrating early music with the romantic theme of 'LOVE'. Experience historical music performed with authentic period instruments.",
+                date=datetime(2025, 10, 18, 19, 0, 0),
+                location="Brighton, UK",
+                price=30.00,
+                total_tickets=1000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800",
+                tags=["early music", "historical", "period instruments", "brighton", "romantic"]
+            ),
+            EventCreate(
+                name="Canterbury Festival",
+                description="A two-week celebration of the arts featuring classical concerts, theatre performances, and cultural events in the historic city of Canterbury.",
+                date=datetime(2025, 10, 24, 19, 30, 0),
+                location="Canterbury, UK",
+                price=28.00,
+                total_tickets=2000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=800",
+                tags=["classical", "theatre", "historic", "cultural", "canterbury"]
+            ),
+            EventCreate(
+                name="Lumiere Festival Durham",
+                description="The UK's leading light art festival featuring spectacular glowing installations and illuminated trails throughout the historic city of Durham.",
+                date=datetime(2025, 11, 14, 18, 0, 0),
+                location="Durham, UK",
+                price=12.00,
+                total_tickets=15000,
+                category="Arts",
+                image_url="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800",
+                tags=["light art", "installations", "illuminated", "durham", "spectacular"]
+            ),
+            # 2026 Highlights
+            EventCreate(
+                name="Isle of Wight Festival 2026",
+                description="A legendary festival featuring Lewis Capaldi (Friday), Calvin Harris (Saturday), and The Cure (Sunday). A diverse mix of pop, rock, indie, and electronic music.",
+                date=datetime(2026, 6, 19, 17, 0, 0),
+                location="Seaclose Park, Isle of Wight, UK",
+                price=299.99,
+                total_tickets=90000,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+                tags=["lewis capaldi", "calvin harris", "the cure", "legendary", "diverse"]
+            ),
+            EventCreate(
+                name="Edinburgh Summer Sessions 2026",
+                description="An intimate concert featuring The Cure with supporting acts Mogwai, Slowdive, and Just Mustard at the scenic Royal Highland Showgrounds.",
+                date=datetime(2026, 8, 23, 18, 0, 0),
+                location="Royal Highland Showgrounds, Edinburgh, UK",
+                price=149.99,
+                total_tickets=25000,
+                category="Music",
+                image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+                tags=["the cure", "mogwai", "slowdive", "just mustard", "edinburgh"]
+            ),
+            # Original US Events
             EventCreate(
                 name="Tech Conference 2025",
                 description="Annual technology conference featuring the latest innovations in AI, blockchain, and software development. Network with industry leaders and discover cutting-edge solutions.",
                 date=datetime(2025, 3, 15, 9, 0, 0),
-                location="San Francisco, CA",
+                location="San Francisco, CA, USA",
                 price=299.99,
                 total_tickets=500,
                 category="Technology",
                 image_url="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
-                tags=["ai", "blockchain", "networking", "innovation"]
+                tags=["ai", "blockchain", "networking", "innovation", "silicon valley"]
             ),
             EventCreate(
                 name="Summer Music Festival",
-                description="Three-day outdoor music festival featuring emerging artists and established performers. Enjoy live music, food trucks, and an unforgettable atmosphere under the stars.",
+                description="Three-day outdoor music festival featuring emerging artists and established performers. Enjoy live music, food trucks, and an unforgettable atmosphere under the Texas stars.",
                 date=datetime(2025, 7, 20, 18, 0, 0),
-                location="Austin, TX",
+                location="Austin, TX, USA",
                 price=199.99,
                 total_tickets=2000,
                 category="Music",
                 image_url="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
-                tags=["music", "outdoor", "festival", "live"]
-            ),
-            EventCreate(
-                name="Contemporary Art Exhibition",
-                description="Exclusive gallery opening featuring contemporary artists from around the world. Experience thought-provoking installations and meet the artists behind the work.",
-                date=datetime(2025, 2, 10, 19, 0, 0),
-                location="New York, NY",
-                price=75.00,
-                total_tickets=150,
-                category="Arts",
-                image_url="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800",
-                tags=["art", "contemporary", "gallery", "culture"]
-            ),
-            EventCreate(
-                name="Startup Pitch Competition",
-                description="Watch innovative startups pitch their ideas to top investors. Network with entrepreneurs, investors, and industry professionals in this exciting competition format.",
-                date=datetime(2025, 4, 5, 18, 30, 0),
-                location="Chicago, IL",
-                price=50.00,
-                total_tickets=300,
-                category="Business",
-                image_url="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800",
-                tags=["startup", "pitch", "investors", "networking"]
-            ),
-            EventCreate(
-                name="Outdoor Adventure Race",
-                description="Challenge yourself in this exciting outdoor adventure race featuring running, cycling, and obstacle courses. Perfect for fitness enthusiasts and adventure seekers.",
-                date=datetime(2025, 5, 15, 8, 0, 0),
-                location="Denver, CO",
-                price=125.00,
-                total_tickets=800,
-                category="Sports",
-                image_url="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800",
-                tags=["sports", "outdoor", "adventure", "fitness"]
+                tags=["music", "outdoor", "festival", "live", "texas"]
             )
         ]
         
-        for event_data in sample_events:
+        for event_data in uk_festivals_2025:
             event = Event(
                 **event_data.dict(),
                 available_tickets=event_data.total_tickets,
                 source="local",
                 is_featured=True,
-                average_rating=4.2 + (len(event_data.tags) * 0.1)  # Vary ratings slightly
+                average_rating=4.0 + (len(event_data.tags) * 0.1)  # Vary ratings based on tags
             )
             
             # Save to database
@@ -1122,7 +1292,7 @@ async def startup_event():
             # Index in vector search engine
             await vector_search_engine.index_event(event)
         
-        logging.info("Sample events created and indexed successfully")
+        logging.info(f"Created and indexed {len(uk_festivals_2025)} UK festivals and events")
     else:
         # Index existing events
         existing_events = await db.events.find().to_list(100)
