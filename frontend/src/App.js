@@ -112,6 +112,7 @@ function App() {
           <main className="container mx-auto px-4 py-8">
             <Routes>
               <Route path="/" element={<EventList events={events} />} />
+              <Route path="/uk-festivals" element={<UKFestivalsShowcase />} />
               <Route path="/events/:eventId" element={<EventDetails events={events} />} />
               <Route 
                 path="/book/:eventId" 
