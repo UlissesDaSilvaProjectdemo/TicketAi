@@ -13,6 +13,7 @@ const API = `${BACKEND_URL}/api`;
 const UserDashboard = () => {
   const { user } = useContext(AuthContext);
   const [tickets, setTickets] = useState([]);
+  const [creditBalance, setCreditBalance] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
