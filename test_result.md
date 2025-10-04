@@ -161,31 +161,40 @@ backend:
 
 frontend:
   - task: "Update PricingPage with correct pricing ($9.99/100 searches)"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "/app/frontend/src/components/PricingPage.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
-    status_history: []
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Updated PricingPage to show only Starter Pack ($9.99/100 searches) and 100 free trial credits as per user requirements. Screenshot confirmed correct display."
   
   - task: "Add pricing route to App.js"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "medium"
     needs_retesting: false
-    status_history: []
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added /pricing route to App.js and imported PricingPage component. Navigation link visible in header."
   
   - task: "Create credit balance display in UI"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "/app/frontend/src/components/Header.js"
     stuck_count: 0
     priority: "medium"
     needs_retesting: false
-    status_history: []
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added credit balance display in Header component for authenticated users. Shows credit count with icon in user info section."
 
 metadata:
   created_by: "main_agent"
