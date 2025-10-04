@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Calendar, MapPin, Ticket, User, Mail, ExternalLink } from 'lucide-react';
+import { Calendar, MapPin, Ticket, User, Mail, ExternalLink, Coins, CreditCard } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
