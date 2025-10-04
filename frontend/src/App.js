@@ -15,6 +15,7 @@ import SearchResultsPage from "./components/SearchResultsPage";
 import UKFestivalsShowcase from "./components/UKFestivalsShowcase";
 import PricingPage from "./components/PricingPage";
 import CreditsSuccess from "./components/CreditsSuccess";
+import AIAnalysisDemo from "./components/AIAnalysisDemo";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
