@@ -38,14 +38,20 @@ const UserDashboard = () => {
   const fetchCreditBalance = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) return;
+      console.log('Fetching credit balance, token exists:', !!token);
+      if (!token) {
+        console.log('No token found, skipping credit balance fetch');
+        return;
+      }
       
       const response = await axios.get(`${API}/credits/balance`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('Credit balance response:', response.data);
       setCreditBalance(response.data);
     } catch (error) {
       console.error('Error fetching credit balance:', error);
+      console.error('Error response:', error.response?.data);
     }
   };
 
