@@ -213,15 +213,18 @@
 
   - task: "Enhanced booking form with credit payment option"
     implemented: true
-    working: true
+    working: false
     file: "BookingForm.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Added payment method selection (credits vs card), credit balance display, and credit booking flow"
+      - working: false
+        agent: "testing"
+        comment: "❌ FAILED: Payment method radio buttons (credits/card) not found with data-testid selectors. Credit balance display not visible in booking form. Authentication issues may be preventing proper form rendering."
 
   - task: "App routing for credit system pages"
     implemented: true
