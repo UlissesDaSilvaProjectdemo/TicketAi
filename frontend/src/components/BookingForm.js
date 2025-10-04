@@ -39,14 +39,17 @@ const BookingForm = ({ events }) => {
   const fetchCreditBalance = async () => {
     try {
       const token = localStorage.getItem('token');
+      console.log('Fetching credit balance in booking form, token exists:', !!token);
       if (!token) return;
       
       const response = await axios.get(`${API}/credits/balance`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('Credit balance response in booking form:', response.data);
       setCreditBalance(response.data);
     } catch (error) {
-      console.error('Error fetching credit balance:', error);
+      console.error('Error fetching credit balance in booking form:', error);
+      console.error('Error response:', error.response?.data);
     }
   };
 
