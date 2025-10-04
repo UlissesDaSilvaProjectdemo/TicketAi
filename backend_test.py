@@ -477,6 +477,9 @@ class TicketAITester:
             print("❌ Skipping login test due to registration failure")
             login_success = False
         
+        # Run Credit System Tests (main focus)
+        self.run_credit_system_tests()
+        
         # Test events
         events_success, events_response = self.test_get_events()
         event_id = None
@@ -502,8 +505,8 @@ class TicketAITester:
         if login_success:
             self.test_get_user_tickets()
         
-        # Test AI recommendations
-        self.test_ai_recommendations()
+        # Test AI recommendations (already tested in credit system)
+        # self.test_ai_recommendations()
         
         # Test mock payment
         self.test_mock_payment()
