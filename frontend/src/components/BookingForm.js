@@ -32,6 +32,24 @@ const BookingForm = ({ events }) => {
 
   const event = events.find(e => e.id === eventId);
 
+  useEffect(() => {
+    fetchCreditBalance();
+  }, [user]);
+
+  const fetchCreditBalance = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      
+      const response = await axios.get(`${API}/credits/balance`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCreditBalance(response.data);
+    } catch (error) {
+      console.error('Error fetching credit balance:', error);
+    }
+  };
+
   if (!event) {
     return <div>Event not found</div>;
   }
