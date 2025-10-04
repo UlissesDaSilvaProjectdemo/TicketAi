@@ -35,6 +35,20 @@ const UserDashboard = () => {
     }
   };
 
+  const fetchCreditBalance = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      
+      const response = await axios.get(`${API}/credits/balance`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCreditBalance(response.data);
+    } catch (error) {
+      console.error('Error fetching credit balance:', error);
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
