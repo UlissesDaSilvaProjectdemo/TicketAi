@@ -1362,12 +1362,54 @@ async def get_recommendations(request: RecommendationRequest, current_user: Opti
         response = await chat.send_message(user_message)
         recommended_events = all_events[:5]
         
-        return {
+        # Deduct credit for authenticated users and log usage
+        credits_remaining = None
+        if current_user:
+            # Deduct 1 credit
+            await db.users.update_one(
+                {"id": current_user.id},
+                {
+                    "$inc": {
+                        "credits": -1,
+                        "total_searches_performed": 1
+                    }
+                }
+            )
+            
+            # Get updated credit count
+            updated_user = await db.users.find_one({"id": current_user.id})
+            credits_remaining = updated_user.get("credits", 0)
+            
+            # Log credit usage
+            credit_log = CreditUsageLog(
+                user_id=current_user.id,
+                user_email=current_user.email,
+                action="recommendation",
+                credits_deducted=1,
+                remaining_credits=credits_remaining,
+                query=request.user_preferences,
+                session_id=str(uuid.uuid4())
+            )
+            
+            await db.credit_usage_logs.insert_one(credit_log.dict())
+        
+        # Prepare response
+        response_data = {
             "recommendations": [event.dict() for event in recommended_events],
             "ai_explanation": response,
             "message": "AI-powered personalized recommendations",
             "total_events_considered": len(all_events)
         }
+        
+        # Add credit info for authenticated users
+        if current_user:
+            response_data["credits_remaining"] = credits_remaining
+            if credits_remaining <= 5:  # Low credit warning
+                response_data["credit_warning"] = True
+                if credits_remaining > 0:
+                    response_data["ai_explanation"] += f"\n\n⚠️ **Low Credits Warning:** You have {credits_remaining} searches remaining."
+        
+        return response_data
         
     except Exception as e:
         logging.error(f"Error in recommendations: {str(e)}")
