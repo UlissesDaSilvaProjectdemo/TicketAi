@@ -241,6 +241,18 @@ frontend:
         agent: "testing"
         comment: "✅ TESTED: Stripe payment integration working perfectly. Buy Credits button redirects to Stripe checkout with correct amount ($9.99). Test payment processing successful using test card (4242424242424242). Payment completion redirects back to success page. Complete payment flow functional."
 
+  - task: "Unified EventCard component with Buy Ticket buttons"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/EventCard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Unified EventCard component working perfectly across all platform pages. (1) Homepage: 8 EventCards with Buy Ticket buttons next to titles, (2) Event List: Consistent layout with proper responsive design, (3) AI Recommendations: 5 EventCards with working Buy buttons, (4) Search Results: EventCard layout maintained in AI search, (5) Buy Ticket Button Placement: Correctly positioned next to titles in flex container headers, (6) Responsive Design: Mobile layout (390x844) maintains functionality, (7) UI Elements: All required elements present (image, badges, price, title, description, date, location, tickets), (8) Source Logic: TicketMaster events open external URLs, Local events navigate to booking, (9) shadcn/ui Integration: Proper Card, Button, Badge components used. EventCard provides seamless action-oriented interface across entire platform."
+
 metadata:
   created_by: "main_agent"
   version: "1.1"
