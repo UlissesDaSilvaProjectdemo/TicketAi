@@ -587,6 +587,10 @@ class TicketAITester:
         self.test_credit_purchase_unauthenticated()
         if self.token:
             self.test_credit_purchase_authenticated()
+            self.test_credit_purchase_quick_topup()
+            self.test_credit_purchase_business_bundle()
+            self.test_credit_purchase_enterprise_bundle()
+            self.test_all_credit_pack_purchases()
             self.test_credit_purchase_invalid_pack()
         
         # Test credit status
