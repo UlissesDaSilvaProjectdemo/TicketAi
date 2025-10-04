@@ -94,30 +94,47 @@ const BookingForm = ({ events }) => {
   };
 
   const handleBookTicket = async () => {
-    setLoading(true);
-    setError('');
-
     try {
-      // First, process mock payment
-      const paymentResponse = await axios.post(`${API}/payments/process`, {
-        amount: event.price,
-        cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
-        expiryDate: paymentData.expiryDate,
-        cvv: paymentData.cvv,
-        cardholderName: paymentData.cardholderName
-      });
+      setLoading(true);
+      setError('');
 
-      if (paymentResponse.data.status === 'success') {
-        // If payment successful, book the ticket
-        const ticketResponse = await axios.post(`${API}/tickets`, {
+      if (bookingData.paymentMethod === 'credits') {
+        // Book with credits
+        const response = await axios.post(`${API}/tickets/checkout/credits`, {
           event_id: eventId,
           user_email: user.email,
           user_name: user.name,
           ticket_type: bookingData.ticketType
+        }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
 
-        setTicket(ticketResponse.data);
-        setStep(3); // Success step
+        if (response.data.ticket) {
+          setTicket(response.data.ticket);
+          setCreditBalance(prev => prev ? { ...prev, balance: prev.balance - 5 } : null);
+          setStep(3); // Success step
+        }
+      } else {
+        // Book with card payment
+        const response = await axios.post(`${API}/tickets/checkout`, {
+          event_id: eventId,
+          user_email: user.email,
+          user_name: user.name,
+          ticket_type: bookingData.ticketType,
+          success_url: `${window.location.origin}/booking-success`,
+          cancel_url: `${window.location.origin}/events/${eventId}`
+        }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+
+        if (response.data.checkout_url) {
+          // Redirect to payment processor
+          window.location.href = response.data.checkout_url;
+        } else if (response.data.ticket) {
+          // Direct booking success (for demo purposes)
+          setTicket(response.data.ticket);
+          setStep(3); // Success step
+        }
       }
     } catch (error) {
       console.error('Booking error:', error);
