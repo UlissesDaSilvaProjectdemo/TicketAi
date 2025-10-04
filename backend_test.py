@@ -336,7 +336,9 @@ class TicketAITester:
         booking_data = {
             "event_id": event_id,
             "ticket_quantity": 20,  # Try to book many tickets to exhaust credits
-            "ticket_type": "Standard"
+            "ticket_type": "Standard",
+            "user_email": self.user_email,
+            "user_name": "Test User"
         }
         
         # This should fail with insufficient credits (400) or succeed if we have enough
