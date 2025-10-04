@@ -20,6 +20,58 @@ const PricingPage = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const navigate = useNavigate();
 
+  const subscriptionPlans = [
+    {
+      id: 'basic',
+      name: 'Basic Subscription',
+      price: 50,
+      period: 'month',
+      color: 'from-blue-500 to-cyan-500',
+      popular: false,
+      features: [
+        'Unlimited AI-powered searches',
+        'Advanced event filtering',
+        'Priority email support',
+        'API access',
+        'Analytics dashboard'
+      ]
+    },
+    {
+      id: 'pro',
+      name: 'Pro Subscription',
+      price: 300,
+      period: 'month',
+      color: 'from-purple-500 to-pink-500',
+      popular: true,
+      features: [
+        'Unlimited AI-powered searches',
+        'Advanced filtering & sorting',
+        'Priority support + phone',
+        'Full API access',
+        'Advanced analytics',
+        'Custom integrations',
+        'Dedicated account manager'
+      ]
+    },
+    {
+      id: 'enterprise',
+      name: 'Enterprise Plan',
+      price: 'Custom',
+      period: 'contact us',
+      color: 'from-emerald-500 to-teal-500',
+      popular: false,
+      features: [
+        'Unlimited everything',
+        'White-label options',
+        'Custom integrations',
+        'Dedicated infrastructure',
+        'SLA guarantees',
+        'On-premise deployment',
+        'Custom billing'
+      ]
+    }
+  ];
+
   const creditPacks = [
     {
       id: 'starter',
@@ -27,14 +79,126 @@ const PricingPage = () => {
       price: 9.99,
       credits: 100,
       searches: 100,
-      color: 'from-indigo-500 to-purple-500',
-      popular: true,
+      color: 'from-green-500 to-emerald-500',
+      popular: false,
+      badge: 'Free Trial Option',
       features: [
         '100 AI-powered searches',
         'Advanced event filtering',
         'Email support',
         '12-month credit validity',
         'API access'
+      ]
+    },
+    {
+      id: 'quick_topup',
+      name: 'Quick Top-up',
+      price: 1,
+      credits: 5,
+      searches: 5,
+      color: 'from-gray-500 to-gray-600',
+      popular: false,
+      badge: 'Test Package',
+      features: [
+        '5 AI-powered searches',
+        'Perfect for testing',
+        'Instant activation'
+      ]
+    },
+    {
+      id: 'basic_pack',
+      name: 'Basic Pack',
+      price: 20,
+      credits: 100,
+      searches: 100,
+      color: 'from-blue-500 to-cyan-500',
+      popular: false,
+      features: [
+        '100 AI-powered searches',
+        'Advanced event filtering',
+        'Email support',
+        '12-month credit validity',
+        'API access'
+      ]
+    },
+    {
+      id: 'value_pack',
+      name: 'Value Pack',
+      price: 50,
+      credits: 250,
+      searches: 250,
+      color: 'from-indigo-500 to-purple-500',
+      popular: true,
+      features: [
+        '250 AI-powered searches',
+        'Advanced filtering & sorting',
+        'Priority email support',
+        '12-month credit validity',
+        'Full API access',
+        'Usage analytics'
+      ]
+    },
+    {
+      id: 'premium_pack',
+      name: 'Premium Pack',
+      price: 100,
+      credits: 500,
+      searches: 500,
+      color: 'from-purple-500 to-pink-500',
+      popular: false,
+      features: [
+        '500 AI-powered searches',
+        'All premium features',
+        'Priority support',
+        '12-month credit validity',
+        'Full API access',
+        'Advanced analytics',
+        'Custom integrations'
+      ]
+    },
+    {
+      id: 'business_bundle',
+      name: 'Business Bundle',
+      price: 500,
+      credits: 3000,
+      searches: 3000,
+      originalCredits: 2500,
+      color: 'from-orange-500 to-red-500',
+      popular: false,
+      badge: '20% Bonus',
+      savings: 100,
+      features: [
+        '3,000 AI-powered searches',
+        '20% bonus credits (2,500 + 500 free)',
+        'Business-grade support',
+        '12-month credit validity',
+        'Full API access',
+        'Advanced analytics',
+        'Custom integrations',
+        'Priority processing'
+      ]
+    },
+    {
+      id: 'enterprise_bundle',
+      name: 'Enterprise Bundle',
+      price: 1000,
+      credits: 6000,
+      searches: 6000,
+      originalCredits: 5000,
+      color: 'from-emerald-500 to-teal-500',
+      popular: false,
+      badge: '20% Bonus',
+      savings: 200,
+      features: [
+        '6,000 AI-powered searches',
+        '20% bonus credits (5,000 + 1,000 free)',
+        'Enterprise-grade support',
+        '12-month credit validity',
+        'Full API access',
+        'Advanced analytics',
+        'Custom integrations',
+        'Dedicated account manager',
+        'Priority processing'
       ]
     }
   ];
