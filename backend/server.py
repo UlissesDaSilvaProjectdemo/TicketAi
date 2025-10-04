@@ -593,7 +593,13 @@ async def purchase_credits(
     try:
         # Get pack details
         packs = {
-            "starter": {"price": 9.99, "credits": 100}
+            "starter": {"price": 9.99, "credits": 100},
+            "quick_topup": {"price": 1.0, "credits": 5},
+            "basic_pack": {"price": 20.0, "credits": 100},
+            "value_pack": {"price": 50.0, "credits": 250},
+            "premium_pack": {"price": 100.0, "credits": 500},
+            "business_bundle": {"price": 500.0, "credits": 3000},
+            "enterprise_bundle": {"price": 1000.0, "credits": 6000}
         }
         
         if request.pack_id not in packs:
