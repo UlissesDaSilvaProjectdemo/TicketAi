@@ -402,7 +402,7 @@ const PricingPage = () => {
                 key={pack.id}
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
                   pack.popular ? 'ring-2 ring-purple-500 shadow-xl' : ''
-                }`}
+                } ${pack.id === 'quick_topup' ? 'md:col-span-1' : ''}`}
                 data-testid={`credit-pack-${pack.id}`}
               >
                 {pack.popular && (
@@ -412,20 +412,41 @@ const PricingPage = () => {
                     </div>
                   </div>
                 )}
+
+                {pack.badge && !pack.popular && (
+                  <div className="absolute top-0 left-0 right-0">
+                    <div className={`${pack.badge === 'Free Trial Option' ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 
+                      pack.badge === 'Test Package' ? 'bg-gradient-to-r from-gray-500 to-gray-600' :
+                      'bg-gradient-to-r from-orange-500 to-red-500'} text-white text-center py-2 text-sm font-semibold`}>
+                      {pack.badge === '20% Bonus' ? '🎁 20% BONUS' : 
+                       pack.badge === 'Free Trial Option' ? '🆓 FREE TRIAL OPTION' : 
+                       '⚡ TEST PACKAGE'}
+                    </div>
+                  </div>
+                )}
                 
                 <div className={`h-2 bg-gradient-to-r ${pack.color}`}></div>
                 
-                <CardHeader className={`text-center ${pack.popular ? 'pt-8' : 'pt-6'}`}>
-                  <CardTitle className="text-2xl font-bold text-gray-900">
+                <CardHeader className={`text-center ${(pack.popular || pack.badge) ? 'pt-8' : 'pt-6'}`}>
+                  <CardTitle className={`${pack.id === 'quick_topup' ? 'text-lg' : 'text-xl'} font-bold text-gray-900`}>
                     {pack.name}
                   </CardTitle>
                   <div className="space-y-2">
-                    <div className="text-4xl font-bold text-gray-900">
-                      ${pack.price}
+                    <div className={`${pack.id === 'quick_topup' ? 'text-2xl' : pack.price >= 500 ? 'text-3xl' : 'text-4xl'} font-bold text-gray-900`}>
+                      ${typeof pack.price === 'number' ? pack.price.toLocaleString() : pack.price}
                     </div>
+                    
+                    {pack.originalCredits && (
+                      <div className="text-sm text-gray-500">
+                        <span className="line-through">{pack.originalCredits.toLocaleString()} credits</span>
+                        <span className="text-green-600 font-semibold ml-2">→ {pack.searches.toLocaleString()} credits</span>
+                      </div>
+                    )}
+                    
                     <div className="text-gray-600">
                       {pack.searches.toLocaleString()} searches included
                     </div>
+                    
                     {pack.savings && (
                       <Badge className="bg-green-100 text-green-800">
                         Save ${pack.savings}!
@@ -433,16 +454,16 @@ const PricingPage = () => {
                     )}
                   </div>
                   <CardDescription className="text-center">
-                    ${(pack.price / pack.searches).toFixed(3)} per search
+                    ${pack.searches > 0 ? (pack.price / pack.searches).toFixed(3) : '0'} per search
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-6">
-                  <div className="space-y-3">
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
                     {pack.features.map((feature, idx) => (
                       <div key={idx} className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700 text-sm">{feature}</span>
+                        <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-700 text-xs">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -450,25 +471,31 @@ const PricingPage = () => {
                   <Button
                     onClick={() => handlePurchaseCredits(pack)}
                     disabled={loading === pack.id}
-                    className={`w-full py-3 text-lg font-semibold bg-gradient-to-r ${pack.color} text-white hover:shadow-lg transition-all duration-200`}
+                    className={`w-full py-2 text-sm font-semibold bg-gradient-to-r ${pack.color} text-white hover:shadow-lg transition-all duration-200`}
                     data-testid={`buy-credits-${pack.id}`}
                   >
                     {loading === pack.id ? (
                       <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                         Processing...
                       </div>
                     ) : (
                       <>
-                        <CreditCard className="w-5 h-5 mr-2" />
-                        Buy Credits
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        Buy Now
                       </>
                     )}
                   </Button>
 
                   {pack.popular && (
-                    <div className="text-center text-sm text-purple-600 font-medium">
-                      ⚡ Best value for growing businesses
+                    <div className="text-center text-xs text-purple-600 font-medium">
+                      ⚡ Best value for regular users
+                    </div>
+                  )}
+
+                  {pack.badge === '20% Bonus' && (
+                    <div className="text-center text-xs text-orange-600 font-medium">
+                      🎁 Best value bundle
                     </div>
                   )}
                 </CardContent>
