@@ -52,7 +52,11 @@ class TicketAITester:
             elif method == 'DELETE':
                 response = requests.delete(url, headers=test_headers, timeout=10)
 
-            success = response.status_code == expected_status
+            # Handle multiple expected status codes
+            if isinstance(expected_status, list):
+                success = response.status_code in expected_status
+            else:
+                success = response.status_code == expected_status
             
             if success:
                 self.log_test(name, True)
@@ -61,7 +65,8 @@ class TicketAITester:
                 except:
                     return True, response.text
             else:
-                self.log_test(name, False, f"Expected {expected_status}, got {response.status_code}: {response.text}")
+                expected_str = str(expected_status) if not isinstance(expected_status, list) else f"one of {expected_status}"
+                self.log_test(name, False, f"Expected {expected_str}, got {response.status_code}: {response.text}")
                 return False, {}
 
         except Exception as e:
