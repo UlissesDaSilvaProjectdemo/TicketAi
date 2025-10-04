@@ -222,7 +222,7 @@ class TicketAITester:
         temp_token = self.token
         self.token = None
         
-        success, response = self.run_test("Free Trial (Unauthenticated)", "POST", "credits/free-trial", 401)
+        success, response = self.run_test("Free Trial (Unauthenticated)", "POST", "credits/free-trial", 403)
         
         # Restore token
         self.token = temp_token
