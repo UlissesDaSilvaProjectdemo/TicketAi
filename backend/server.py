@@ -1372,9 +1372,22 @@ async def get_credit_balance(current_user: User = Depends(get_current_user)):
 @api_router.get("/credits/transactions")
 async def get_credit_transactions(current_user: User = Depends(get_current_user)):
     """Get user's credit transaction history"""
-    transactions = await db.credit_transactions.find(
+    transactions_data = await db.credit_transactions.find(
         {"user_id": current_user.id}
     ).sort("created_at", -1).to_list(50)
+    
+    # Convert to CreditTransaction models to ensure proper serialization
+    transactions = []
+    for transaction_data in transactions_data:
+        try:
+            # Remove MongoDB ObjectId if present
+            if '_id' in transaction_data:
+                del transaction_data['_id']
+            transaction = CreditTransaction(**transaction_data)
+            transactions.append(transaction.dict())
+        except Exception as e:
+            logging.error(f"Error serializing transaction: {e}")
+            continue
     
     return {"transactions": transactions}
 
