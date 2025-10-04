@@ -269,6 +269,57 @@ class EmailTemplate(BaseModel):
     is_active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+# Credit System Models
+class CreditPack(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    price: float  # Price in USD
+    credits: int  # Number of credits
+    searches: int  # Number of searches (same as credits)
+    popular: bool = False
+    savings: Optional[float] = None  # Amount saved compared to individual pricing
+    features: List[str] = Field(default_factory=list)
+    active: bool = True
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CreditPurchaseRequest(BaseModel):
+    pack_id: str
+    success_url: str
+    cancel_url: str
+    payment_method: str = "stripe"  # stripe, paypal, apple_pay, google_pay
+
+class CreditTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    user_email: str
+    pack_id: str
+    amount: float
+    credits: int
+    payment_method: str
+    session_id: Optional[str] = None
+    payment_intent_id: Optional[str] = None
+    stripe_session_id: Optional[str] = None
+    paypal_order_id: Optional[str] = None
+    status: str = "pending"  # pending, completed, failed, cancelled
+    payment_status: str = "pending"  # pending, paid, failed, cancelled
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    completed_at: Optional[datetime] = None
+
+class CreditUsageLog(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    user_email: str
+    action: str  # search, recommendation, etc.
+    credits_deducted: int = 1
+    remaining_credits: int
+    query: Optional[str] = None
+    session_id: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class FreeTrialActivationRequest(BaseModel):
+    pass  # No fields needed, user is taken from auth
+
 # Error Response Models
 class ErrorResponse(BaseModel):
     error: bool = True
