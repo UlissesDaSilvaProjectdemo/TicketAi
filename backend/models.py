@@ -19,6 +19,12 @@ class User(BaseModel):
         "sms_notifications": False,
         "push_notifications": True
     })
+    # Credit System Fields
+    credits: int = Field(default=100)  # Start with 100 free trial credits
+    free_trial_used: bool = Field(default=False)
+    total_credits_purchased: int = Field(default=0)
+    total_searches_performed: int = Field(default=0)
+    last_credit_purchase: Optional[datetime] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserCreate(BaseModel):
