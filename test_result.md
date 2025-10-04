@@ -255,14 +255,17 @@
 
 ## test_plan:
   current_focus:
-    - "Credit balance API endpoint testing"
-    - "Credit purchase flow with Stripe integration"
-    - "Credit-based ticket booking functionality" 
-    - "Free trial credit assignment"
-    - "Frontend credit system UI and UX"
-  stuck_tasks: []
-  test_all: true
-  test_priority: "high_first"
+    - "Fix credit purchase Stripe redirect (CRITICAL)"
+    - "Fix authentication 401 errors"
+    - "Fix credit balance display in dashboard and booking form"
+    - "Fix payment method selection in booking form"
+  stuck_tasks: 
+    - "Credit purchase system with Stripe integration"
+    - "Credit balance management APIs"
+    - "Credit balance display in user dashboard"
+    - "Enhanced booking form with credit payment option"
+  test_all: false
+  test_priority: "stuck_first"
 
 ## agent_communication:
     - agent: "main"
