@@ -65,9 +65,10 @@ function App() {
     
     fetchEvents();
     
-    // Cleanup interceptor on unmount
+    // Cleanup interceptors on unmount
     return () => {
-      axios.interceptors.request.eject(interceptor);
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
     };
   }, []);
 
