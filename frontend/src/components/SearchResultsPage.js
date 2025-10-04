@@ -5,6 +5,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Calendar, MapPin, DollarSign, Users, Sparkles, ExternalLink, Brain, Filter } from 'lucide-react';
 import AISearchBar from './AISearchBar';
+import EventCard from './EventCard';
 
 const SearchResultsPage = () => {
   const location = useLocation();
