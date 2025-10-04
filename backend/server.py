@@ -618,6 +618,8 @@ async def get_credit_purchase_status(session_id: str, current_user: User = Depen
             "payment_status": status_response.payment_status
         }
         
+    except HTTPException:
+        raise  # Re-raise HTTPExceptions as-is
     except Exception as e:
         logging.error(f"Error checking credit purchase status: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to check payment status")
