@@ -117,11 +117,14 @@ backend:
     file: "/app/backend/models.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Added credit system fields to User model: credits (default 100), free_trial_used, total_credits_purchased, total_searches_performed, last_credit_purchase. Also created CreditPack, CreditTransaction, CreditUsageLog models."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: User registration creates users with 100 free credits by default. All credit fields properly initialized. User model working correctly with credit system integration."
   
   - task: "Create credit management API endpoints"
     implemented: true
