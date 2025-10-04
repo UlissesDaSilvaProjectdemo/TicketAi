@@ -134,7 +134,7 @@ class TicketAITester:
             "category": "Testing"
         }
         
-        success, response = self.run_test("Create Event", "POST", "events", 200, event_data)
+        success, response = self.run_test("Create Event", "POST", "admin/events", 200, event_data)
         return success, response
 
     def test_book_ticket(self, event_id):
