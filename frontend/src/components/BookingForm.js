@@ -17,8 +17,10 @@ const BookingForm = ({ events }) => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Details, 2: Payment, 3: Success
   const [bookingData, setBookingData] = useState({
-    ticketType: 'Standard'
+    ticketType: 'Standard',
+    paymentMethod: 'credits' // 'credits' or 'card'
   });
+  const [creditBalance, setCreditBalance] = useState(null);
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
     expiryDate: '',
