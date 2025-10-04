@@ -130,6 +130,7 @@ function App() {
             </Routes>
           </main>
           {showAuth && <AuthModal />}
+          <ChatBot />
         </BrowserRouter>
       </div>
     </AuthContext.Provider>
