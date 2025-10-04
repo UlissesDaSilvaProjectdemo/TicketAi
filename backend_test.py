@@ -314,7 +314,7 @@ class TicketAITester:
         self.token = None
         
         mock_session_id = "cs_test_mock_session_id_12345"
-        success, response = self.run_test("Credit Status (Unauthenticated)", "GET", f"credits/status/{mock_session_id}", 401)
+        success, response = self.run_test("Credit Status (Unauthenticated)", "GET", f"credits/status/{mock_session_id}", 403)
         
         # Restore token
         self.token = temp_token
