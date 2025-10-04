@@ -215,10 +215,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Create credit management API endpoints"
-    - "Integrate payment systems (Stripe, PayPal, Apple Pay, Google Pay)" 
-    - "Add credit validation to AI search endpoints"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
