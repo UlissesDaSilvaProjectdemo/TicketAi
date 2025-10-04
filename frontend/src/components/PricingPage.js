@@ -149,21 +149,7 @@ const PricingPage = () => {
       return;
     }
 
-    setLoading('free');
-
-    try {
-      await axios.post(`${API}/credits/free-trial`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      
-      alert('🎉 Free trial activated! You now have 50 free credits.');
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Error activating free trial:', error);
-      alert('Free trial could not be activated. You may have already used your free trial.');
-    } finally {
-      setLoading('');
-    }
+    navigate('/dashboard');
   };
 
   return (
