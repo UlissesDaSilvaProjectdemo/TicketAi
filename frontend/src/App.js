@@ -38,7 +38,7 @@ function App() {
     }
     
     // Add axios interceptor to automatically attach token to all requests
-    const interceptor = axios.interceptors.request.use(
+    const requestInterceptor = axios.interceptors.request.use(
       (config) => {
         const currentToken = localStorage.getItem('token');
         if (currentToken) {
@@ -47,6 +47,18 @@ function App() {
         return config;
       },
       (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    // Add response interceptor to handle 401 errors (invalid/expired tokens)
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          // Token is invalid or expired, logout user
+          logout();
+        }
         return Promise.reject(error);
       }
     );
