@@ -36,6 +36,13 @@ const BookingForm = ({ events }) => {
     fetchCreditBalance();
   }, [user]);
 
+  // Update payment method based on credit balance
+  useEffect(() => {
+    if (creditBalance && creditBalance.balance >= 5) {
+      setBookingData(prev => ({ ...prev, paymentMethod: 'credits' }));
+    }
+  }, [creditBalance]);
+
   const fetchCreditBalance = async () => {
     try {
       const token = localStorage.getItem('token');
