@@ -246,3 +246,5 @@
 ## agent_communication:
     - agent: "main"
       message: "Implemented comprehensive Pay-As-You-Go credit system with backend APIs, Stripe integration, and frontend UI. Ready for testing of credit balance management, purchase flow, and ticket booking with credits. All credit pack values match specifications and free trial system is implemented."
+    - agent: "testing"
+      message: "Completed comprehensive testing of Pay-As-You-Go credit system. Found critical issues: 1) Credit purchase buttons not redirecting to Stripe checkout (CRITICAL), 2) User authentication returning 401 errors, 3) Credit balance not displaying in dashboard/booking form, 4) Payment method selection in booking form not working. Pricing page displays correctly with all 3 packs and free trial section. Responsive design works properly."
