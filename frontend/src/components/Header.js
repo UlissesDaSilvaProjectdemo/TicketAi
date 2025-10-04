@@ -48,6 +48,13 @@ const Header = () => {
             >
               AI Recommendations
             </Link>
+            <Link
+              to="/pricing"
+              className={`nav-link ${isActive('/pricing') ? 'active' : ''}`}
+              data-testid="nav-pricing"
+            >
+              Pricing
+            </Link>
             {user && (
               <Link
                 to="/dashboard"
