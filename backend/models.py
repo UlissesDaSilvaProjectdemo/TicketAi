@@ -257,6 +257,61 @@ class EmailTemplate(BaseModel):
     is_active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+# Credit System Models
+class CreditBalance(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    balance: int = 0
+    total_earned: int = 0  # Total credits ever earned
+    total_spent: int = 0   # Total credits ever spent
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CreditTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    transaction_type: str  # "purchase", "spend", "refund", "bonus", "trial"
+    amount: int  # Credits (positive for earned, negative for spent)
+    description: str
+    related_entity_id: Optional[str] = None  # Event ID, Purchase ID, etc.
+    related_entity_type: Optional[str] = None  # "event_booking", "credit_purchase", etc.
+    balance_after: int  # Balance after this transaction
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CreditPack(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str  # "Small Pack", "Medium Pack", "Large Pack"
+    credits: int  # Number of credits in the pack
+    price: float  # Price in USD
+    currency: str = "usd"
+    discount_percentage: float = 0.0  # Optional discount
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CreditPurchase(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    credit_pack_id: str
+    credits_purchased: int
+    amount_paid: float
+    currency: str = "usd"
+    payment_provider: str  # "stripe", "paypal"
+    payment_id: Optional[str] = None  # External payment ID
+    status: str = "pending"  # pending, completed, failed, refunded
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    completed_at: Optional[datetime] = None
+
+class CreditPurchaseRequest(BaseModel):
+    credit_pack_id: str
+    payment_provider: str  # "stripe" or "paypal"
+    success_url: str
+    cancel_url: str
+
+class CreditUsage(BaseModel):
+    booking_cost: int = 5  # Credits per ticket booking
+    ai_search_cost: int = 1  # Credits per AI search (if we want to charge for this)
+    recommendation_cost: int = 0  # Free for now
+
 # Error Response Models
 class ErrorResponse(BaseModel):
     error: bool = True
