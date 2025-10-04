@@ -124,9 +124,8 @@ const PricingPage = () => {
 
     try {
       const response = await axios.post(`${API}/credits/purchase`, {
-        pack_id: pack.id,
-        amount: pack.price * 100, // Convert to cents
-        credits: pack.credits,
+        credit_pack_id: pack.id,
+        payment_provider: "stripe",
         success_url: `${window.location.origin}/credits/success`,
         cancel_url: `${window.location.origin}/pricing`
       }, {
