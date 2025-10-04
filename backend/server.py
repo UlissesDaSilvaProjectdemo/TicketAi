@@ -1292,6 +1292,23 @@ async def get_event_analytics():
 @api_router.post("/recommendations")
 async def get_recommendations(request: RecommendationRequest, current_user: Optional[User] = Depends(get_optional_current_user)):
     try:
+        # Check credit balance for authenticated users
+        if current_user:
+            user = await db.users.find_one({"id": current_user.id})
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+            
+            user_credits = user.get("credits", 0)
+            if user_credits <= 0:
+                return {
+                    "recommendations": [],
+                    "ai_explanation": "❌ **Insufficient Credits**\n\nYou have run out of search credits! 💳\n\n**Purchase Credits:**\n- Starter Pack: $9.99 for 100 searches\n- Visit our pricing page to get more credits and continue discovering amazing events! 🎉",
+                    "message": "Credits required for AI recommendations",
+                    "total_events_considered": 0,
+                    "credits_remaining": 0,
+                    "credit_warning": True
+                }
+        
         # Get user's event history for better recommendations
         user_history = []
         if current_user:
