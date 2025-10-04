@@ -188,8 +188,8 @@ const PricingPage = () => {
 
           <div className="flex flex-wrap justify-center gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-indigo-600">500</div>
-              <div className="text-sm text-gray-600">Free Trial Searches</div>
+              <div className="text-3xl font-bold text-indigo-600">50</div>
+              <div className="text-sm text-gray-600">Free Trial Credits</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">12</div>
