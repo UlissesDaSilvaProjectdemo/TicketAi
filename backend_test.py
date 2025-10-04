@@ -242,14 +242,57 @@ class TicketAITester:
         return success, response
 
     def test_get_credit_packs(self):
-        """Test getting available credit packs"""
+        """Test getting available credit packs - verify all 7 packs with correct pricing"""
         success, response = self.run_test("Get Credit Packs", "GET", "credits/packs", 200)
         
         if success and 'packs' in response:
             packs = response['packs']
             print(f"📦 Found {len(packs)} credit packs")
+            
+            # Expected packs with correct pricing
+            expected_packs = {
+                "starter": {"price": 9.99, "credits": 100},
+                "quick_topup": {"price": 1.0, "credits": 5},
+                "basic_pack": {"price": 20.0, "credits": 100},
+                "value_pack": {"price": 50.0, "credits": 250},
+                "premium_pack": {"price": 100.0, "credits": 500},
+                "business_bundle": {"price": 500.0, "credits": 3000},
+                "enterprise_bundle": {"price": 1000.0, "credits": 6000}
+            }
+            
+            # Verify all 7 packs are present
+            if len(packs) != 7:
+                print(f"❌ Expected 7 credit packs, found {len(packs)}")
+                success = False
+            else:
+                print(f"✅ All 7 credit packs found")
+            
+            # Verify each pack has correct pricing and credits
+            pack_ids = [pack.get('id') for pack in packs]
             for pack in packs:
-                print(f"   - {pack.get('name', 'N/A')}: ${pack.get('price', 'N/A')} for {pack.get('credits', 'N/A')} credits")
+                pack_id = pack.get('id')
+                price = pack.get('price')
+                credits = pack.get('credits')
+                
+                print(f"   - {pack.get('name', 'N/A')} ({pack_id}): ${price} for {credits} credits")
+                
+                if pack_id in expected_packs:
+                    expected = expected_packs[pack_id]
+                    if price != expected['price']:
+                        print(f"     ❌ Wrong price: expected ${expected['price']}, got ${price}")
+                        success = False
+                    if credits != expected['credits']:
+                        print(f"     ❌ Wrong credits: expected {expected['credits']}, got {credits}")
+                        success = False
+                else:
+                    print(f"     ❌ Unexpected pack ID: {pack_id}")
+                    success = False
+            
+            # Check for missing packs
+            for expected_id in expected_packs:
+                if expected_id not in pack_ids:
+                    print(f"     ❌ Missing pack: {expected_id}")
+                    success = False
         
         return success, response
 
