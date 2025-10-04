@@ -360,7 +360,9 @@ class TicketAITester:
         booking_data = {
             "event_id": fake_event_id,
             "ticket_quantity": 1,
-            "ticket_type": "Standard"
+            "ticket_type": "Standard",
+            "user_email": self.user_email,
+            "user_name": "Test User"
         }
         
         success, response = self.run_test("Credit Booking Non-existent Event", "POST", "tickets/checkout/credits", 404, booking_data)
