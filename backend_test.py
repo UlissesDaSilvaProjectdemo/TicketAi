@@ -95,7 +95,7 @@ class TicketAITester:
         """Test user login"""
         login_data = {
             "email": self.user_email,
-            "password": "TestPassword123!"
+            "password": "TestPass123!"  # Match the shorter password
         }
         
         success, response = self.run_test("User Login", "POST", "auth/login", 200, login_data)
