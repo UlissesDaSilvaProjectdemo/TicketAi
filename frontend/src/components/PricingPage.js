@@ -123,21 +123,32 @@ const PricingPage = () => {
     setLoading(pack.id);
 
     try {
+      console.log('Initiating credit purchase for pack:', pack.id);
+      const token = localStorage.getItem('token');
+      console.log('Token exists:', !!token);
+      
       const response = await axios.post(`${API}/credits/purchase`, {
         credit_pack_id: pack.id,
         payment_provider: "stripe",
         success_url: `${window.location.origin}/credits/success`,
         cancel_url: `${window.location.origin}/pricing`
       }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
 
+      console.log('Purchase response:', response.data);
+      
       if (response.data.checkout_url) {
+        console.log('Redirecting to:', response.data.checkout_url);
         window.location.href = response.data.checkout_url;
+      } else {
+        console.error('No checkout_url in response:', response.data);
+        alert('No checkout URL received. Please try again.');
       }
     } catch (error) {
       console.error('Error purchasing credits:', error);
-      alert('There was an error processing your purchase. Please try again.');
+      console.error('Error response:', error.response?.data);
+      alert(`Error: ${error.response?.data?.detail || error.message || 'Please try again.'}`);
     } finally {
       setLoading('');
     }
