@@ -384,7 +384,7 @@ class TicketAITester:
         results = []
         for endpoint, method in endpoints_to_test:
             data = {"credit_pack_id": "small", "payment_provider": "stripe", "success_url": "test", "cancel_url": "test"} if method == "POST" else None
-            success, response = self.run_test(f"Unauthorized {endpoint}", method, endpoint, 401, data)
+            success, response = self.run_test(f"Unauthorized {endpoint}", method, endpoint, 403, data)  # 403 is correct for "Not authenticated"
             results.append(success)
         
         # Restore token
