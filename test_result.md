@@ -158,15 +158,18 @@ backend:
   
   - task: "Add credit validation to AI search endpoints"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added credit validation and deduction to smart search and recommendations endpoints. Users with 0 credits get warning message. Logs usage to credit_usage_logs collection. Needs testing."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Credit validation working perfectly on AI endpoints. POST /search/smart deducts 1 credit per search (tested: 100→99 credits). POST /recommendations deducts 1 credit per request (tested: 100→99 credits). Both endpoints return credit_remaining in response. Credit usage properly logged to credit_usage_logs collection. Users with 0 credits receive proper warning messages with purchase prompts. AI features working with Emergent LLM key."
 
 frontend:
   - task: "Update PricingPage with correct pricing ($9.99/100 searches)"
