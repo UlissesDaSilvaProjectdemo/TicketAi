@@ -437,84 +437,116 @@ const BookingForm = ({ events }) => {
                 </form>
               ) : (
                 <form onSubmit={handleFinalBooking} className="space-y-6" data-testid="payment-form">
-                  {/* Payment Form */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Payment Details</h3>
-                    
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <p className="text-sm text-blue-800">
-                        💳 This is a demo payment form. Use any test card details.
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cardholder Name
-                      </label>
-                      <input
-                        type="text"
-                        name="cardholderName"
-                        value={paymentData.cardholderName}
-                        onChange={handlePaymentInputChange}
-                        className="form-input"
-                        placeholder="John Doe"
-                        required
-                        data-testid="cardholder-name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Number
-                      </label>
-                      <div className="relative">
-                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                        <input
-                          type="text"
-                          name="cardNumber"
-                          value={paymentData.cardNumber}
-                          onChange={handlePaymentInputChange}
-                          className="form-input pl-10"
-                          placeholder="1234 5678 9012 3456"
-                          required
-                          data-testid="card-number"
-                        />
+                  {bookingData.paymentMethod === 'credits' ? (
+                    /* Credit Payment Confirmation */
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Payment with Credits</h3>
+                      
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
+                        <div className="flex items-center justify-center mb-4">
+                          <Coins className="w-8 h-8 text-emerald-600" />
+                        </div>
+                        <div className="text-center space-y-2">
+                          <p className="text-emerald-800 font-medium">
+                            You're about to book this ticket using your credits
+                          </p>
+                          <div className="text-sm text-emerald-700">
+                            <div className="flex justify-between items-center py-1">
+                              <span>Current Balance:</span>
+                              <span className="font-semibold">{creditBalance?.balance} credits</span>
+                            </div>
+                            <div className="flex justify-between items-center py-1">
+                              <span>Ticket Cost:</span>
+                              <span className="font-semibold">5 credits</span>
+                            </div>
+                            <div className="flex justify-between items-center py-1 border-t border-emerald-300 mt-2 pt-2">
+                              <span>Remaining Balance:</span>
+                              <span className="font-bold">{(creditBalance?.balance || 0) - 5} credits</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
+                  ) : (
+                    /* Card Payment Form */
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Payment Details</h3>
+                      
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <p className="text-sm text-blue-800">
+                          💳 This is a demo payment form. Use any test card details.
+                        </p>
+                      </div>
 
-                    <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Expiry Date
+                          Cardholder Name
                         </label>
                         <input
                           type="text"
-                          name="expiryDate"
-                          value={paymentData.expiryDate}
+                          name="cardholderName"
+                          value={paymentData.cardholderName}
                           onChange={handlePaymentInputChange}
                           className="form-input"
-                          placeholder="MM/YY"
+                          placeholder="John Doe"
                           required
-                          data-testid="expiry-date"
+                          data-testid="cardholder-name"
                         />
                       </div>
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          CVV
+                          Card Number
                         </label>
-                        <input
-                          type="text"
-                          name="cvv"
-                          value={paymentData.cvv}
-                          onChange={handlePaymentInputChange}
-                          className="form-input"
-                          placeholder="123"
-                          required
-                          data-testid="cvv"
-                        />
+                        <div className="relative">
+                          <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <input
+                            type="text"
+                            name="cardNumber"
+                            value={paymentData.cardNumber}
+                            onChange={handlePaymentInputChange}
+                            className="form-input pl-10"
+                            placeholder="1234 5678 9012 3456"
+                            required
+                            data-testid="card-number"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Expiry Date
+                          </label>
+                          <input
+                            type="text"
+                            name="expiryDate"
+                            value={paymentData.expiryDate}
+                            onChange={handlePaymentInputChange}
+                            className="form-input"
+                            placeholder="MM/YY"
+                            required
+                            data-testid="expiry-date"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            CVV
+                          </label>
+                          <input
+                            type="text"
+                            name="cvv"
+                            value={paymentData.cvv}
+                            onChange={handlePaymentInputChange}
+                            className="form-input"
+                            placeholder="123"
+                            required
+                            data-testid="cvv"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   {error && (
                     <div className="p-4 bg-red-50 border border-red-200 rounded-lg" data-testid="payment-error">
