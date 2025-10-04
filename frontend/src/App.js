@@ -124,6 +124,11 @@ function App() {
                 path="/dashboard" 
                 element={user ? <UserDashboard /> : <Navigate to="/" />} 
               />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route 
+                path="/credits/success" 
+                element={user ? <CreditsSuccess /> : <Navigate to="/" />} 
+              />
               <Route path="/recommendations" element={<RecommendationsPage />} />
               <Route path="/search-results" element={<SearchResultsPage />} />
             </Routes>
