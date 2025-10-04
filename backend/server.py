@@ -1310,6 +1310,396 @@ async def startup_event():
     logging.info(f"Indexed {len(tm_events)} TicketMaster events")
     logging.info("AI-powered search and personalization system initialized successfully")
 
+# Credit System Management
+
+# Initialize Stripe for credit purchases
+stripe_api_key = os.environ.get('STRIPE_API_KEY')
+stripe_checkout = StripeCheckout(
+    api_key=stripe_api_key,
+    webhook_url=""  # Will be set dynamically
+)
+
+# Credit Packs Configuration
+CREDIT_PACKS = {
+    "small": {"id": "small", "name": "Small Pack", "credits": 100, "price": 10.00},
+    "medium": {"id": "medium", "name": "Medium Pack", "credits": 500, "price": 40.00},
+    "large": {"id": "large", "name": "Large Pack", "credits": 1000, "price": 70.00}
+}
+
+# Credit Management Routes
+@api_router.get("/credits/balance")
+async def get_credit_balance(current_user: User = Depends(get_current_user)):
+    """Get user's current credit balance"""
+    balance = await db.credit_balances.find_one({"user_id": current_user.id})
+    if not balance:
+        # Create initial balance with free trial credits
+        new_balance = CreditBalance(
+            user_id=current_user.id,
+            balance=50,  # Free trial credits
+            total_earned=50,
+            total_spent=0
+        )
+        await db.credit_balances.insert_one(new_balance.dict())
+        
+        # Log the trial credit transaction
+        trial_transaction = CreditTransaction(
+            user_id=current_user.id,
+            transaction_type="trial",
+            amount=50,
+            description="Welcome! Free trial credits",
+            balance_after=50
+        )
+        await db.credit_transactions.insert_one(trial_transaction.dict())
+        
+        return {"balance": 50, "total_earned": 50, "total_spent": 0}
+    
+    return {"balance": balance["balance"], "total_earned": balance["total_earned"], "total_spent": balance["total_spent"]}
+
+@api_router.get("/credits/transactions")
+async def get_credit_transactions(current_user: User = Depends(get_current_user)):
+    """Get user's credit transaction history"""
+    transactions = await db.credit_transactions.find(
+        {"user_id": current_user.id}
+    ).sort("created_at", -1).to_list(50)
+    
+    return {"transactions": transactions}
+
+@api_router.get("/credits/packs")
+async def get_credit_packs():
+    """Get available credit packs for purchase"""
+    return {"packs": list(CREDIT_PACKS.values())}
+
+@api_router.post("/credits/purchase")
+async def create_credit_purchase(
+    request: CreditPurchaseRequest,
+    req: Request,
+    current_user: User = Depends(get_current_user)
+):
+    """Create a credit purchase session"""
+    pack_id = request.credit_pack_id
+    
+    if pack_id not in CREDIT_PACKS:
+        raise HTTPException(status_code=400, detail="Invalid credit pack")
+    
+    pack = CREDIT_PACKS[pack_id]
+    
+    # Get host URL from request
+    host_url = str(req.base_url).rstrip('/')
+    
+    # Set webhook URL dynamically
+    global stripe_checkout
+    stripe_checkout.webhook_url = f"{host_url}/api/webhook/stripe"
+    
+    try:
+        # Create Stripe checkout session
+        checkout_request = CheckoutSessionRequest(
+            amount=pack["price"],
+            currency="usd",
+            success_url=f"{request.success_url}?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=request.cancel_url,
+            metadata={
+                "user_id": current_user.id,
+                "user_email": current_user.email,
+                "pack_id": pack_id,
+                "credits": str(pack["credits"]),
+                "type": "credit_purchase"
+            }
+        )
+        
+        session = await stripe_checkout.create_checkout_session(checkout_request)
+        
+        # Create purchase record
+        purchase = CreditPurchase(
+            user_id=current_user.id,
+            credit_pack_id=pack_id,
+            credits_purchased=pack["credits"],
+            amount_paid=pack["price"],
+            payment_provider="stripe",
+            payment_id=session.session_id,
+            status="pending"
+        )
+        
+        await db.credit_purchases.insert_one(purchase.dict())
+        
+        return {
+            "checkout_url": session.url,
+            "session_id": session.session_id,
+            "pack": pack
+        }
+        
+    except Exception as e:
+        logging.error(f"Error creating credit purchase: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create purchase session")
+
+@api_router.get("/credits/purchase/status/{session_id}")
+async def get_credit_purchase_status(session_id: str, current_user: User = Depends(get_current_user)):
+    """Check credit purchase status"""
+    try:
+        # Check Stripe session status
+        checkout_status = await stripe_checkout.get_checkout_status(session_id)
+        
+        # Find purchase record
+        purchase = await db.credit_purchases.find_one({"payment_id": session_id})
+        if not purchase:
+            raise HTTPException(status_code=404, detail="Purchase not found")
+        
+        # Update purchase status if payment completed and not already processed
+        if checkout_status.payment_status == "paid" and purchase["status"] != "completed":
+            # Update purchase status
+            await db.credit_purchases.update_one(
+                {"payment_id": session_id},
+                {
+                    "$set": {
+                        "status": "completed",
+                        "completed_at": datetime.now(timezone.utc)
+                    }
+                }
+            )
+            
+            # Add credits to user balance
+            await add_credits_to_user(
+                current_user.id,
+                purchase["credits_purchased"],
+                "purchase",
+                f"Credit pack purchase: {CREDIT_PACKS[purchase['credit_pack_id']]['name']}",
+                session_id
+            )
+        
+        return {
+            "status": checkout_status.status,
+            "payment_status": checkout_status.payment_status,
+            "amount": checkout_status.amount_total / 100,  # Convert from cents
+            "purchase_status": purchase["status"]
+        }
+        
+    except Exception as e:
+        logging.error(f"Error checking purchase status: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to check purchase status")
+
+async def add_credits_to_user(user_id: str, credits: int, transaction_type: str, description: str, related_id: str = None):
+    """Helper function to add credits to user balance"""
+    # Get current balance
+    balance = await db.credit_balances.find_one({"user_id": user_id})
+    if not balance:
+        new_balance = CreditBalance(user_id=user_id, balance=0, total_earned=0, total_spent=0)
+        await db.credit_balances.insert_one(new_balance.dict())
+        balance = {"balance": 0, "total_earned": 0, "total_spent": 0}
+    
+    # Update balance
+    new_balance = balance["balance"] + credits
+    new_total_earned = balance["total_earned"] + credits
+    
+    await db.credit_balances.update_one(
+        {"user_id": user_id},
+        {
+            "$set": {
+                "balance": new_balance,
+                "total_earned": new_total_earned,
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    # Log transaction
+    transaction = CreditTransaction(
+        user_id=user_id,
+        transaction_type=transaction_type,
+        amount=credits,
+        description=description,
+        related_entity_id=related_id,
+        related_entity_type="credit_purchase" if transaction_type == "purchase" else transaction_type,
+        balance_after=new_balance
+    )
+    
+    await db.credit_transactions.insert_one(transaction.dict())
+
+async def deduct_credits_from_user(user_id: str, credits: int, description: str, related_id: str = None, related_type: str = None):
+    """Helper function to deduct credits from user balance"""
+    # Get current balance
+    balance = await db.credit_balances.find_one({"user_id": user_id})
+    if not balance or balance["balance"] < credits:
+        return False  # Insufficient credits
+    
+    # Update balance
+    new_balance = balance["balance"] - credits
+    new_total_spent = balance["total_spent"] + credits
+    
+    await db.credit_balances.update_one(
+        {"user_id": user_id},
+        {
+            "$set": {
+                "balance": new_balance,
+                "total_spent": new_total_spent,
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    # Log transaction
+    transaction = CreditTransaction(
+        user_id=user_id,
+        transaction_type="spend",
+        amount=-credits,  # Negative for spending
+        description=description,
+        related_entity_id=related_id,
+        related_entity_type=related_type,
+        balance_after=new_balance
+    )
+    
+    await db.credit_transactions.insert_one(transaction.dict())
+    return True
+
+# Modified ticket booking to use credits
+@api_router.post("/tickets/checkout/credits")
+async def checkout_with_credits(
+    request: TicketCreate,
+    current_user: User = Depends(get_current_user)
+):
+    """Book tickets using credits instead of payment"""
+    # Check if event exists
+    event = await db.events.find_one({"id": request.event_id})
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+    event_obj = Event(**event)
+    
+    # Check ticket availability
+    if event_obj.available_tickets <= 0:
+        raise HTTPException(status_code=400, detail="No tickets available")
+    
+    # Calculate credit cost (5 credits per ticket)
+    credit_cost = 5
+    
+    # Check user's credit balance
+    balance = await db.credit_balances.find_one({"user_id": current_user.id})
+    if not balance or balance["balance"] < credit_cost:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Insufficient credits. You need {credit_cost} credits but have {balance['balance'] if balance else 0}"
+        )
+    
+    try:
+        # Deduct credits
+        success = await deduct_credits_from_user(
+            current_user.id,
+            credit_cost,
+            f"Ticket booking: {event_obj.name}",
+            request.event_id,
+            "ticket_booking"
+        )
+        
+        if not success:
+            raise HTTPException(status_code=400, detail="Failed to deduct credits")
+        
+        # Generate QR code
+        qr_data = f"ticket-{uuid.uuid4()}-{request.event_id}-{current_user.email}"
+        
+        if QR_AVAILABLE:
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(qr_data)
+            qr.make(fit=True)
+            
+            qr_img = qr.make_image(fill_color="black", back_color="white")
+            buffer = BytesIO()
+            qr_img.save(buffer, format="PNG")
+            qr_code_b64 = base64.b64encode(buffer.getvalue()).decode()
+        else:
+            # Fallback QR code
+            qr_code_b64 = base64.b64encode(qr_data.encode()).decode()
+        
+        # Create ticket
+        ticket = Ticket(
+            event_id=request.event_id,
+            user_email=current_user.email,
+            user_name=current_user.name,
+            ticket_type=request.ticket_type,
+            qr_code=qr_code_b64,
+            price=0.0,  # Free since paid with credits
+            status="confirmed"
+        )
+        
+        # Save ticket
+        await db.tickets.insert_one(ticket.dict())
+        
+        # Update event availability
+        await db.events.update_one(
+            {"id": request.event_id},
+            {"$inc": {"available_tickets": -1}}
+        )
+        
+        # Track behavior
+        behavior = UserBehavior(
+            user_id=current_user.id,
+            action_type='booking',
+            event_id=request.event_id,
+            session_id=str(uuid.uuid4()),
+            context={'payment_method': 'credits', 'credit_cost': credit_cost}
+        )
+        await behavior_tracker.track_behavior(behavior)
+        
+        return {
+            "ticket": ticket.dict(),
+            "credits_used": credit_cost,
+            "remaining_balance": balance["balance"] - credit_cost,
+            "message": "Ticket booked successfully with credits!"
+        }
+        
+    except Exception as e:
+        logging.error(f"Error in credit ticket booking: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to book ticket with credits")
+
+# Webhook for credit purchases
+@api_router.post("/webhook/stripe/credits")
+async def stripe_credits_webhook(request: Request):
+    """Handle Stripe webhooks for credit purchases"""
+    try:
+        body = await request.body()
+        signature = request.headers.get("Stripe-Signature")
+        
+        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        
+        if webhook_response.event_type == "checkout.session.completed":
+            session_id = webhook_response.session_id
+            payment_status = webhook_response.payment_status
+            metadata = webhook_response.metadata
+            
+            if payment_status == "paid" and metadata.get("type") == "credit_purchase":
+                # Find purchase record
+                purchase = await db.credit_purchases.find_one({"payment_id": session_id})
+                
+                if purchase and purchase["status"] != "completed":
+                    # Update purchase status
+                    await db.credit_purchases.update_one(
+                        {"payment_id": session_id},
+                        {
+                            "$set": {
+                                "status": "completed",
+                                "completed_at": datetime.now(timezone.utc)
+                            }
+                        }
+                    )
+                    
+                    # Add credits to user
+                    user_id = metadata["user_id"]
+                    credits = int(metadata["credits"])
+                    pack_id = metadata["pack_id"]
+                    
+                    await add_credits_to_user(
+                        user_id,
+                        credits,
+                        "purchase",
+                        f"Credit pack purchase: {CREDIT_PACKS[pack_id]['name']}",
+                        session_id
+                    )
+                    
+                    logging.info(f"Credits added successfully for user {user_id}: {credits} credits")
+        
+        return {"status": "success"}
+        
+    except Exception as e:
+        logging.error(f"Error processing webhook: {str(e)}")
+        return {"status": "error", "message": str(e)}
+
 # Include router
 app.include_router(api_router)
 
