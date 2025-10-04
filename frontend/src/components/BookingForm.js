@@ -633,16 +633,24 @@ const BookingForm = ({ events }) => {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Price:</span>
                   <span className="font-medium" data-testid="summary-ticket-price">
-                    ${event.price}
+                    {bookingData.paymentMethod === 'credits' ? '5 Credits' : `$${event.price}`}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Quantity:</span>
                   <span className="font-medium">1</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Payment Method:</span>
+                  <span className="font-medium">
+                    {bookingData.paymentMethod === 'credits' ? 'Credits' : 'Credit Card'}
+                  </span>
+                </div>
                 <div className="flex justify-between text-lg font-bold text-indigo-600 border-t border-gray-100 pt-2">
                   <span>Total:</span>
-                  <span data-testid="summary-total-price">${event.price}</span>
+                  <span data-testid="summary-total-price">
+                    {bookingData.paymentMethod === 'credits' ? '5 Credits' : `$${event.price}`}
+                  </span>
                 </div>
               </div>
             </CardContent>
