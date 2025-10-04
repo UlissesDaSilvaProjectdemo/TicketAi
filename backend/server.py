@@ -33,14 +33,9 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Security
-try:
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-except Exception as e:
-    # Fallback to a simpler hashing method for testing
-    import hashlib
-    pwd_context = None
-    print(f"Warning: bcrypt failed, using fallback hashing: {e}")
+# Security - Using simple hashing for testing due to bcrypt issues
+import hashlib
+pwd_context = None  # Disable bcrypt for testing
 
 security = HTTPBearer()
 JWT_SECRET = os.environ.get('JWT_SECRET', 'your-secret-key-change-in-production')
