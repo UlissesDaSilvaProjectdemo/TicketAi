@@ -693,6 +693,9 @@ const PricingPage = () => {
           </div>
         </div>
       </div>
+
+      {/* ChatBot */}
+      <ChatBot />
     </div>
   );
 };
