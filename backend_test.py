@@ -641,6 +641,10 @@ class TicketAITester:
         # Test webhook endpoint
         self.test_stripe_webhook_endpoint()
         
+        # Test Stripe checkout amounts
+        if self.token:
+            self.test_stripe_checkout_amounts()
+        
         # Test AI features with credit deduction
         if self.token:
             self.test_smart_search_with_credits()
