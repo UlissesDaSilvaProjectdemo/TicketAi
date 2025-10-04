@@ -112,40 +112,52 @@ user_problem_statement: |
 
 backend:
   - task: "Update User model with credit fields"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "/app/backend/models.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
-    status_history: []
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added credit system fields to User model: credits (default 100), free_trial_used, total_credits_purchased, total_searches_performed, last_credit_purchase. Also created CreditPack, CreditTransaction, CreditUsageLog models."
   
   - task: "Create credit management API endpoints"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
-    status_history: []
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented credit management APIs: /credits/balance, /credits/free-trial, /credits/packs, /credits/purchase, /credits/status/{session_id}, /webhook/stripe. Needs testing."
   
   - task: "Integrate payment systems (Stripe, PayPal, Apple Pay, Google Pay)"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
-    status_history: []
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Integrated Stripe payment system using emergentintegrations. PayPal, Apple Pay, Google Pay integration planned for future phase. Needs testing."
   
   - task: "Add credit validation to AI search endpoints"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
-    status_history: []
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added credit validation and deduction to smart search and recommendations endpoints. Users with 0 credits get warning message. Logs usage to credit_usage_logs collection. Needs testing."
 
 frontend:
   - task: "Update PricingPage with correct pricing ($9.99/100 searches)"
