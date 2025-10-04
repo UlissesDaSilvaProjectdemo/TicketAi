@@ -266,6 +266,7 @@ test_plan:
   test_priority: "high_first"
   frontend_testing_completed: true
   saas_flows_tested: true
+  eventcard_testing_completed: true
 
 agent_communication:
   - agent: "main"
