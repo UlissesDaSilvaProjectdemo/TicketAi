@@ -213,7 +213,7 @@ const BookingForm = ({ events }) => {
                 <div>
                   <span className="text-gray-600">Price Paid:</span>
                   <p className="font-semibold text-green-600" data-testid="ticket-price-paid">
-                    ${ticket.price}
+                    {ticket.price === 0 ? '5 Credits' : `$${ticket.price}`}
                   </p>
                 </div>
                 <div>
