@@ -337,12 +337,12 @@ class TicketAITester:
 
     def test_stripe_webhook_endpoint(self):
         """Test Stripe webhook endpoint exists"""
-        # Test that the webhook endpoint exists (should return 400 for invalid webhook)
-        success, response = self.run_test("Stripe Webhook Endpoint", "POST", "webhook/stripe", 400, {})
+        # Test that the webhook endpoint exists (should return 200 with error status for invalid webhook)
+        success, response = self.run_test("Stripe Webhook Endpoint", "POST", "webhook/stripe", 200, {})
         
-        # 400 is expected for invalid webhook data
-        if success or "webhook" in str(response).lower():
-            print(f"✅ Stripe webhook endpoint exists")
+        # 200 with error status is expected for invalid webhook data
+        if success and response.get('status') == 'error':
+            print(f"✅ Stripe webhook endpoint exists and handles invalid data correctly")
             return True, response
         
         return success, response
