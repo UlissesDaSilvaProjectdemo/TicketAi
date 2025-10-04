@@ -142,15 +142,79 @@ const SearchResultsPage = () => {
               <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                 <Brain className="w-4 h-4 text-purple-600" />
               </div>
-              <div>
-                <h3 className="font-semibold text-purple-900 mb-2" data-testid="ai-analysis-title">
-                  AI Search Analysis
+              <div className="flex-1">
+                <h3 className="font-semibold text-purple-900 mb-4" data-testid="ai-analysis-title">
+                  Recommended Events for You
                 </h3>
-                <div 
-                  className="text-purple-800 leading-relaxed ai-response-content" 
-                  data-testid="ai-analysis-text"
-                  dangerouslySetInnerHTML={{ __html: results.ai_analysis }}
-                />
+                
+                {/* Enhanced AI Analysis with Buy Buttons */}
+                <div className="space-y-4">
+                  {filteredResults.slice(0, 5).map((event, index) => (
+                    <div 
+                      key={event.id} 
+                      className="bg-white/60 rounded-lg p-4 border border-purple-200 hover:bg-white/80 transition-colors"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-purple-900 text-lg" data-testid={`ai-rec-title-${event.id}`}>
+                            {event.name}
+                          </h4>
+                          <div className="flex items-center space-x-4 text-sm text-purple-700 mb-2">
+                            <div className="flex items-center">
+                              <MapPin className="w-3 h-3 mr-1" />
+                              {event.location}
+                            </div>
+                            <div className="flex items-center">
+                              <Calendar className="w-3 h-3 mr-1" />
+                              {new Date(event.date).toLocaleDateString()}
+                            </div>
+                          </div>
+                          <div className="text-2xl font-bold text-purple-900 mb-2">
+                            ${event.price}
+                          </div>
+                          <p className="text-purple-800 text-sm leading-relaxed" data-testid={`ai-rec-desc-${event.id}`}>
+                            {event.description}
+                          </p>
+                        </div>
+                        
+                        {/* Buy Ticket Button */}
+                        <div className="ml-4 flex-shrink-0">
+                          {event.source === 'ticketmaster' ? (
+                            <Button
+                              onClick={() => window.open(event.external_url || `https://www.ticketmaster.com`, '_blank')}
+                              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2"
+                              data-testid={`ai-buy-tm-${event.id}`}
+                            >
+                              Buy on TicketMaster
+                            </Button>
+                          ) : (
+                            <Link to={`/book/${event.id}`}>
+                              <Button 
+                                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2"
+                                disabled={event.available_tickets === 0}
+                                data-testid={`ai-buy-local-${event.id}`}
+                              >
+                                {event.available_tickets === 0 ? 'Sold Out' : 'Buy Ticket'}
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Original AI Analysis Text (if needed for additional insights) */}
+                {results.ai_analysis && (
+                  <div className="mt-6 pt-4 border-t border-purple-200">
+                    <h4 className="font-medium text-purple-900 mb-2">AI Analysis</h4>
+                    <div 
+                      className="text-purple-800 text-sm leading-relaxed ai-response-content" 
+                      data-testid="ai-analysis-text"
+                      dangerouslySetInnerHTML={{ __html: results.ai_analysis }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
