@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
+import ChatBot from './ChatBot';
 import { 
   Check, Zap, Sparkles, TrendingUp, Shield, Clock, 
   CreditCard, Star, ArrowRight, Phone, Mail, DollarSign,
