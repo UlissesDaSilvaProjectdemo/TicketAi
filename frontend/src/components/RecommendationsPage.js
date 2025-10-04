@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
 import { Calendar, MapPin, DollarSign, Users, Sparkles, Brain, Wand2 } from 'lucide-react';
+import EventCard from './EventCard';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
