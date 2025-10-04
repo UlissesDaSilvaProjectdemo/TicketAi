@@ -330,6 +330,105 @@ const BookingForm = ({ events }) => {
                     </div>
                   </div>
 
+                  {/* Payment Method */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Payment Method</h3>
+                    
+                    {/* Credit Balance Display */}
+                    {creditBalance && (
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <Coins className="w-5 h-5 text-emerald-600 mr-2" />
+                            <span className="text-sm font-medium text-emerald-800">
+                              Current Balance: {creditBalance.balance} credits
+                            </span>
+                          </div>
+                          <span className="text-xs text-emerald-600">
+                            5 credits per ticket
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      {/* Credits Payment Option */}
+                      <label className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${
+                        bookingData.paymentMethod === 'credits' 
+                          ? 'border-emerald-500 bg-emerald-50' 
+                          : 'border-gray-200 hover:bg-gray-50'
+                      } ${!creditBalance || creditBalance.balance < 5 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="credits"
+                          checked={bookingData.paymentMethod === 'credits'}
+                          onChange={(e) => setBookingData({ ...bookingData, paymentMethod: e.target.value })}
+                          className="text-emerald-600"
+                          disabled={!creditBalance || creditBalance.balance < 5}
+                          data-testid="payment-method-credits"
+                        />
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-900 flex items-center">
+                            <Coins className="w-4 h-4 mr-2" />
+                            Pay with Credits
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {creditBalance && creditBalance.balance >= 5 
+                              ? `Use 5 credits (${creditBalance.balance - 5} remaining)`
+                              : 'Insufficient credits (need 5 credits)'
+                            }
+                          </div>
+                        </div>
+                        <div className="font-semibold text-emerald-600">5 Credits</div>
+                      </label>
+
+                      {/* Card Payment Option */}
+                      <label className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${
+                        bookingData.paymentMethod === 'card' 
+                          ? 'border-indigo-500 bg-indigo-50' 
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="card"
+                          checked={bookingData.paymentMethod === 'card'}
+                          onChange={(e) => setBookingData({ ...bookingData, paymentMethod: e.target.value })}
+                          className="text-indigo-600"
+                          data-testid="payment-method-card"
+                        />
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-900 flex items-center">
+                            <CreditCard className="w-4 h-4 mr-2" />
+                            Pay with Credit Card
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            Secure payment via Stripe
+                          </div>
+                        </div>
+                        <div className="font-semibold text-indigo-600">${event.price}</div>
+                      </label>
+                    </div>
+
+                    {/* Buy Credits Link */}
+                    {(!creditBalance || creditBalance.balance < 5) && (
+                      <div className="text-center p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-sm text-yellow-800 mb-2">
+                          Need more credits? 
+                        </p>
+                        <Button 
+                          type="button"
+                          size="sm" 
+                          onClick={() => window.open('/pricing', '_blank')}
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                        >
+                          Buy Credits
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
                   <Button type="submit" className="w-full btn-primary" data-testid="proceed-to-payment-btn">
                     Proceed to Payment
                   </Button>
