@@ -119,15 +119,18 @@
 
   - task: "Credit balance management APIs"
     implemented: true
-    working: true
+    working: false
     file: "server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Added /credits/balance, /credits/transactions, /credits/packs endpoints with automatic 50 free trial credits"
+      - working: false
+        agent: "testing"
+        comment: "❌ FAILED: Credit balance API returning 401 authentication errors. Frontend not receiving credit balance data, causing dashboard and booking form to not display credit information properly."
 
   - task: "Credit purchase system with Stripe integration"
     implemented: true
