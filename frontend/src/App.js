@@ -165,6 +165,7 @@ function App() {
               />
               <Route path="/recommendations" element={<RecommendationsPage />} />
               <Route path="/search-results" element={<SearchResultsPage />} />
+              <Route path="/ai-demo" element={<AIAnalysisDemo />} />
             </Routes>
           </main>
           {showAuth && <AuthModal />}
