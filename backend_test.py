@@ -396,7 +396,7 @@ class TicketAITester:
         user_data = {
             "name": f"Credit Test User {timestamp}",
             "email": test_email,
-            "password": "TestPassword123!"
+            "password": "TestPass123"
         }
         
         success, response = self.run_test("User Registration (Credit Check)", "POST", "auth/register", 200, user_data)
