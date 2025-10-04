@@ -211,103 +211,11 @@ const RecommendationsPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendations.map((event) => (
-              <Card 
+              <EventCard 
                 key={event.id} 
-                className="event-card overflow-hidden hover:shadow-2xl transition-all duration-300"
-                data-testid={`recommended-event-${event.id}`}
-              >
-                {/* Event Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={event.image_url || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800'}
-                    alt={event.name}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800';
-                    }}
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Badge className="badge-primary" data-testid={`recommended-event-category-${event.id}`}>
-                      {event.category}
-                    </Badge>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-purple-600" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-4 right-4">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
-                      <span className="text-sm font-semibold text-gray-900">
-                        ${event.price}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2" data-testid={`recommended-event-title-${event.id}`}>
-                    {event.name}
-                  </CardTitle>
-                  <CardDescription className="text-gray-600 line-clamp-2" data-testid={`recommended-event-description-${event.id}`}>
-                    {event.description}
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  {/* Event Details */}
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="w-4 h-4 mr-2 text-indigo-600" />
-                      <span data-testid={`recommended-event-date-${event.id}`}>
-                        {formatDate(event.date)}
-                      </span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="w-4 h-4 mr-2 text-indigo-600" />
-                      <span data-testid={`recommended-event-location-${event.id}`}>
-                        {event.location}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center text-gray-600">
-                        <Users className="w-4 h-4 mr-2 text-indigo-600" />
-                        <span data-testid={`recommended-event-tickets-${event.id}`}>
-                          {event.available_tickets} tickets left
-                        </span>
-                      </div>
-                      <div className="flex items-center font-semibold text-lg text-indigo-600">
-                        <DollarSign className="w-4 h-4 mr-1" />
-                        <span data-testid={`recommended-event-price-${event.id}`}>
-                          {event.price}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-3 pt-4">
-                    <Link to={`/events/${event.id}`} className="flex-1">
-                      <Button 
-                        variant="outline" 
-                        className="w-full btn-secondary"
-                        data-testid={`view-recommended-event-btn-${event.id}`}
-                      >
-                        View Details
-                      </Button>
-                    </Link>
-                    <Link to={`/book/${event.id}`} className="flex-1">
-                      <Button 
-                        className="w-full btn-primary"
-                        disabled={event.available_tickets === 0}
-                        data-testid={`book-recommended-event-btn-${event.id}`}
-                      >
-                        {event.available_tickets === 0 ? 'Sold Out' : 'Book Now'}
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+                event={event}
+                testIdPrefix="recommended-event"
+              />
             ))}
           </div>
 
