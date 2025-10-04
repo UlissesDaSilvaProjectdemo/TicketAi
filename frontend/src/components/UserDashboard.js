@@ -103,7 +103,39 @@ const UserDashboard = () => {
       </div>
 
       {/* Dashboard Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Credit Balance Card */}
+        <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-emerald-700">Credit Balance</p>
+                <p className="text-2xl font-bold text-emerald-900" data-testid="credit-balance">
+                  {creditBalance ? creditBalance.balance : '...'}
+                </p>
+                <p className="text-xs text-emerald-600 mt-1">
+                  5 credits = 1 ticket booking
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                <Coins className="w-6 h-6 text-emerald-600" />
+              </div>
+            </div>
+            <div className="mt-4">
+              <Link to="/pricing">
+                <Button 
+                  size="sm" 
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                  data-testid="buy-credits-dashboard-btn"
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Buy Credits
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
