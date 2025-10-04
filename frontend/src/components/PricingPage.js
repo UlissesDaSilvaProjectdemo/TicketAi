@@ -115,7 +115,7 @@ const PricingPage = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       
-      alert('🎉 Free trial activated! You now have 500 free searches.');
+      alert('🎉 Free trial activated! You now have 100 free searches.');
       navigate('/dashboard');
     } catch (error) {
       console.error('Error activating free trial:', error);
