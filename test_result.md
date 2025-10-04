@@ -128,15 +128,18 @@ backend:
   
   - task: "Create credit management API endpoints"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented credit management APIs: /credits/balance, /credits/free-trial, /credits/packs, /credits/purchase, /credits/status/{session_id}, /webhook/stripe. Needs testing."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: All credit management APIs working correctly. GET /credits/balance returns user credit info (requires auth). POST /credits/free-trial activates 100 free credits (requires auth). GET /credits/packs returns starter pack ($9.99/100 searches). POST /credits/purchase creates Stripe checkout sessions. GET /credits/status/{session_id} checks payment status. POST /webhook/stripe handles webhooks. All authentication and error handling working properly."
   
   - task: "Integrate payment systems (Stripe, PayPal, Apple Pay, Google Pay)"
     implemented: true
