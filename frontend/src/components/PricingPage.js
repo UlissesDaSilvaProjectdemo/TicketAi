@@ -22,58 +22,19 @@ const PricingPage = () => {
 
   const creditPacks = [
     {
-      id: 'small',
-      name: 'Small Pack',
-      price: 10,
-      credits: 500,
-      searches: 500,
-      color: 'from-blue-500 to-cyan-500',
-      popular: false,
+      id: 'starter',
+      name: 'Starter Pack',
+      price: 9.99,
+      credits: 100,
+      searches: 100,
+      color: 'from-indigo-500 to-purple-500',
+      popular: true,
       features: [
-        '500 AI-powered searches',
-        'Basic event filtering',
+        '100 AI-powered searches',
+        'Advanced event filtering',
         'Email support',
         '12-month credit validity',
         'API access'
-      ]
-    },
-    {
-      id: 'medium',
-      name: 'Medium Pack',
-      price: 45,
-      credits: 2500,
-      searches: 2500,
-      color: 'from-purple-500 to-pink-500',
-      popular: true,
-      savings: 55,
-      features: [
-        '2,500 AI-powered searches',
-        'Advanced filtering & sorting',
-        'Priority email support',
-        '12-month credit validity',
-        'Full API access',
-        'Usage analytics',
-        'Custom integrations'
-      ]
-    },
-    {
-      id: 'large',
-      name: 'Large Pack',
-      price: 80,
-      credits: 5000,
-      searches: 5000,
-      color: 'from-emerald-500 to-teal-500',
-      popular: false,
-      savings: 120,
-      features: [
-        '5,000 AI-powered searches',
-        'All advanced features',
-        'Priority support + phone',
-        '12-month credit validity',
-        'Full API access',
-        'Advanced analytics',
-        'Custom integrations',
-        'Dedicated account manager'
       ]
     }
   ];
