@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { Calendar, MapPin, DollarSign, Users, ExternalLink, Sparkles, TrendingUp } from 'lucide-react';
 import SmartSearch from './SmartSearch';
+import EventCard from './EventCard';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
