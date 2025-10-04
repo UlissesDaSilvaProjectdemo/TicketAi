@@ -266,7 +266,7 @@ class TicketAITester:
             "payment_method": "stripe"
         }
         
-        success, response = self.run_test("Credit Purchase (Unauthenticated)", "POST", "credits/purchase", 401, purchase_data)
+        success, response = self.run_test("Credit Purchase (Unauthenticated)", "POST", "credits/purchase", 403, purchase_data)
         
         # Restore token
         self.token = temp_token
