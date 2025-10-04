@@ -77,6 +77,11 @@ const Header = () => {
                   <p className="text-xs text-gray-500" data-testid="user-email">
                     {user.email}
                   </p>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-medium" data-testid="credit-balance">
+                      💳 {user.credits || 0} credits
+                    </span>
+                  </div>
                 </div>
                 <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
                   <span className="text-indigo-600 font-semibold text-sm">
