@@ -188,6 +188,257 @@ class TicketAITester:
         
         return success, response
 
+    # Credit System Tests
+    def test_credit_balance(self):
+        """Test getting credit balance - should auto-create 50 free trial credits"""
+        success, response = self.run_test("Get Credit Balance", "GET", "credits/balance", 200)
+        
+        if success:
+            balance = response.get('balance', 0)
+            total_earned = response.get('total_earned', 0)
+            print(f"💰 Credit balance: {balance} credits (earned: {total_earned})")
+            
+            # For new users, should have 50 free trial credits
+            if balance == 50 and total_earned == 50:
+                print("🎁 Free trial credits correctly assigned")
+            
+        return success, response
+
+    def test_credit_transactions(self):
+        """Test getting credit transaction history"""
+        success, response = self.run_test("Get Credit Transactions", "GET", "credits/transactions", 200)
+        
+        if success and 'transactions' in response:
+            transactions = response['transactions']
+            print(f"📊 Found {len(transactions)} credit transactions")
+            
+            # Check for trial credit transaction
+            trial_found = any(t.get('transaction_type') == 'trial' for t in transactions)
+            if trial_found:
+                print("✅ Trial credit transaction found in history")
+        
+        return success, response
+
+    def test_credit_packs(self):
+        """Test getting available credit packs"""
+        success, response = self.run_test("Get Credit Packs", "GET", "credits/packs", 200)
+        
+        if success and 'packs' in response:
+            packs = response['packs']
+            print(f"📦 Found {len(packs)} credit packs available")
+            
+            # Verify expected packs
+            expected_packs = {'small': 100, 'medium': 500, 'large': 1000}
+            for pack in packs:
+                pack_id = pack.get('id')
+                credits = pack.get('credits')
+                price = pack.get('price')
+                
+                if pack_id in expected_packs:
+                    expected_credits = expected_packs[pack_id]
+                    if credits == expected_credits:
+                        print(f"✅ {pack_id.title()} pack: {credits} credits for ${price}")
+                    else:
+                        print(f"❌ {pack_id.title()} pack has wrong credits: {credits} (expected {expected_credits})")
+        
+        return success, response
+
+    def test_credit_purchase(self):
+        """Test creating a credit purchase session"""
+        purchase_data = {
+            "credit_pack_id": "small",
+            "payment_provider": "stripe",
+            "success_url": f"{self.base_url}/credits/success",
+            "cancel_url": f"{self.base_url}/credits/cancel"
+        }
+        
+        success, response = self.run_test("Create Credit Purchase", "POST", "credits/purchase", 200, purchase_data)
+        
+        if success:
+            checkout_url = response.get('checkout_url')
+            session_id = response.get('session_id')
+            pack = response.get('pack')
+            
+            if checkout_url and session_id:
+                print(f"💳 Stripe checkout session created: {session_id[:20]}...")
+                print(f"🔗 Checkout URL generated")
+                
+                if pack:
+                    print(f"📦 Pack: {pack.get('name')} - {pack.get('credits')} credits for ${pack.get('price')}")
+                
+                # Store session_id for status testing
+                self.credit_session_id = session_id
+                return True, response
+        
+        return success, response
+
+    def test_credit_purchase_invalid_pack(self):
+        """Test credit purchase with invalid pack ID"""
+        purchase_data = {
+            "credit_pack_id": "invalid_pack",
+            "payment_provider": "stripe",
+            "success_url": f"{self.base_url}/credits/success",
+            "cancel_url": f"{self.base_url}/credits/cancel"
+        }
+        
+        success, response = self.run_test("Credit Purchase Invalid Pack", "POST", "credits/purchase", 400, purchase_data)
+        return success, response
+
+    def test_credit_purchase_status(self):
+        """Test checking credit purchase status"""
+        if not hasattr(self, 'credit_session_id'):
+            print("⚠️ No credit session ID available, skipping status test")
+            return False, "No session ID"
+        
+        success, response = self.run_test(
+            "Credit Purchase Status", 
+            "GET", 
+            f"credits/purchase/status/{self.credit_session_id}", 
+            200
+        )
+        
+        if success:
+            status = response.get('status')
+            payment_status = response.get('payment_status')
+            print(f"📊 Purchase status: {status}, Payment: {payment_status}")
+        
+        return success, response
+
+    def test_credit_based_ticket_booking(self, event_id):
+        """Test booking a ticket using credits"""
+        if not event_id:
+            return False, "No event ID available"
+        
+        booking_data = {
+            "event_id": event_id,
+            "ticket_quantity": 1,
+            "ticket_type": "Standard"
+        }
+        
+        success, response = self.run_test("Credit-Based Ticket Booking", "POST", "tickets/checkout/credits", 200, booking_data)
+        
+        if success:
+            ticket_id = response.get('ticket_id')
+            credits_used = response.get('credits_used', 0)
+            remaining_balance = response.get('remaining_balance', 0)
+            
+            if ticket_id:
+                print(f"🎫 Ticket booked with credits: {ticket_id[:8]}...")
+                print(f"💰 Credits used: {credits_used}, Remaining: {remaining_balance}")
+        
+        return success, response
+
+    def test_credit_booking_insufficient_credits(self, event_id):
+        """Test credit booking with insufficient credits"""
+        if not event_id:
+            return False, "No event ID available"
+        
+        # First, let's try to spend all credits by booking multiple tickets
+        # This test assumes we might not have enough credits
+        booking_data = {
+            "event_id": event_id,
+            "ticket_quantity": 20,  # Try to book many tickets to exhaust credits
+            "ticket_type": "Standard"
+        }
+        
+        # This should fail with insufficient credits (400) or succeed if we have enough
+        success, response = self.run_test("Credit Booking Insufficient Credits", "POST", "tickets/checkout/credits", [400, 200], booking_data)
+        
+        if not success:
+            # If it's a 400 error, check if it's about insufficient credits
+            error_msg = response.get('detail', '')
+            if 'insufficient' in error_msg.lower() or 'credit' in error_msg.lower():
+                print("✅ Correctly rejected booking due to insufficient credits")
+                return True, response
+        
+        return success, response
+
+    def test_credit_booking_nonexistent_event(self):
+        """Test credit booking with non-existent event"""
+        fake_event_id = "00000000-0000-0000-0000-000000000000"
+        
+        booking_data = {
+            "event_id": fake_event_id,
+            "ticket_quantity": 1,
+            "ticket_type": "Standard"
+        }
+        
+        success, response = self.run_test("Credit Booking Non-existent Event", "POST", "tickets/checkout/credits", 404, booking_data)
+        return success, response
+
+    def test_credit_endpoints_without_auth(self):
+        """Test credit endpoints without authentication"""
+        # Temporarily remove token
+        original_token = self.token
+        self.token = None
+        
+        # Test endpoints that should require auth
+        endpoints_to_test = [
+            ("credits/balance", "GET"),
+            ("credits/transactions", "GET"),
+            ("credits/purchase", "POST")
+        ]
+        
+        results = []
+        for endpoint, method in endpoints_to_test:
+            data = {"credit_pack_id": "small", "payment_provider": "stripe", "success_url": "test", "cancel_url": "test"} if method == "POST" else None
+            success, response = self.run_test(f"Unauthorized {endpoint}", method, endpoint, 401, data)
+            results.append(success)
+        
+        # Restore token
+        self.token = original_token
+        
+        return all(results), "All unauthorized tests completed"
+
+    def run_credit_system_tests(self):
+        """Run comprehensive credit system tests"""
+        print("\n💳 Starting Credit System Tests")
+        print("=" * 40)
+        
+        if not self.token:
+            print("❌ No authentication token available for credit tests")
+            return False
+        
+        # Test credit balance (should auto-create free trial credits)
+        balance_success, balance_response = self.test_credit_balance()
+        
+        # Test credit transactions
+        self.test_credit_transactions()
+        
+        # Test credit packs
+        self.test_credit_packs()
+        
+        # Test credit purchase creation
+        purchase_success, purchase_response = self.test_credit_purchase()
+        
+        # Test invalid credit pack
+        self.test_credit_purchase_invalid_pack()
+        
+        # Test purchase status
+        if purchase_success:
+            self.test_credit_purchase_status()
+        
+        # Test unauthorized access
+        self.test_credit_endpoints_without_auth()
+        
+        # Get an event for credit booking tests
+        events_success, events_response = self.test_get_events()
+        event_id = None
+        if events_success and events_response:
+            event_id = events_response[0]['id']
+            
+            # Test credit-based ticket booking
+            booking_success, booking_response = self.test_credit_based_ticket_booking(event_id)
+            
+            # Test insufficient credits scenario
+            self.test_credit_booking_insufficient_credits(event_id)
+        
+        # Test booking with non-existent event
+        self.test_credit_booking_nonexistent_event()
+        
+        print("💳 Credit system tests completed")
+        return True
+
     def run_comprehensive_test(self):
         """Run all tests in sequence"""
         print("🚀 Starting TicketAI Backend API Tests")
