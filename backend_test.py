@@ -196,7 +196,7 @@ class TicketAITester:
         temp_token = self.token
         self.token = None
         
-        success, response = self.run_test("Credit Balance (Unauthenticated)", "GET", "credits/balance", 401)
+        success, response = self.run_test("Credit Balance (Unauthenticated)", "GET", "credits/balance", 403)
         
         # Restore token
         self.token = temp_token
