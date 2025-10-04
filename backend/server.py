@@ -735,13 +735,55 @@ async def smart_search(
                         enriched_results.append(event.dict())
                         break
         
-        return {
+        # Deduct credit for authenticated users and log usage
+        credits_remaining = None
+        if current_user:
+            # Deduct 1 credit
+            result = await db.users.update_one(
+                {"id": current_user.id},
+                {
+                    "$inc": {
+                        "credits": -1,
+                        "total_searches_performed": 1
+                    }
+                }
+            )
+            
+            # Get updated credit count
+            updated_user = await db.users.find_one({"id": current_user.id})
+            credits_remaining = updated_user.get("credits", 0)
+            
+            # Log credit usage
+            credit_log = CreditUsageLog(
+                user_id=current_user.id,
+                user_email=current_user.email,
+                action="search",
+                credits_deducted=1,
+                remaining_credits=credits_remaining,
+                query=request.query,
+                session_id=search_context.session_id
+            )
+            
+            await db.credit_usage_logs.insert_one(credit_log.dict())
+        
+        # Prepare response
+        response = {
             'events': enriched_results,
             'ai_analysis': search_results['ai_explanation'],
             'search_interpretation': search_results['search_query'],
             'total_found': search_results['total_found'],
             'intent_analysis': search_results['intent']
         }
+        
+        # Add credit info for authenticated users
+        if current_user:
+            response['credits_remaining'] = credits_remaining
+            if credits_remaining <= 5:  # Low credit warning
+                response['credit_warning'] = True
+                if credits_remaining > 0:
+                    response['ai_analysis'] += f"\n\n⚠️ **Low Credits Warning:** You have {credits_remaining} searches remaining."
+        
+        return response
         
     except Exception as e:
         logging.error(f"Error in smart search: {str(e)}")
