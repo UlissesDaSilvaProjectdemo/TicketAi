@@ -183,15 +183,18 @@
 
   - task: "Credit balance display in user dashboard"
     implemented: true
-    working: true
+    working: false
     file: "UserDashboard.js"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: true
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Added credit balance card with buy credits button and real-time balance display"
+      - working: false
+        agent: "testing"
+        comment: "❌ FAILED: Credit balance not displaying in dashboard. Buy Credits button also not found. Authentication issues may be preventing proper data loading (401 errors observed)."
 
   - task: "Credit purchase success page with polling"
     implemented: true
