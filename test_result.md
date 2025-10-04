@@ -252,6 +252,8 @@ test_plan:
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
+  frontend_testing_completed: true
+  saas_flows_tested: true
 
 agent_communication:
   - agent: "main"
