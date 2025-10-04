@@ -464,13 +464,119 @@ async def get_credit_packs():
             "price": 9.99,
             "credits": 100,
             "searches": 100,
-            "popular": True,
+            "popular": False,
+            "badge": "Free Trial Option",
             "features": [
                 "100 AI-powered searches",
                 "Advanced event filtering",
                 "Email support",
                 "12-month credit validity",
                 "API access"
+            ]
+        },
+        {
+            "id": "quick_topup",
+            "name": "Quick Top-up",
+            "price": 1.0,
+            "credits": 5,
+            "searches": 5,
+            "popular": False,
+            "badge": "Test Package",
+            "features": [
+                "5 AI-powered searches",
+                "Perfect for testing",
+                "Instant activation"
+            ]
+        },
+        {
+            "id": "basic_pack",
+            "name": "Basic Pack",
+            "price": 20.0,
+            "credits": 100,
+            "searches": 100,
+            "popular": False,
+            "features": [
+                "100 AI-powered searches",
+                "Advanced event filtering",
+                "Email support",
+                "12-month credit validity",
+                "API access"
+            ]
+        },
+        {
+            "id": "value_pack",
+            "name": "Value Pack",
+            "price": 50.0,
+            "credits": 250,
+            "searches": 250,
+            "popular": True,
+            "features": [
+                "250 AI-powered searches",
+                "Advanced filtering & sorting",
+                "Priority email support",
+                "12-month credit validity",
+                "Full API access",
+                "Usage analytics"
+            ]
+        },
+        {
+            "id": "premium_pack",
+            "name": "Premium Pack",
+            "price": 100.0,
+            "credits": 500,
+            "searches": 500,
+            "popular": False,
+            "features": [
+                "500 AI-powered searches",
+                "All premium features",
+                "Priority support",
+                "12-month credit validity",
+                "Full API access",
+                "Advanced analytics",
+                "Custom integrations"
+            ]
+        },
+        {
+            "id": "business_bundle",
+            "name": "Business Bundle",
+            "price": 500.0,
+            "credits": 3000,
+            "searches": 3000,
+            "originalCredits": 2500,
+            "popular": False,
+            "badge": "20% Bonus",
+            "savings": 100,
+            "features": [
+                "3,000 AI-powered searches",
+                "20% bonus credits (2,500 + 500 free)",
+                "Business-grade support",
+                "12-month credit validity",
+                "Full API access",
+                "Advanced analytics",
+                "Custom integrations",
+                "Priority processing"
+            ]
+        },
+        {
+            "id": "enterprise_bundle",
+            "name": "Enterprise Bundle",
+            "price": 1000.0,
+            "credits": 6000,
+            "searches": 6000,
+            "originalCredits": 5000,
+            "popular": False,
+            "badge": "20% Bonus",
+            "savings": 200,
+            "features": [
+                "6,000 AI-powered searches",
+                "20% bonus credits (5,000 + 1,000 free)",
+                "Enterprise-grade support",
+                "12-month credit validity",
+                "Full API access",
+                "Advanced analytics",
+                "Custom integrations",
+                "Dedicated account manager",
+                "Priority processing"
             ]
         }
     ]
