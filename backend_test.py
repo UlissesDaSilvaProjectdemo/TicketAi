@@ -85,7 +85,7 @@ class TicketAITester:
         user_data = {
             "name": f"Test User {timestamp}",
             "email": self.user_email,
-            "password": "TestPass123!"  # Shorter password to avoid bcrypt 72-byte limit
+            "password": "test123"  # Very short password to avoid bcrypt issues
         }
         
         success, response = self.run_test("User Registration", "POST", "auth/register", 200, user_data)
