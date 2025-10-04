@@ -19,6 +19,7 @@ const UserDashboard = () => {
 
   useEffect(() => {
     fetchUserTickets();
+    fetchCreditBalance();
   }, [user]);
 
   const fetchUserTickets = async () => {
