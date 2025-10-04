@@ -263,12 +263,14 @@ const BookingForm = ({ events }) => {
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl font-bold">
-                {step === 1 ? 'Booking Details' : 'Payment Information'}
+                {step === 1 ? 'Booking Details' : (bookingData.paymentMethod === 'credits' ? 'Confirm Booking' : 'Payment Information')}
               </CardTitle>
               <CardDescription>
                 {step === 1 
                   ? 'Review your booking details and proceed to payment'
-                  : 'Enter your payment information to complete the booking'
+                  : (bookingData.paymentMethod === 'credits' 
+                    ? 'Confirm your booking with credits'
+                    : 'Enter your payment information to complete the booking')
                 }
               </CardDescription>
             </CardHeader>
