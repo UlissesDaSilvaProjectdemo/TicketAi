@@ -224,132 +224,13 @@ const SearchResultsPage = () => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredResults.map((event) => {
-            const sourceBadge = getSourceBadge(event.source);
-            
-            return (
-              <Card 
-                key={event.id} 
-                className="event-card overflow-hidden hover:shadow-2xl transition-all duration-300"
-                data-testid={`search-result-${event.id}`}
-              >
-                {/* Event Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={event.image_url || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800'}
-                    alt={event.name}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800';
-                    }}
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Badge className="badge-primary" data-testid={`event-category-${event.id}`}>
-                      {event.category}
-                    </Badge>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <Badge className={sourceBadge.class} data-testid={`event-source-${event.id}`}>
-                      {sourceBadge.text}
-                    </Badge>
-                  </div>
-                  <div className="absolute bottom-4 right-4">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
-                      <span className="text-sm font-semibold text-gray-900">
-                        ${event.price}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2" data-testid={`event-title-${event.id}`}>
-                    {event.name}
-                  </CardTitle>
-                  <CardDescription className="text-gray-600 line-clamp-2" data-testid={`event-description-${event.id}`}>
-                    {event.description}
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  {/* Event Details */}
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="w-4 h-4 mr-2 text-indigo-600" />
-                      <span data-testid={`event-date-${event.id}`}>
-                        {formatDate(event.date)}
-                      </span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="w-4 h-4 mr-2 text-indigo-600" />
-                      <span data-testid={`event-location-${event.id}`}>
-                        {event.location}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center text-gray-600">
-                        <Users className="w-4 h-4 mr-2 text-indigo-600" />
-                        <span data-testid={`event-tickets-${event.id}`}>
-                          {event.available_tickets} tickets left
-                        </span>
-                      </div>
-                      <div className="flex items-center font-semibold text-lg text-indigo-600">
-                        <DollarSign className="w-4 h-4 mr-1" />
-                        <span data-testid={`event-price-${event.id}`}>
-                          {event.price}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-3 pt-4">
-                    {event.source === 'ticketmaster' ? (
-                      <>
-                        <Button
-                          onClick={() => window.open(event.external_url || `https://www.ticketmaster.com`, '_blank')}
-                          variant="outline"
-                          className="flex-1 btn-secondary"
-                          data-testid={`view-on-ticketmaster-${event.id}`}
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          View on TicketMaster
-                        </Button>
-                        <Button
-                          onClick={() => window.open(event.external_url || `https://www.ticketmaster.com`, '_blank')}
-                          className="flex-1 btn-primary"
-                          data-testid={`buy-on-ticketmaster-${event.id}`}
-                        >
-                          Buy on TicketMaster
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Link to={`/events/${event.id}`} className="flex-1">
-                          <Button 
-                            variant="outline" 
-                            className="w-full btn-secondary"
-                            data-testid={`view-local-event-${event.id}`}
-                          >
-                            View Details
-                          </Button>
-                        </Link>
-                        <Link to={`/book/${event.id}`} className="flex-1">
-                          <Button 
-                            className="w-full btn-primary"
-                            disabled={event.available_tickets === 0}
-                            data-testid={`book-local-event-${event.id}`}
-                          >
-                            {event.available_tickets === 0 ? 'Sold Out' : 'Book Now'}
-                          </Button>
-                        </Link>
-                      </>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {filteredResults.map((event) => (
+            <EventCard 
+              key={event.id} 
+              event={event}
+              testIdPrefix="search-result"
+            />
+          ))}
         </div>
       )}
     </div>
