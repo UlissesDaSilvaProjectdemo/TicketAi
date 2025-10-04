@@ -298,7 +298,7 @@ const PricingPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold">Try Before You Buy</h3>
                 <p className="text-green-100 text-lg">
-                  Get 500 free searches with no credit card required
+                  Get 50 free credits with no credit card required
                 </p>
                 <Button
                   onClick={handleFreeTrial}
