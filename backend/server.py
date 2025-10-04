@@ -310,12 +310,22 @@ ai_search_engine = AISearchEngine()
 
 # Authentication Functions
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+    if pwd_context:
+        return pwd_context.verify(plain_password, hashed_password)
+    else:
+        # Fallback verification using simple hash comparison
+        import hashlib
+        return hashlib.sha256(plain_password.encode()).hexdigest() == hashed_password
 
 def get_password_hash(password):
-    # Truncate password to avoid bcrypt 72-byte limit
-    password = password[:72] if len(password.encode('utf-8')) > 72 else password
-    return pwd_context.hash(password)
+    if pwd_context:
+        # Truncate password to avoid bcrypt 72-byte limit
+        password = password[:72] if len(password.encode('utf-8')) > 72 else password
+        return pwd_context.hash(password)
+    else:
+        # Fallback hashing for testing
+        import hashlib
+        return hashlib.sha256(password.encode()).hexdigest()
 
 def create_access_token(data: dict):
     to_encode = data.copy()
