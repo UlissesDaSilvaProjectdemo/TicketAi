@@ -131,15 +131,18 @@
 
   - task: "Credit purchase system with Stripe integration"
     implemented: true
-    working: true
+    working: false
     file: "server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Integrated Stripe checkout with dynamic webhook URL, purchase tracking, and status polling"
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL FAILURE: Buy Credits buttons not redirecting to Stripe checkout. Clicking buttons stays on pricing page instead of redirecting to checkout.stripe.com. This breaks the entire credit purchase flow."
 
   - task: "Credit-based ticket booking endpoint"
     implemented: true
