@@ -491,6 +491,12 @@ class TicketAITester:
         # Test mock payment
         self.test_mock_payment()
         
+        # Run comprehensive credit system tests
+        if login_success:
+            self.run_credit_system_tests()
+        else:
+            print("❌ Skipping credit system tests due to authentication failure")
+        
         # Print summary
         print("\n" + "=" * 50)
         print(f"📊 Test Summary: {self.tests_passed}/{self.tests_run} tests passed")
