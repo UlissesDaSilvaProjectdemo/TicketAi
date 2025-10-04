@@ -543,6 +543,8 @@ async def purchase_credits(
         
         return {"checkout_url": session.url, "session_id": session.session_id}
         
+    except HTTPException:
+        raise  # Re-raise HTTPExceptions as-is
     except Exception as e:
         logging.error(f"Error creating credit purchase session: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create payment session")
