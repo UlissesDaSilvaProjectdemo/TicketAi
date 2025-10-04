@@ -45,6 +45,12 @@ class UserResponse(BaseModel):
     preferences: Dict[str, Any]
     wishlist: List[str]
     notification_settings: Dict[str, bool]
+    # Credit System Fields
+    credits: int
+    free_trial_used: bool
+    total_credits_purchased: int
+    total_searches_performed: int
+    last_credit_purchase: Optional[datetime]
     created_at: datetime
 
 # Enhanced Event Models
