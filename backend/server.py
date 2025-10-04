@@ -674,6 +674,24 @@ async def smart_search(
 ):
     """Advanced semantic search with personalization and context understanding"""
     try:
+        # Check credit balance for authenticated users
+        if current_user:
+            user = await db.users.find_one({"id": current_user.id})
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+            
+            user_credits = user.get("credits", 0)
+            if user_credits <= 0:
+                return {
+                    'events': [],
+                    'ai_analysis': "❌ **Insufficient Credits**\n\nYou have run out of search credits! 💳\n\n**Purchase Credits:**\n- Starter Pack: $9.99 for 100 searches\n- Visit our pricing page to get more credits and continue discovering amazing events! 🎉",
+                    'search_interpretation': request.query,
+                    'total_found': 0,
+                    'intent_analysis': {},
+                    'credits_remaining': 0,
+                    'credit_warning': True
+                }
+        
         # Create search context
         search_context = SearchContext(
             query=request.query,
