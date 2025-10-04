@@ -325,14 +325,78 @@ const PricingPage = () => {
           </div>
         </div>
 
-        {/* Credit Packs */}
+        {/* Subscription Plans */}
         <div className="space-y-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Credit Pack</h2>
-            <p className="text-gray-600">No monthly commitment • Credits roll over for 12 months • Cancel anytime</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Subscription Plans</h2>
+            <p className="text-gray-600">Unlimited searches • Priority support • Advanced features</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {subscriptionPlans.map((plan, index) => (
+              <Card 
+                key={plan.id}
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
+                  plan.popular ? 'ring-2 ring-purple-500 shadow-xl' : ''
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute top-0 left-0 right-0">
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-center py-2 text-sm font-semibold">
+                      🏆 MOST POPULAR
+                    </div>
+                  </div>
+                )}
+                
+                <div className={`h-2 bg-gradient-to-r ${plan.color}`}></div>
+                
+                <CardHeader className={`text-center ${plan.popular ? 'pt-8' : 'pt-6'}`}>
+                  <CardTitle className="text-2xl font-bold text-gray-900">
+                    {plan.name}
+                  </CardTitle>
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold text-gray-900">
+                      {typeof plan.price === 'number' ? `$${plan.price}` : plan.price}
+                    </div>
+                    <div className="text-gray-600">
+                      {typeof plan.price === 'number' ? `per ${plan.period}` : plan.period}
+                    </div>
+                  </div>
+                  <CardDescription className="text-center">
+                    {typeof plan.price === 'number' ? 'Unlimited searches included' : 'Tailored to your needs'}
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-6">
+                  <div className="space-y-3">
+                    {plan.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start space-x-3">
+                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-700 text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Button
+                    onClick={() => plan.id === 'enterprise' ? alert('Contact our sales team for Enterprise pricing') : alert('Subscription billing coming soon!')}
+                    className={`w-full py-3 text-lg font-semibold bg-gradient-to-r ${plan.color} text-white hover:shadow-lg transition-all duration-200`}
+                  >
+                    {plan.id === 'enterprise' ? 'Contact Sales' : 'Coming Soon'}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Credit Packs */}
+        <div className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Pay-As-You-Go Credits</h2>
+            <p className="text-gray-600">No monthly commitment • Credits roll over for 12 months • Buy exactly what you need</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {creditPacks.map((pack, index) => (
               <Card 
                 key={pack.id}
