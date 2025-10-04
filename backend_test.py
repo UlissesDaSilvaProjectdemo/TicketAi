@@ -316,7 +316,7 @@ class TicketAITester:
         return success, response
 
     def test_credit_purchase_authenticated(self):
-        """Test credit purchase with authentication"""
+        """Test credit purchase with authentication - starter pack"""
         if not self.token:
             return False, "No authentication token available"
             
@@ -327,13 +327,117 @@ class TicketAITester:
             "payment_method": "stripe"
         }
         
-        success, response = self.run_test("Credit Purchase (Authenticated)", "POST", "credits/purchase", 200, purchase_data)
+        success, response = self.run_test("Credit Purchase - Starter Pack ($9.99/100)", "POST", "credits/purchase", 200, purchase_data)
         
         if success:
             print(f"🛒 Checkout URL: {response.get('checkout_url', 'N/A')[:50]}...")
             print(f"🔑 Session ID: {response.get('session_id', 'N/A')}")
         
         return success, response
+
+    def test_credit_purchase_quick_topup(self):
+        """Test credit purchase - quick topup pack ($1/5 credits)"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        purchase_data = {
+            "pack_id": "quick_topup",
+            "success_url": "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+            "cancel_url": "https://example.com/cancel",
+            "payment_method": "stripe"
+        }
+        
+        success, response = self.run_test("Credit Purchase - Quick Top-up ($1/5)", "POST", "credits/purchase", 200, purchase_data)
+        
+        if success:
+            print(f"🛒 Quick top-up checkout created successfully")
+            print(f"🔑 Session ID: {response.get('session_id', 'N/A')}")
+        
+        return success, response
+
+    def test_credit_purchase_business_bundle(self):
+        """Test credit purchase - business bundle ($500/3000 credits)"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        purchase_data = {
+            "pack_id": "business_bundle",
+            "success_url": "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+            "cancel_url": "https://example.com/cancel",
+            "payment_method": "stripe"
+        }
+        
+        success, response = self.run_test("Credit Purchase - Business Bundle ($500/3000)", "POST", "credits/purchase", 200, purchase_data)
+        
+        if success:
+            print(f"🛒 Business bundle checkout created successfully")
+            print(f"🔑 Session ID: {response.get('session_id', 'N/A')}")
+        
+        return success, response
+
+    def test_credit_purchase_enterprise_bundle(self):
+        """Test credit purchase - enterprise bundle ($1000/6000 credits)"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        purchase_data = {
+            "pack_id": "enterprise_bundle",
+            "success_url": "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+            "cancel_url": "https://example.com/cancel",
+            "payment_method": "stripe"
+        }
+        
+        success, response = self.run_test("Credit Purchase - Enterprise Bundle ($1000/6000)", "POST", "credits/purchase", 200, purchase_data)
+        
+        if success:
+            print(f"🛒 Enterprise bundle checkout created successfully")
+            print(f"🔑 Session ID: {response.get('session_id', 'N/A')}")
+        
+        return success, response
+
+    def test_all_credit_pack_purchases(self):
+        """Test purchasing all 7 credit packs"""
+        if not self.token:
+            return False, "No authentication token available"
+        
+        print("\n💳 Testing All Credit Pack Purchases")
+        print("-" * 40)
+        
+        all_packs = [
+            {"id": "starter", "name": "Starter Pack", "price": 9.99, "credits": 100},
+            {"id": "quick_topup", "name": "Quick Top-up", "price": 1.0, "credits": 5},
+            {"id": "basic_pack", "name": "Basic Pack", "price": 20.0, "credits": 100},
+            {"id": "value_pack", "name": "Value Pack", "price": 50.0, "credits": 250},
+            {"id": "premium_pack", "name": "Premium Pack", "price": 100.0, "credits": 500},
+            {"id": "business_bundle", "name": "Business Bundle", "price": 500.0, "credits": 3000},
+            {"id": "enterprise_bundle", "name": "Enterprise Bundle", "price": 1000.0, "credits": 6000}
+        ]
+        
+        all_success = True
+        
+        for pack in all_packs:
+            purchase_data = {
+                "pack_id": pack["id"],
+                "success_url": "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+                "cancel_url": "https://example.com/cancel",
+                "payment_method": "stripe"
+            }
+            
+            success, response = self.run_test(
+                f"Purchase {pack['name']} (${pack['price']}/{pack['credits']} credits)", 
+                "POST", 
+                "credits/purchase", 
+                200, 
+                purchase_data
+            )
+            
+            if success:
+                print(f"   ✅ {pack['name']}: Checkout session created")
+            else:
+                print(f"   ❌ {pack['name']}: Failed to create checkout session")
+                all_success = False
+        
+        return all_success, {"tested_packs": len(all_packs)}
 
     def test_credit_purchase_invalid_pack(self):
         """Test credit purchase with invalid pack ID"""
