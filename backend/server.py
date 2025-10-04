@@ -303,6 +303,9 @@ ai_search_engine = AISearchEngine()
 
 # Authentication Functions
 def verify_password(plain_password, hashed_password):
+    # Truncate password to 72 bytes to match hashing behavior
+    if len(plain_password.encode('utf-8')) > 72:
+        plain_password = plain_password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password):
