@@ -188,6 +188,279 @@ class TicketAITester:
         
         return success, response
 
+    # ===== CREDIT SYSTEM TESTS =====
+    
+    def test_credit_balance_unauthenticated(self):
+        """Test credit balance endpoint without authentication"""
+        # Temporarily remove token
+        temp_token = self.token
+        self.token = None
+        
+        success, response = self.run_test("Credit Balance (Unauthenticated)", "GET", "credits/balance", 401)
+        
+        # Restore token
+        self.token = temp_token
+        return success, response
+
+    def test_credit_balance_authenticated(self):
+        """Test credit balance endpoint with authentication"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        success, response = self.run_test("Credit Balance (Authenticated)", "GET", "credits/balance", 200)
+        
+        if success:
+            print(f"💰 User credits: {response.get('credits', 'N/A')}")
+            print(f"🎁 Free trial used: {response.get('free_trial_used', 'N/A')}")
+            print(f"📊 Total searches: {response.get('total_searches_performed', 'N/A')}")
+        
+        return success, response
+
+    def test_free_trial_activation_unauthenticated(self):
+        """Test free trial activation without authentication"""
+        # Temporarily remove token
+        temp_token = self.token
+        self.token = None
+        
+        success, response = self.run_test("Free Trial (Unauthenticated)", "POST", "credits/free-trial", 401)
+        
+        # Restore token
+        self.token = temp_token
+        return success, response
+
+    def test_free_trial_activation_authenticated(self):
+        """Test free trial activation with authentication"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        success, response = self.run_test("Free Trial Activation", "POST", "credits/free-trial", 200)
+        
+        if success:
+            print(f"🎁 Free trial result: {response.get('message', 'N/A')}")
+            print(f"💰 Credits added: {response.get('credits_added', 'N/A')}")
+        
+        return success, response
+
+    def test_get_credit_packs(self):
+        """Test getting available credit packs"""
+        success, response = self.run_test("Get Credit Packs", "GET", "credits/packs", 200)
+        
+        if success and 'packs' in response:
+            packs = response['packs']
+            print(f"📦 Found {len(packs)} credit packs")
+            for pack in packs:
+                print(f"   - {pack.get('name', 'N/A')}: ${pack.get('price', 'N/A')} for {pack.get('credits', 'N/A')} credits")
+        
+        return success, response
+
+    def test_credit_purchase_unauthenticated(self):
+        """Test credit purchase without authentication"""
+        # Temporarily remove token
+        temp_token = self.token
+        self.token = None
+        
+        purchase_data = {
+            "pack_id": "starter",
+            "success_url": "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+            "cancel_url": "https://example.com/cancel",
+            "payment_method": "stripe"
+        }
+        
+        success, response = self.run_test("Credit Purchase (Unauthenticated)", "POST", "credits/purchase", 401, purchase_data)
+        
+        # Restore token
+        self.token = temp_token
+        return success, response
+
+    def test_credit_purchase_authenticated(self):
+        """Test credit purchase with authentication"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        purchase_data = {
+            "pack_id": "starter",
+            "success_url": "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+            "cancel_url": "https://example.com/cancel",
+            "payment_method": "stripe"
+        }
+        
+        success, response = self.run_test("Credit Purchase (Authenticated)", "POST", "credits/purchase", 200, purchase_data)
+        
+        if success:
+            print(f"🛒 Checkout URL: {response.get('checkout_url', 'N/A')[:50]}...")
+            print(f"🔑 Session ID: {response.get('session_id', 'N/A')}")
+        
+        return success, response
+
+    def test_credit_purchase_invalid_pack(self):
+        """Test credit purchase with invalid pack ID"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        purchase_data = {
+            "pack_id": "invalid_pack",
+            "success_url": "https://example.com/success?session_id={CHECKOUT_SESSION_ID}",
+            "cancel_url": "https://example.com/cancel",
+            "payment_method": "stripe"
+        }
+        
+        success, response = self.run_test("Credit Purchase (Invalid Pack)", "POST", "credits/purchase", 400, purchase_data)
+        return success, response
+
+    def test_credit_status_unauthenticated(self):
+        """Test credit purchase status without authentication"""
+        # Temporarily remove token
+        temp_token = self.token
+        self.token = None
+        
+        mock_session_id = "cs_test_mock_session_id_12345"
+        success, response = self.run_test("Credit Status (Unauthenticated)", "GET", f"credits/status/{mock_session_id}", 401)
+        
+        # Restore token
+        self.token = temp_token
+        return success, response
+
+    def test_credit_status_authenticated(self):
+        """Test credit purchase status with authentication"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        mock_session_id = "cs_test_mock_session_id_12345"
+        success, response = self.run_test("Credit Status (Authenticated)", "GET", f"credits/status/{mock_session_id}", 404)
+        
+        # 404 is expected for non-existent session
+        if response.get('detail') == 'Transaction not found':
+            print(f"✅ Credit status check working (session not found as expected)")
+            return True, response
+        
+        return success, response
+
+    def test_stripe_webhook_endpoint(self):
+        """Test Stripe webhook endpoint exists"""
+        # Test that the webhook endpoint exists (should return 400 for invalid webhook)
+        success, response = self.run_test("Stripe Webhook Endpoint", "POST", "webhook/stripe", 400, {})
+        
+        # 400 is expected for invalid webhook data
+        if success or "webhook" in str(response).lower():
+            print(f"✅ Stripe webhook endpoint exists")
+            return True, response
+        
+        return success, response
+
+    def test_smart_search_with_credits(self):
+        """Test smart search with credit deduction"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        search_data = {
+            "query": "music concerts in London",
+            "location": "London, UK",
+            "max_results": 5
+        }
+        
+        success, response = self.run_test("Smart Search (With Credits)", "POST", "search/smart", 200, search_data)
+        
+        if success:
+            print(f"🔍 Search results: {len(response.get('events', []))} events found")
+            print(f"💰 Credits remaining: {response.get('credits_remaining', 'N/A')}")
+            if response.get('credit_warning'):
+                print(f"⚠️ Low credit warning displayed")
+        
+        return success, response
+
+    def test_recommendations_with_credits(self):
+        """Test recommendations with credit deduction"""
+        if not self.token:
+            return False, "No authentication token available"
+            
+        recommendation_data = {
+            "user_preferences": "I love jazz music and art exhibitions in London",
+            "location": "London, UK"
+        }
+        
+        success, response = self.run_test("Recommendations (With Credits)", "POST", "recommendations", 200, recommendation_data)
+        
+        if success:
+            print(f"🎯 Recommendations: {len(response.get('recommendations', []))} events")
+            print(f"💰 Credits remaining: {response.get('credits_remaining', 'N/A')}")
+            if response.get('credit_warning'):
+                print(f"⚠️ Low credit warning displayed")
+        
+        return success, response
+
+    def test_user_registration_with_credits(self):
+        """Test that new users get 100 free credits"""
+        timestamp = int(time.time())
+        test_email = f"credituser_{timestamp}@example.com"
+        
+        user_data = {
+            "name": f"Credit Test User {timestamp}",
+            "email": test_email,
+            "password": "TestPassword123!"
+        }
+        
+        success, response = self.run_test("User Registration (Credit Check)", "POST", "auth/register", 200, user_data)
+        
+        if success:
+            # Check if user has credits field
+            credits = response.get('credits', 0)
+            free_trial_used = response.get('free_trial_used', False)
+            print(f"💰 New user credits: {credits}")
+            print(f"🎁 Free trial status: {free_trial_used}")
+            
+            if credits == 100:
+                print(f"✅ New user correctly received 100 free credits")
+            else:
+                print(f"❌ New user should have 100 credits, got {credits}")
+        
+        return success, response
+
+    def run_credit_system_tests(self):
+        """Run comprehensive credit system tests"""
+        print("\n🏦 Starting Credit System Tests")
+        print("=" * 50)
+        
+        # Test credit balance endpoints
+        self.test_credit_balance_unauthenticated()
+        if self.token:
+            self.test_credit_balance_authenticated()
+        
+        # Test free trial activation
+        self.test_free_trial_activation_unauthenticated()
+        if self.token:
+            # Note: This might fail if free trial already used
+            trial_success, trial_response = self.test_free_trial_activation_authenticated()
+            if not trial_success and "already used" in str(trial_response).lower():
+                print("ℹ️ Free trial already used (expected for existing user)")
+        
+        # Test credit packs
+        self.test_get_credit_packs()
+        
+        # Test credit purchase
+        self.test_credit_purchase_unauthenticated()
+        if self.token:
+            self.test_credit_purchase_authenticated()
+            self.test_credit_purchase_invalid_pack()
+        
+        # Test credit status
+        self.test_credit_status_unauthenticated()
+        if self.token:
+            self.test_credit_status_authenticated()
+        
+        # Test webhook endpoint
+        self.test_stripe_webhook_endpoint()
+        
+        # Test AI features with credit deduction
+        if self.token:
+            self.test_smart_search_with_credits()
+            self.test_recommendations_with_credits()
+        
+        # Test new user registration with credits
+        self.test_user_registration_with_credits()
+        
+        print("🏦 Credit System Tests Complete")
+        print("=" * 50)
+
     def run_comprehensive_test(self):
         """Run all tests in sequence"""
         print("🚀 Starting TicketAI Backend API Tests")
