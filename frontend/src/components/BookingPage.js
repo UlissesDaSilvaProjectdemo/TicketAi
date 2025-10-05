@@ -324,6 +324,16 @@ const BookingPage = () => {
                     </div>
                   </div>
 
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Demo Test Card Details:</p>
+                    <div className="text-xs font-mono text-gray-600 space-y-1">
+                      <div>Name: Ulisses Da Silva</div>
+                      <div>Card: 6565 6587 8789 9000</div>
+                      <div>Expiry: 09/27</div>
+                      <div>CVV: 678</div>
+                    </div>
+                  </div>
+
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex justify-between text-sm text-gray-600 mb-1">
                       <span>Subtotal</span>
