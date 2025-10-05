@@ -74,17 +74,16 @@ const EventCard = ({ event, testIdPrefix = 'event' }) => {
               Buy Ticket
             </Button>
           ) : (
-            <Link to={`/book/${event.id}`}>
-              <Button 
-                size="sm"
-                className="btn-primary whitespace-nowrap flex-shrink-0"
-                disabled={event.available_tickets === 0}
-                data-testid={`buy-ticket-btn-${event.id}`}
-              >
-                <ShoppingCart className="w-4 h-4 mr-1" />
-                {event.available_tickets === 0 ? 'Sold Out' : 'Buy Ticket'}
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => window.location.href = `/book/${event.id}`}
+              size="sm"
+              className="btn-primary whitespace-nowrap flex-shrink-0"
+              disabled={event.available_tickets === 0}
+              data-testid={`buy-ticket-btn-${event.id}`}
+            >
+              <ShoppingCart className="w-4 h-4 mr-1" />
+              {event.available_tickets === 0 ? 'Sold Out' : 'Buy Ticket'}
+            </Button>
           )}
         </div>
         
