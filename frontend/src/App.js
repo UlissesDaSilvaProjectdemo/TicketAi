@@ -128,6 +128,7 @@ function App() {
               <Route path="/recommendations" element={<RecommendationsPage />} />
               <Route path="/search-results" element={<SearchResultsPage />} />
               <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/book/:eventId" element={<BookingPage />} />
             </Routes>
           </main>
           {showAuth && <AuthModal />}
