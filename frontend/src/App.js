@@ -130,6 +130,7 @@ function App() {
               <Route path="/search-results" element={<SearchResultsPage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/book/:eventId" element={<BookingPage />} />
+              <Route path="/demo-payment" element={<DemoPaymentPage />} />
             </Routes>
           </main>
           {showAuth && <AuthModal />}
