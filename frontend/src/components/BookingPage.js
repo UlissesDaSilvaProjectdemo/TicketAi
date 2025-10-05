@@ -21,25 +21,28 @@ const BookingPage = () => {
 
   // Mock event data (in real app, this would fetch from API)
   useEffect(() => {
+    // Always show a demo event for testing
+    const demoEvent = {
+      id: eventId || 'demo',
+      name: "Summer Music Festival 2025",
+      description: "Join us for an amazing outdoor music festival featuring top artists from around the world. Food trucks, art installations, and multiple stages await!",
+      date: "2025-07-15T19:00:00Z",
+      location: "Central Park, New York, NY",
+      venue: "Great Lawn",
+      price: 85,
+      available_tickets: 250,
+      category: "Music",
+      image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+      organizer: "NYC Events Co.",
+      duration: "8 hours",
+      age_restriction: "18+"
+    };
+
     // Simulate API call
     setTimeout(() => {
-      setEvent({
-        id: eventId,
-        name: "Summer Music Festival 2025",
-        description: "Join us for an amazing outdoor music festival featuring top artists from around the world. Food trucks, art installations, and multiple stages await!",
-        date: "2025-07-15T19:00:00Z",
-        location: "Central Park, New York, NY",
-        venue: "Great Lawn",
-        price: 85,
-        available_tickets: 250,
-        category: "Music",
-        image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
-        organizer: "NYC Events Co.",
-        duration: "8 hours",
-        age_restriction: "18+"
-      });
+      setEvent(demoEvent);
       setLoading(false);
-    }, 1000);
+    }, 500);
   }, [eventId]);
 
   const formatDate = (dateString) => {
