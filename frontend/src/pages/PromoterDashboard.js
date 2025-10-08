@@ -152,8 +152,11 @@ const PromoterDashboard = () => {
       createdAt: new Date().toISOString(),
       status: 'active',
       promoterId: user.id,
-      views: 0,
-      interestedCount: Math.floor(Math.random() * 50)
+      views: Math.floor(Math.random() * 20),
+      interestedCount: Math.floor(Math.random() * 50),
+      boosted: false,
+      boostLevel: null,
+      boostExpiry: null
     };
 
     // Update events list
