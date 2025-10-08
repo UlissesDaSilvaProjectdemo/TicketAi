@@ -208,7 +208,12 @@ const LandingPage = () => {
               
               <div className="hidden md:flex items-center space-x-6">
                 <button className="text-slate-300 hover:text-white transition-colors">Features</button>
-                <button className="text-slate-300 hover:text-white transition-colors">Pricing</button>
+                <button 
+                  className="text-slate-300 hover:text-white transition-colors"
+                  onClick={() => navigate('/pricing')}
+                >
+                  Pricing
+                </button>
                 <button className="text-slate-300 hover:text-white transition-colors">Community</button>
                 <button 
                   className="text-slate-300 hover:text-white transition-colors"
