@@ -36,6 +36,8 @@ function App() {
           <Route path="/success" element={<Success />} />
           <Route path="/dashboard/fan" element={<DashboardFan />} />
           <Route path="/dashboard/investor" element={<DashboardInvestor />} />
+          <Route path="/promoter-login" element={<PromoterLogin />} />
+          <Route path="/promoter-dashboard" element={<PromoterDashboard />} />
         </Routes>
         <Toaster />
       </Router>
