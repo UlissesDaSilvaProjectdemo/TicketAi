@@ -428,7 +428,14 @@ const LandingPage = () => {
                 "Free outdoor events near me",
                 "Art galleries opening this week"
               ].map((query, index) => (
-                <div key={index} className="p-3 bg-slate-800/30 rounded-lg border border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-colors">
+                <div 
+                  key={index} 
+                  className="p-3 bg-slate-800/30 rounded-lg border border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-colors"
+                  onClick={() => {
+                    setSearchQuery(query);
+                    handleAISearch();
+                  }}
+                >
                   <p className="text-slate-300 text-sm">"{query}"</p>
                 </div>
               ))}
@@ -444,7 +451,14 @@ const LandingPage = () => {
                 "Music festivals in California this summer",
                 "Business networking events next week"
               ].map((query, index) => (
-                <div key={index} className="p-3 bg-slate-800/30 rounded-lg border border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-colors">
+                <div 
+                  key={index} 
+                  className="p-3 bg-slate-800/30 rounded-lg border border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-colors"
+                  onClick={() => {
+                    setSearchQuery(query);
+                    handleAISearch();
+                  }}
+                >
                   <p className="text-slate-300 text-sm">"{query}"</p>
                 </div>
               ))}
