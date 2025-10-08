@@ -221,9 +221,9 @@ const LandingPage = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xl px-12 py-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/events')}
                 >
-                  Start Free Trial
+                  Get AI Recommendations
                   <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
                 
@@ -233,13 +233,13 @@ const LandingPage = () => {
                   className="border-2 border-slate-600 text-slate-300 hover:bg-slate-800 text-xl px-12 py-8 rounded-2xl backdrop-blur-sm"
                   onClick={() => navigate('/events')}
                 >
-                  <Play className="mr-3 h-6 w-6" />
-                  Watch Demo
+                  <Globe className="mr-3 h-6 w-6" />
+                  Browse All Events
                 </Button>
               </div>
               
               <p className="text-slate-500 text-sm">
-                No credit card required • 14-day free trial • Cancel anytime
+                Free to use • Instant search • Thousands of events
               </p>
             </div>
           </div>
