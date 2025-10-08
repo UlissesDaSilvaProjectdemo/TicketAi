@@ -14,68 +14,178 @@ const PricingPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('credits');
 
-  const monthlyPlans = [
+  const subscriptionPlans = [
     {
-      name: "Starter",
-      price: "$0",
-      description: "Perfect for casual event-goers",
-      icon: <Users className="h-8 w-8 text-blue-500" />,
+      name: "Basic Subscription",
+      price: "$50",
+      period: "per month",
+      description: "Unlimited searches included",
       features: [
-        "Browse all events",
-        "Basic price alerts",
-        "Community access", 
-        "5 transactions/month",
-        "Email support"
+        "Unlimited AI-powered searches",
+        "Advanced event filtering", 
+        "Priority email support",
+        "API access",
+        "Analytics dashboard"
       ],
-      limitations: [
-        "Limited AI insights",
-        "No priority support"
-      ],
-      cta: "Get Started Free",
+      cta: "Coming Soon",
       popular: false,
-      highlight: false
+      available: false
     },
     {
-      name: "Pro Trader",
-      price: "$29",
-      originalPrice: "$39",
-      description: "For serious ticket investors",
-      icon: <BarChart3 className="h-8 w-8 text-purple-500" />,
+      name: "Pro Subscription",
+      price: "$300", 
+      period: "per month",
+      description: "Unlimited searches included",
       features: [
-        "Unlimited transactions",
-        "Advanced AI predictions",
-        "Real-time market alerts",
-        "Portfolio analytics",
-        "Priority support",
-        "Early event access",
-        "Custom price alerts",
-        "Mobile app access"
+        "Unlimited AI-powered searches",
+        "Advanced filtering & sorting",
+        "Priority support + phone",
+        "Full API access",
+        "Advanced analytics",
+        "Custom integrations",
+        "Dedicated account manager"
       ],
-      limitations: [],
-      cta: "Start 14-Day Free Trial",
+      cta: "Coming Soon",
       popular: true,
-      highlight: true
+      available: false
     },
     {
-      name: "Enterprise",
-      price: "$299",
-      description: "For event promoters & venues",
-      icon: <Building className="h-8 w-8 text-amber-500" />,
+      name: "Enterprise Plan",
+      price: "Custom",
+      period: "contact us",
+      description: "Tailored to your needs",
       features: [
-        "White-label solution",
-        "API access & webhooks", 
+        "Unlimited everything",
+        "White-label options",
+        "Custom integrations", 
+        "Dedicated infrastructure",
+        "SLA guarantees",
+        "On-premise deployment",
+        "Custom billing"
+      ],
+      cta: "Contact Sales",
+      popular: false,
+      available: true
+    }
+  ];
+
+  const creditPacks = [
+    {
+      name: "Starter Pack",
+      price: "$9.99",
+      searches: "100 searches included",
+      perSearch: "$0.100 per search",
+      features: [
+        "100 AI-powered searches",
+        "Advanced event filtering",
+        "Email support",
+        "12-month credit validity",
+        "API access"
+      ],
+      badge: "🆓 FREE TRIAL OPTION",
+      badgeColor: "bg-green-600"
+    },
+    {
+      name: "Quick Top-up", 
+      price: "$1",
+      searches: "5 searches included",
+      perSearch: "$0.200 per search",
+      features: [
+        "5 AI-powered searches",
+        "Perfect for testing",
+        "Instant activation"
+      ],
+      badge: "⚡ TEST PACKAGE",
+      badgeColor: "bg-amber-600"
+    },
+    {
+      name: "Basic Pack",
+      price: "$20",
+      searches: "100 searches included", 
+      perSearch: "$0.200 per search",
+      features: [
+        "100 AI-powered searches",
+        "Advanced event filtering",
+        "Email support",
+        "12-month credit validity",
+        "API access"
+      ],
+      badge: null,
+      badgeColor: ""
+    },
+    {
+      name: "Value Pack",
+      price: "$50",
+      searches: "250 searches included",
+      perSearch: "$0.200 per search", 
+      features: [
+        "250 AI-powered searches",
+        "Advanced filtering & sorting",
+        "Priority email support",
+        "12-month credit validity",
+        "Full API access",
+        "Usage analytics"
+      ],
+      badge: "🏆 MOST POPULAR",
+      badgeColor: "bg-purple-600"
+    },
+    {
+      name: "Premium Pack",
+      price: "$100",
+      searches: "500 searches included",
+      perSearch: "$0.200 per search",
+      features: [
+        "500 AI-powered searches",
+        "All premium features",
+        "Priority support",
+        "12-month credit validity", 
+        "Full API access",
+        "Advanced analytics",
+        "Custom integrations"
+      ],
+      badge: "⚡ Best value for regular users",
+      badgeColor: "bg-blue-600"
+    },
+    {
+      name: "Business Bundle",
+      price: "$500",
+      searches: "2,500 credits→ 3,000 credits",
+      searchCount: "3,000 searches included",
+      perSearch: "$0.167 per search",
+      savings: "Save $100!",
+      features: [
+        "3,000 AI-powered searches",
+        "20% bonus credits (2,500 + 500 free)",
+        "Business-grade support",
+        "12-month credit validity",
+        "Full API access", 
+        "Advanced analytics",
+        "Custom integrations",
+        "Priority processing"
+      ],
+      badge: "🎁 20% BONUS",
+      badgeColor: "bg-red-600"
+    },
+    {
+      name: "Enterprise Bundle",
+      price: "$1,000", 
+      searches: "5,000 credits→ 6,000 credits",
+      searchCount: "6,000 searches included",
+      perSearch: "$0.167 per search",
+      savings: "Save $200!",
+      features: [
+        "6,000 AI-powered searches",
+        "20% bonus credits (5,000 + 1,000 free)",
+        "Enterprise-grade support",
+        "12-month credit validity",
+        "Full API access",
+        "Advanced analytics", 
         "Custom integrations",
         "Dedicated account manager",
-        "Advanced reporting & analytics",
-        "Bulk operations",
-        "Custom branding",
-        "SLA guarantees",
-        "Training & onboarding"
+        "Priority processing"
       ],
-      limitations: [],
-      cta: "Contact Sales Team",
-      popular: false,
-      highlight: false
+      badge: "🎁 Best value bundle",
+      badgeColor: "bg-red-600"
     }
   ];
 
