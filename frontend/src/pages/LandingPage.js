@@ -140,10 +140,18 @@ const LandingPage = () => {
       
       console.log('Mapped results:', mappedResults);
       console.log('Setting search results and showing results');
+      console.log('Current showResults state before update:', showResults);
+      console.log('Current searchResults length before update:', searchResults.length);
       
       setSearchResults(mappedResults);
       setIsSearching(false);
       setShowResults(true);
+      
+      // Add a timeout to check state after update
+      setTimeout(() => {
+        console.log('After state update - showResults should be true');
+        console.log('After state update - searchResults length:', mappedResults.length);
+      }, 100);
       
     } catch (error) {
       console.error('AI search error:', error);
