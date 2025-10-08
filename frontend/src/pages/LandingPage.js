@@ -98,23 +98,23 @@ const LandingPage = () => {
   const testimonials = [
     {
       name: "Sarah Chen",
-      role: "Professional Trader",
+      role: "Music Lover",
       image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=80&h=80&fit=crop&crop=face",
-      content: "I've made over $15,000 profit in 6 months using TicketAI's predictions. The AI insights are incredibly accurate.",
+      content: "TicketAI found me the perfect indie concert I never would have discovered. The AI search is incredibly intuitive!",
       rating: 5
     },
     {
       name: "Marcus Rodriguez",
-      role: "Event Promoter", 
+      role: "Event Organizer", 
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
-      content: "TicketAI transformed how we price and sell tickets. Our revenue increased by 40% in the first quarter.",
+      content: "Our event attendance increased by 60% after listing on TicketAI. Their smart recommendations really work.",
       rating: 5
     },
     {
       name: "Emily Watson",
-      role: "Music Fan",
+      role: "Tech Professional",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
-      content: "I finally got Taylor Swift tickets at face value thanks to TicketAI's marketplace. Amazing platform!",
+      content: "I just searched 'networking events this week' and found 3 perfect matches. Saved me hours of research!",
       rating: 5
     }
   ];
