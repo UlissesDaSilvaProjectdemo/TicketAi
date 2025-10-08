@@ -592,7 +592,7 @@ const LandingPage = () => {
 
           <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-sm">
             <CardContent className="p-8 md:p-12">
-              <form className="space-y-8">
+              <form className="space-y-8" onSubmit={handleAIRecommendations}>
                 <div className="space-y-4">
                   <Label htmlFor="interests" className="text-lg font-semibold text-white">
                     What kind of events do you enjoy? *
@@ -601,6 +601,8 @@ const LandingPage = () => {
                     id="interests"
                     placeholder="Tell us about your interests, hobbies, or the type of events you like to attend..."
                     className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 min-h-[120px] text-lg leading-relaxed"
+                    value={interests}
+                    onChange={(e) => setInterests(e.target.value)}
                   />
                   
                   <div className="mt-4">
@@ -617,11 +619,7 @@ const LandingPage = () => {
                           key={index}
                           className="p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:bg-slate-800 cursor-pointer transition-colors text-sm text-slate-300"
                           onClick={() => {
-                            const textarea = document.getElementById('interests');
-                            if (textarea) {
-                              textarea.value = example;
-                              textarea.focus();
-                            }
+                            setInterests(example);
                           }}
                         >
                           <span className="italic">"{example}"</span>
@@ -640,6 +638,8 @@ const LandingPage = () => {
                     type="text"
                     placeholder="e.g., New York, San Francisco, or leave blank for all locations"
                     className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 text-lg py-6"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
                   />
                 </div>
 
@@ -647,14 +647,11 @@ const LandingPage = () => {
                   <Button 
                     type="submit"
                     size="lg" 
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg px-8 py-6 flex-1"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate('/events');
-                    }}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg px-8 py-6 flex-1 disabled:opacity-50"
+                    disabled={isGettingRecommendations || !interests.trim()}
                   >
                     <Star className="mr-2 h-5 w-5" />
-                    Get My Recommendations
+                    {isGettingRecommendations ? 'Getting Recommendations...' : 'Get My Recommendations'}
                   </Button>
                   
                   <Button 
