@@ -176,10 +176,81 @@ const Merchandise = () => {
     localStorage.setItem('merchCart', JSON.stringify(updatedCart));
   };
 
+  // Platforms that charge credits (1.5 credits per click)
+  const chargablePlatforms = ['etsy', 'redbubble', 'reverb'];
+  const PLATFORM_FEE = 1.5;
+
   const handleBuyExternal = (item) => {
-    if (item.externalUrl) {
-      window.open(item.externalUrl, '_blank');
+    // Check if this platform requires a credit fee
+    if (chargablePlatforms.includes(item.platform)) {
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please sign in to purchase from external platforms.",
+          variant: "destructive"
+        });
+        navigate('/auth');
+        return;
+      }
+
+      if (!user.credits || user.credits < PLATFORM_FEE) {
+        toast({
+          title: "Insufficient Credits",
+          description: `You need ${PLATFORM_FEE} credits to purchase from external platforms. Current balance: ${user.credits || 0}`,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Show confirmation modal
+      setPendingPurchase(item);
+      setShowFeeModal(true);
+    } else {
+      // Free platforms or official stores
+      if (item.externalUrl) {
+        window.open(item.externalUrl, '_blank');
+      }
     }
+  };
+
+  const confirmPurchase = () => {
+    if (!pendingPurchase || !user) return;
+
+    // Deduct credits
+    const updatedUser = { 
+      ...user, 
+      credits: (user.credits || 0) - PLATFORM_FEE 
+    };
+
+    // Update user state and localStorage
+    setUser(updatedUser);
+    
+    // Update the appropriate localStorage key
+    if (localStorage.getItem('promoterUser')) {
+      localStorage.setItem('promoterUser', JSON.stringify(updatedUser));
+    } else if (localStorage.getItem('userData')) {
+      localStorage.setItem('userData', JSON.stringify(updatedUser));
+    }
+
+    // Open external link
+    if (pendingPurchase.externalUrl) {
+      window.open(pendingPurchase.externalUrl, '_blank');
+    }
+
+    // Show success message
+    toast({
+      title: "Purchase Authorized! 🛍️",
+      description: `${PLATFORM_FEE} credits deducted. Redirecting to ${platforms[pendingPurchase.platform].name}...`,
+    });
+
+    // Reset modal state
+    setShowFeeModal(false);
+    setPendingPurchase(null);
+  };
+
+  const cancelPurchase = () => {
+    setShowFeeModal(false);
+    setPendingPurchase(null);
   };
 
   return (
