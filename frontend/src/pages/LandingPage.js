@@ -214,7 +214,12 @@ const LandingPage = () => {
                 >
                   Pricing
                 </button>
-                <button className="text-slate-300 hover:text-white transition-colors">Community</button>
+                <button 
+                  className="text-slate-300 hover:text-white transition-colors"
+                  onClick={() => navigate('/promoter-login')}
+                >
+                  Promoter & Venues
+                </button>
                 <button 
                   className="text-slate-300 hover:text-white transition-colors"
                   onClick={() => navigate('/events')}
