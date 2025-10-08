@@ -19,6 +19,9 @@ const LandingPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [interests, setInterests] = useState('');
+  const [location, setLocation] = useState('');
+  const [isGettingRecommendations, setIsGettingRecommendations] = useState(false);
 
   const handleNewsletterSignup = () => {
     if (email) {
