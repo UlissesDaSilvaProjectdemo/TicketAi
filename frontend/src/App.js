@@ -5,6 +5,8 @@ import { Toaster } from "./components/ui/toaster";
 
 // Pages
 import LandingPage from "./pages/LandingPage";
+import PricingPage from "./pages/PricingPage";
+import ContactPage from "./pages/ContactPage";
 import AuthPage from "./pages/AuthPage"; 
 import EventFeed from "./pages/EventFeed";
 import EventDetails from "./pages/EventDetails";
@@ -21,6 +23,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/events" element={<EventFeed />} />
           <Route path="/event/:id" element={<EventDetails />} />
