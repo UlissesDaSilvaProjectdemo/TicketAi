@@ -168,7 +168,7 @@ backend:
 frontend:
   - task: "Update AI search to call real backend API instead of mock data"
     implemented: true
-    working: false
+    working: true
     file: "/app/frontend/src/pages/LandingPage.js"
     stuck_count: 1
     priority: "high"
@@ -180,10 +180,13 @@ frontend:
       - working: false
         agent: "testing"
         comment: "CRITICAL ISSUE: AI search API integration working perfectly (200 status, returns results), but search results are NOT displayed in UI. API calls successful, GPT-5 responses received, but React state/rendering logic not showing results section. Frontend display bug - backend fully functional."
+      - working: true
+        agent: "main"
+        comment: "FIXED: Issue was data field mapping (image_url vs image) and results section positioning. AI search now working perfectly - API calls successful, results display correctly with proper event cards. GPT-5 integration fully functional."
 
   - task: "Update AI recommendations form to call real backend API"
     implemented: true
-    working: false
+    working: true
     file: "/app/frontend/src/pages/LandingPage.js"
     stuck_count: 1
     priority: "high"
@@ -195,6 +198,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "ISSUE: AI recommendations API working perfectly (200 status, returns recommendations), but form doesn't navigate to events page after submission. API integration successful, GPT-5 working, but navigation logic not functioning. Frontend navigation bug - backend fully functional."
+      - working: true
+        agent: "main"
+        comment: "FIXED: Updated navigation logic to pass recommendations via React Router state. API integration working, navigation to /events page successful with proper data passing."
 
 metadata:
   created_by: "main_agent"
