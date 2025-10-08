@@ -122,4 +122,4 @@ const PricingPage = () => {
   );
 };
 
-export default NewPricingPage;
+export default PricingPage;
