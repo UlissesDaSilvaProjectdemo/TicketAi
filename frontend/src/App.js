@@ -16,6 +16,8 @@ import DashboardFan from "./pages/DashboardFan";
 import DashboardInvestor from "./pages/DashboardInvestor";
 import Marketplace from "./pages/Marketplace";
 import SellTicket from "./pages/SellTicket";
+import PromoterLogin from "./pages/PromoterLogin";
+import PromoterDashboard from "./pages/PromoterDashboard";
 
 function App() {
   return (
