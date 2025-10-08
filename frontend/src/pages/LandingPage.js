@@ -348,6 +348,108 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* AI Recommendations Form */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Get Your AI Recommendations
+            </h2>
+            <p className="text-xl text-slate-400">
+              Share your interests and let our AI find events you'll love
+            </p>
+          </div>
+
+          <Card className="bg-slate-900/50 border-slate-700 backdrop-blur-sm">
+            <CardContent className="p-8 md:p-12">
+              <form className="space-y-8">
+                <div className="space-y-4">
+                  <Label htmlFor="interests" className="text-lg font-semibold text-white">
+                    What kind of events do you enjoy? *
+                  </Label>
+                  <Textarea
+                    id="interests"
+                    placeholder="Tell us about your interests, hobbies, or the type of events you like to attend..."
+                    className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 min-h-[120px] text-lg leading-relaxed"
+                  />
+                  
+                  <div className="mt-4">
+                    <p className="text-sm font-medium text-slate-300 mb-3">Try:</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        "I love music festivals and outdoor concerts",
+                        "Tech conferences and startup networking events", 
+                        "Art galleries and cultural exhibitions",
+                        "Comedy shows and entertainment events",
+                        "Sports events and live games"
+                      ].map((example, index) => (
+                        <div 
+                          key={index}
+                          className="p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:bg-slate-800 cursor-pointer transition-colors text-sm text-slate-300"
+                          onClick={() => {
+                            const textarea = document.getElementById('interests');
+                            if (textarea) {
+                              textarea.value = example;
+                              textarea.focus();
+                            }
+                          }}
+                        >
+                          <span className="italic">"{example}"</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <Label htmlFor="location" className="text-lg font-semibold text-white">
+                    Preferred Location (Optional)
+                  </Label>
+                  <Input
+                    id="location"
+                    type="text"
+                    placeholder="e.g., New York, San Francisco, or leave blank for all locations"
+                    className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 text-lg py-6"
+                  />
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                  <Button 
+                    type="submit"
+                    size="lg" 
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg px-8 py-6 flex-1"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/events');
+                    }}
+                  >
+                    <Star className="mr-2 h-5 w-5" />
+                    Get My Recommendations
+                  </Button>
+                  
+                  <Button 
+                    type="button"
+                    size="lg" 
+                    variant="outline"
+                    className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-6 flex-1"
+                    onClick={() => navigate('/events')}
+                  >
+                    <Search className="mr-2 h-5 w-5" />
+                    Browse All Events
+                  </Button>
+                </div>
+
+                <div className="text-center pt-4">
+                  <p className="text-sm text-slate-500">
+                    Our AI analyzes your preferences to find the perfect events. No spam, just great recommendations.
+                  </p>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center mb-16">
