@@ -471,10 +471,60 @@ const PromoterDashboard = () => {
                         </div>
                       </div>
                       
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-sm mb-3">
                         <span className="text-slate-400">Interested: {event.interestedCount}</span>
                         <span className="text-slate-400">Views: {event.views}</span>
                       </div>
+
+                      {/* Boost Section */}
+                      {event.boosted && event.boostExpiry && new Date(event.boostExpiry) > new Date() ? (
+                        <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-lg p-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <Rocket className="h-4 w-4 text-purple-400" />
+                              <span className="text-purple-400 font-semibold text-sm">
+                                {event.boostLevel?.toUpperCase()} BOOST
+                              </span>
+                            </div>
+                            <Badge className="bg-purple-600 text-white text-xs">
+                              {Math.ceil((new Date(event.boostExpiry) - new Date()) / (1000 * 60 * 60 * 24))} days left
+                            </Badge>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-xs text-slate-400 mb-2">🚀 Boost your event for more visibility</p>
+                          <div className="grid grid-cols-3 gap-1">
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="text-xs py-1 border-blue-500/30 text-blue-400 hover:bg-blue-500/20"
+                              onClick={() => handleBoostEvent(event.id, 'basic')}
+                            >
+                              Basic
+                              <span className="block text-xs">5 💳</span>
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="text-xs py-1 border-purple-500/30 text-purple-400 hover:bg-purple-500/20"
+                              onClick={() => handleBoostEvent(event.id, 'premium')}
+                            >
+                              Premium
+                              <span className="block text-xs">15 💳</span>
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="text-xs py-1 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20"
+                              onClick={() => handleBoostEvent(event.id, 'platinum')}
+                            >
+                              Platinum
+                              <span className="block text-xs">30 💳</span>
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
