@@ -332,14 +332,90 @@ const LandingPage = () => {
               type="text"
               placeholder="Ask me anything... 'Rock concerts this weekend' or 'Free tech events near me'"
               className="bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 text-lg px-6 py-6 pr-32 rounded-2xl backdrop-blur-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAISearch()}
             />
             <Button 
-              className="absolute right-2 top-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-6 py-4"
+              className="absolute right-2 top-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-6 py-4 disabled:opacity-50"
+              onClick={handleAISearch}
+              disabled={isSearching || !searchQuery.trim()}
             >
-              Search with AI
+              {isSearching ? 'Searching...' : 'Search with AI'}
             </Button>
           </div>
         </div>
+
+        {/* Search Results */}
+        {showResults && (
+          <div className="max-w-6xl mx-auto mb-16">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-white mb-2">
+                AI Search Results for "{searchQuery}"
+              </h3>
+              <p className="text-slate-400">
+                Found {searchResults.length} perfect matches for you
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {searchResults.map((event) => (
+                <Card key={event.id} className="bg-slate-900/50 border-slate-700 hover:bg-slate-900/70 transition-all duration-300 cursor-pointer group">
+                  <div className="relative overflow-hidden rounded-t-lg">
+                    <img 
+                      src={event.image} 
+                      alt={event.name}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <Badge className="absolute top-3 left-3 bg-blue-600/90 text-white border-0">
+                      {event.category}
+                    </Badge>
+                  </div>
+                  <CardContent className="p-6">
+                    <div className="space-y-3">
+                      <h4 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
+                        {event.name}
+                      </h4>
+                      <div className="space-y-2 text-sm text-slate-400">
+                        <div className="flex items-center space-x-2">
+                          <MapPin className="w-4 h-4" />
+                          <span>{event.venue}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="w-4 h-4" />
+                          <span>{event.date}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-3">
+                        <div className="text-2xl font-bold text-white">
+                          {event.price}
+                        </div>
+                        <Button 
+                          size="sm" 
+                          className="bg-blue-600 hover:bg-blue-700"
+                          onClick={() => navigate('/events')}
+                        >
+                          View Details
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            <div className="text-center mt-8">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                onClick={() => navigate('/events')}
+              >
+                View All Results
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Smart Search Examples */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
