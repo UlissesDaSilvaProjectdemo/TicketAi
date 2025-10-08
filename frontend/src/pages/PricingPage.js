@@ -12,7 +12,7 @@ import {
 
 const PricingPage = () => {
   const navigate = useNavigate();
-  const [billingCycle, setBillingCycle] = useState('monthly');
+  const [activeTab, setActiveTab] = useState('credits');
 
   const monthlyPlans = [
     {
