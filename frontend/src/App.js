@@ -40,6 +40,8 @@ function App() {
           <Route path="/dashboard/investor" element={<DashboardInvestor />} />
           <Route path="/promoter-login" element={<PromoterLogin />} />
           <Route path="/promoter-dashboard" element={<PromoterDashboard />} />
+          <Route path="/my-tickets" element={<MyTickets />} />
+          <Route path="/merchandise" element={<Merchandise />} />
         </Routes>
         <Toaster />
       </Router>
