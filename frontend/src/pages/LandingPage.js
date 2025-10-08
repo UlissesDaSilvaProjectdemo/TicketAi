@@ -246,55 +246,103 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Live Market Preview */}
+      {/* AI-Powered Smart Search */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Live Market in Action
+            AI-Powered Smart Search
           </h2>
           <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-            See real-time price movements and AI predictions for today's hottest events
+            Ask naturally - "rock concerts this weekend", "tech events under $100", or anything you have in mind
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { name: "Taylor Swift - Eras Tour", price: "$245", change: "+104.2%", confidence: "98%", status: "🔥 Trending" },
-            { name: "Drake - World Tour", price: "$180", change: "+13.3%", confidence: "92%", status: "📈 Rising" },
-            { name: "Hamilton Broadway", price: "$195", change: "-2.5%", confidence: "78%", status: "💎 Stable" }
-          ].map((event, index) => (
-            <Card key={index} className="bg-slate-900/50 border-slate-700 backdrop-blur-sm hover:bg-slate-900/70 transition-all duration-300 cursor-pointer transform hover:scale-105">
-              <CardContent className="p-8">
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <Badge className="bg-blue-600/20 text-blue-400 border-blue-500/30 mb-2">
-                      {event.status}
-                    </Badge>
-                    <h3 className="text-xl font-bold text-white">{event.name}</h3>
-                  </div>
-                  
-                  <div className="text-center space-y-2">
-                    <div className="text-3xl font-bold text-white">{event.price}</div>
-                    <div className="text-green-400 font-medium">{event.change}</div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <div className="text-sm text-slate-400">AI Confidence</div>
-                    <div className="text-lg font-semibold text-purple-400">{event.confidence}</div>
-                  </div>
+        {/* Search Demo */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Ask me anything... 'Rock concerts this weekend' or 'Free tech events near me'"
+              className="bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 text-lg px-6 py-6 pr-32 rounded-2xl backdrop-blur-sm"
+            />
+            <Button 
+              className="absolute right-2 top-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-6 py-4"
+            >
+              Search with AI
+            </Button>
+          </div>
+        </div>
+
+        {/* Smart Search Examples */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-4">Try These Smart Searches:</h3>
+            <div className="space-y-3">
+              {[
+                "Find rock concerts this weekend in New York",
+                "Tech conferences next month under $200", 
+                "Free outdoor events near me",
+                "Art galleries opening this week"
+              ].map((query, index) => (
+                <div key={index} className="p-3 bg-slate-800/30 rounded-lg border border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-colors">
+                  <p className="text-slate-300 text-sm">"{query}"</p>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-4">Popular Searches:</h3>
+            <div className="space-y-3">
+              {[
+                "Sports games for families with kids",
+                "Comedy shows tonight downtown",
+                "Music festivals in California this summer",
+                "Business networking events next week"
+              ].map((query, index) => (
+                <div key={index} className="p-3 bg-slate-800/30 rounded-lg border border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-colors">
+                  <p className="text-slate-300 text-sm">"{query}"</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-4">Trending Now:</h3>
+            <div className="space-y-3">
+              {[
+                { name: "Tech Conference 2025", price: "$299", status: "🔥 Hot" },
+                { name: "Amazing Music Festival", price: "$89", status: "🎵 Music" },
+                { name: "Comedy Night Downtown", price: "$35", status: "😂 Comedy" },
+                { name: "Art Gallery Opening", price: "Free", status: "🎨 Art" }
+              ].map((event, index) => (
+                <Card key={index} className="bg-slate-900/50 border-slate-700 hover:bg-slate-900/70 transition-colors cursor-pointer">
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <Badge className="bg-blue-600/20 text-blue-400 border-blue-500/30 text-xs mb-1">
+                          {event.status}
+                        </Badge>
+                        <h4 className="font-semibold text-white text-sm">{event.name}</h4>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-white">{event.price}</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
         
-        <div className="text-center mt-12">
+        <div className="text-center">
           <Button 
             size="lg" 
             className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6"
             onClick={() => navigate('/events')}
           >
-            View All Live Events
+            Discover Events
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
