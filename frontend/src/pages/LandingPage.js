@@ -433,7 +433,7 @@ const LandingPage = () => {
                   className="p-3 bg-slate-800/30 rounded-lg border border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-colors"
                   onClick={() => {
                     setSearchQuery(query);
-                    handleAISearch();
+                    setTimeout(() => handleAISearch(), 100);
                   }}
                 >
                   <p className="text-slate-300 text-sm">"{query}"</p>
