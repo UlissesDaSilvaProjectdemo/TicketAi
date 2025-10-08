@@ -480,9 +480,9 @@ const LandingPage = () => {
       <section className="max-w-7xl mx-auto px-6 py-20">
         <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-slate-700 p-12">
           <div className="text-center space-y-8">
-            <h2 className="text-4xl font-bold text-white">Stay Ahead of the Market</h2>
+            <h2 className="text-4xl font-bold text-white">Never Miss Great Events</h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Get exclusive market insights, AI predictions, and early access to new features.
+              Get personalized event recommendations, exclusive presales, and early access to hot tickets.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
