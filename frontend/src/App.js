@@ -5,7 +5,7 @@ import { Toaster } from "./components/ui/toaster";
 
 // Pages
 import LandingPage from "./pages/LandingPage";
-import NewPricingPage from "./pages/NewPricingPage";
+import PricingPage from "./pages/PricingPage";
 import ContactPage from "./pages/ContactPage";
 import AuthPage from "./pages/AuthPage"; 
 import EventFeed from "./pages/EventFeed";
