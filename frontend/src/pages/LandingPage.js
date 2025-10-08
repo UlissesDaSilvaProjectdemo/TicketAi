@@ -28,6 +28,68 @@ const LandingPage = () => {
     }
   };
 
+  const mockSearchResults = {
+    'rock concerts': [
+      { id: 1, name: 'Arctic Monkeys Live', venue: 'Madison Square Garden', date: 'Dec 15, 2024', price: '$89', category: 'Music', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop' },
+      { id: 2, name: 'Foo Fighters World Tour', venue: 'Barclays Center', date: 'Dec 22, 2024', price: '$125', category: 'Music', image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&h=200&fit=crop' },
+      { id: 3, name: 'Local Rock Festival', venue: 'Central Park', date: 'Dec 28, 2024', price: '$45', category: 'Festival', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=200&fit=crop' }
+    ],
+    'tech events': [
+      { id: 4, name: 'AI & Machine Learning Summit', venue: 'Javits Center', date: 'Jan 10, 2025', price: '$299', category: 'Conference', image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&h=200&fit=crop' },
+      { id: 5, name: 'Startup Networking Night', venue: 'WeWork SoHo', date: 'Dec 18, 2024', price: 'Free', category: 'Networking', image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=300&h=200&fit=crop' },
+      { id: 6, name: 'Blockchain Conference 2025', venue: 'Brooklyn Expo Center', date: 'Jan 15, 2025', price: '$199', category: 'Conference', image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=300&h=200&fit=crop' }
+    ],
+    'comedy': [
+      { id: 7, name: 'Stand-Up Comedy Night', venue: 'Comedy Cellar', date: 'Dec 16, 2024', price: '$35', category: 'Comedy', image: 'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=300&h=200&fit=crop' },
+      { id: 8, name: 'Improv Comedy Show', venue: 'UCB Theatre', date: 'Dec 20, 2024', price: '$25', category: 'Comedy', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&h=200&fit=crop' }
+    ],
+    'art': [
+      { id: 9, name: 'Modern Art Gallery Opening', venue: 'MoMA', date: 'Dec 19, 2024', price: 'Free', category: 'Art', image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=200&fit=crop' },
+      { id: 10, name: 'Street Art Exhibition', venue: 'Brooklyn Museum', date: 'Dec 25, 2024', price: '$20', category: 'Art', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop' }
+    ],
+    'sports': [
+      { id: 11, name: 'Knicks vs Lakers', venue: 'Madison Square Garden', date: 'Dec 21, 2024', price: '$150', category: 'Sports', image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=200&fit=crop' },
+      { id: 12, name: 'Rangers Hockey Game', venue: 'Madison Square Garden', date: 'Dec 23, 2024', price: '$85', category: 'Sports', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop' }
+    ]
+  };
+
+  const handleAISearch = () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    setShowResults(false);
+    
+    // Simulate AI processing delay
+    setTimeout(() => {
+      const query = searchQuery.toLowerCase();
+      let results = [];
+      
+      // Simple keyword matching for demo
+      if (query.includes('rock') || query.includes('music') || query.includes('concert')) {
+        results = mockSearchResults['rock concerts'];
+      } else if (query.includes('tech') || query.includes('conference') || query.includes('startup')) {
+        results = mockSearchResults['tech events'];
+      } else if (query.includes('comedy') || query.includes('funny') || query.includes('laugh')) {
+        results = mockSearchResults['comedy'];
+      } else if (query.includes('art') || query.includes('gallery') || query.includes('exhibition')) {
+        results = mockSearchResults['art'];
+      } else if (query.includes('sport') || query.includes('game') || query.includes('basketball') || query.includes('hockey')) {
+        results = mockSearchResults['sports'];
+      } else {
+        // Default mixed results for any other query
+        results = [
+          ...mockSearchResults['rock concerts'].slice(0, 2),
+          ...mockSearchResults['tech events'].slice(0, 2),
+          ...mockSearchResults['comedy'].slice(0, 1)
+        ];
+      }
+      
+      setSearchResults(results);
+      setIsSearching(false);
+      setShowResults(true);
+    }, 1500);
+  };
+
   const features = [
     {
       icon: <Zap className="h-12 w-12 text-blue-500" />,
