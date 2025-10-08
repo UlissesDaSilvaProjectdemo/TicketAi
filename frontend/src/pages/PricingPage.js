@@ -293,30 +293,33 @@ const PricingPage = () => {
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <Badge className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 border-amber-500/30 text-amber-400 mb-6">
-            <Award className="w-4 h-4 mr-2" />
-            14-Day Free Trial Available
-          </Badge>
-          
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Simple, Transparent Pricing
+            ⚡ Pay-As-You-Go Pricing
           </h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-12">
-            Choose the plan that fits your trading style. Start free, upgrade when you're ready to scale.
-          </p>
-
-          {/* Billing Toggle */}
-          <Tabs value={billingCycle} onValueChange={setBillingCycle} className="w-fit mx-auto">
-            <TabsList className="bg-slate-800 border-slate-700 p-2">
-              <TabsTrigger value="monthly" className="data-[state=active]:bg-slate-700 text-white px-8 py-2">
-                Monthly
-              </TabsTrigger>
-              <TabsTrigger value="yearly" className="data-[state=active]:bg-slate-700 text-white px-8 py-2">
-                Yearly
-                <Badge className="ml-2 bg-green-600 text-white text-xs">Save 20%</Badge>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Buy Credits, Use Anytime
+            </h2>
+            <p className="text-xl text-slate-400 mb-8">
+              Prefer flexibility? Buy credits and pay only for what you use. Perfect for startups and businesses with fluctuating search volumes.
+            </p>
+            
+            {/* Key Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="text-center">
+                <div className="text-5xl font-bold text-blue-400 mb-2">100</div>
+                <div className="text-slate-400">Free Trial Searches</div>
+              </div>
+              <div className="text-center">
+                <div className="text-5xl font-bold text-purple-400 mb-2">12</div>
+                <div className="text-slate-400">Months Validity</div>
+              </div>
+              <div className="text-center">
+                <div className="text-5xl font-bold text-green-400 mb-2">0</div>
+                <div className="text-slate-400">Monthly Commitment</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Pricing Cards */}
