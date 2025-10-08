@@ -143,15 +143,21 @@ const LandingPage = () => {
       console.log('Current showResults state before update:', showResults);
       console.log('Current searchResults length before update:', searchResults.length);
       
-      setSearchResults(mappedResults);
+      // Try with a simple test result first
+      const testResult = [{
+        id: 'test-1',
+        name: 'Test Rock Concert',
+        venue: 'Test Venue',
+        date: 'Test Date',
+        price: '$50',
+        category: 'Music',
+        image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop'
+      }];
+      
+      console.log('Setting test results to force rendering');
+      setSearchResults(testResult);
       setIsSearching(false);
       setShowResults(true);
-      
-      // Add a timeout to check state after update
-      setTimeout(() => {
-        console.log('After state update - showResults should be true');
-        console.log('After state update - searchResults length:', mappedResults.length);
-      }, 100);
       
     } catch (error) {
       console.error('AI search error:', error);
