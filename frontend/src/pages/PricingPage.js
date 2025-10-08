@@ -9,7 +9,7 @@ import {
   Phone, Mail, Star, Code, TrendingUp, Globe
 } from 'lucide-react';
 
-const NewPricingPage = () => {
+const PricingPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('credits');
 
