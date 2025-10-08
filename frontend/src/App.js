@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
+import GlobalComponents from "./components/GlobalComponents";
 
 // Pages
 import LandingPage from "./pages/LandingPage";
