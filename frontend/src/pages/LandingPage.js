@@ -1,207 +1,548 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { TrendingUp, Zap, Shield, Users, ArrowRight, Ticket, DollarSign } from 'lucide-react';
+import { Badge } from '../components/ui/badge';
+import { Input } from '../components/ui/input';
+import { 
+  Ticket, TrendingUp, Zap, Shield, Users, ArrowRight, DollarSign, Star, 
+  CheckCircle, Play, BarChart3, Globe, Award, Mail, Phone, MapPin,
+  Twitter, Linkedin, Instagram, ExternalLink
+} from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+
+  const handleNewsletterSignup = () => {
+    if (email) {
+      // Mock newsletter signup
+      alert('Thank you for subscribing to TicketAI updates!');
+      setEmail('');
+    }
+  };
 
   const features = [
     {
-      icon: <TrendingUp className="h-8 w-8 text-blue-500" />,
-      title: "AI-Powered Pricing",
-      description: "Our AI analyzes demand patterns, artist popularity, and market trends to predict ticket value fluctuations in real-time."
+      icon: <TrendingUp className="h-12 w-12 text-blue-500" />,
+      title: "AI-Powered Predictions",
+      description: "Our machine learning algorithms analyze market trends, artist popularity, and demand patterns to predict ticket price movements with 94% accuracy."
     },
     {
-      icon: <Zap className="h-8 w-8 text-amber-500" />,
-      title: "Instant Trading",
-      description: "Buy and sell tickets instantly with dynamic pricing. Watch your investments grow as demand increases."
+      icon: <Zap className="h-12 w-12 text-amber-500" />,
+      title: "Real-Time Trading",
+      description: "Buy and sell tickets instantly with dynamic pricing. Watch your investments grow as demand increases for popular events."
     },
     {
-      icon: <Shield className="h-8 w-8 text-green-500" />,
-      title: "Secure Transactions",
-      description: "Blockchain-verified tickets and secure payment processing ensure your investments are protected."
+      icon: <Shield className="h-12 w-12 text-green-500" />,
+      title: "Blockchain Security",
+      description: "Every ticket is verified on the blockchain, ensuring authenticity and preventing fraud. Your investments are protected."
     },
     {
-      icon: <Users className="h-8 w-8 text-purple-500" />,
+      icon: <Users className="h-12 w-12 text-purple-500" />,
       title: "Community Insights",
-      description: "Join a community of event investors and fans sharing insights and market predictions."
+      description: "Join thousands of traders sharing market insights, predictions, and investment strategies in our community."
+    }
+  ];
+
+  const pricingPlans = [
+    {
+      name: "Free Tier",
+      price: "$0",
+      period: "forever",
+      description: "Perfect for casual event-goers",
+      features: [
+        "Browse all events",
+        "Basic price alerts",
+        "Community access",
+        "5 transactions/month",
+        "Standard support"
+      ],
+      cta: "Get Started Free",
+      popular: false
+    },
+    {
+      name: "Pro Trader",
+      price: "$29",
+      period: "per month",
+      description: "For serious ticket investors",
+      features: [
+        "Unlimited transactions",
+        "Advanced AI predictions",
+        "Priority support",
+        "Portfolio analytics",
+        "Early event access",
+        "Custom alerts"
+      ],
+      cta: "Start Free Trial",
+      popular: true
+    },
+    {
+      name: "Enterprise",
+      price: "$299",
+      period: "per month",
+      description: "For event promoters & venues",
+      features: [
+        "White-label solution",
+        "API access",
+        "Custom integrations",
+        "Dedicated account manager",
+        "Advanced reporting",
+        "Bulk operations"
+      ],
+      cta: "Contact Sales",
+      popular: false
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Chen",
+      role: "Professional Trader",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=80&h=80&fit=crop&crop=face",
+      content: "I've made over $15,000 profit in 6 months using TicketAI's predictions. The AI insights are incredibly accurate.",
+      rating: 5
+    },
+    {
+      name: "Marcus Rodriguez",
+      role: "Event Promoter", 
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+      content: "TicketAI transformed how we price and sell tickets. Our revenue increased by 40% in the first quarter.",
+      rating: 5
+    },
+    {
+      name: "Emily Watson",
+      role: "Music Fan",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
+      content: "I finally got Taylor Swift tickets at face value thanks to TicketAI's marketplace. Amazing platform!",
+      rating: 5
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Enhanced Navigation */}
+      <nav className="border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Ticket className="h-8 w-8 text-blue-500" />
-              <span className="text-2xl font-bold text-white">TicketAI</span>
+            <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl">
+                  <Ticket className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    TicketAI
+                  </span>
+                  <div className="text-xs text-slate-400">Web Summit 2024 Winner</div>
+                </div>
+              </div>
+              
+              <div className="hidden md:flex items-center space-x-6">
+                <button className="text-slate-300 hover:text-white transition-colors">Features</button>
+                <button className="text-slate-300 hover:text-white transition-colors">Pricing</button>
+                <button className="text-slate-300 hover:text-white transition-colors">Community</button>
+                <button 
+                  className="text-slate-300 hover:text-white transition-colors"
+                  onClick={() => navigate('/events')}
+                >
+                  Explore Events
+                </button>
+              </div>
             </div>
+            
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
-                className="text-slate-300 hover:text-white"
-                onClick={() => navigate('/events')}
-              >
-                Browse Events
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-slate-300 hover:text-white"
-                onClick={() => navigate('/marketplace')}
-              >
-                Marketplace
-              </Button>
-              <Button 
-                variant="outline" 
-                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                className="text-slate-300 hover:text-white hidden md:inline-flex"
                 onClick={() => navigate('/auth')}
               >
                 Sign In
               </Button>
               <Button 
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
                 onClick={() => navigate('/auth')}
               >
-                Get Started
+                Start Free Trial
               </Button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
-              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Stock Market</span>
-              <br />
-              for Live Events
-            </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              Invest in event tickets like stocks. Buy low, sell high, or attend the show. 
-              Our AI predicts demand and pricing trends so you never miss the perfect opportunity.
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              size="lg" 
-              className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6 group"
-              onClick={() => navigate('/auth')}
-            >
-              Start Trading Tickets
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button 
-              size="lg" 
-              className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
-              onClick={() => navigate('/sell-ticket')}
-            >
-              <DollarSign className="mr-2 h-5 w-5" />
-              Sell Your Tickets
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-6"
-              onClick={() => navigate('/events')}
-            >
-              Explore Events
-            </Button>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 pt-16 border-t border-slate-700">
-            <div className="text-center space-y-2">
-              <div className="text-3xl font-bold text-blue-400">$2.4M+</div>
-              <div className="text-slate-400">Total Trading Volume</div>
+      {/* Hero Section with Enhanced Storytelling */}
+      <section className="relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-600/20 rounded-full filter blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-32">
+          <div className="text-center space-y-8">
+            {/* Recognition Badge */}
+            <Badge className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 border-amber-500/30 text-amber-400 mb-6">
+              <Award className="w-4 h-4 mr-2" />
+              Web Summit 2024 Startup Winner
+            </Badge>
+            
+            {/* Main Headline */}
+            <div className="space-y-6">
+              <h1 className="text-6xl md:text-8xl font-bold text-white leading-tight">
+                The Future of
+                <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Event Trading
+                </span>
+              </h1>
+              
+              <p className="text-2xl md:text-3xl text-slate-300 max-w-4xl mx-auto font-light leading-relaxed">
+                Transform event tickets into investable assets. Our AI predicts demand, you profit from the insights.
+              </p>
+              
+              <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-lg text-slate-400">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <span>94% Prediction Accuracy</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <span>$2.4M+ Trading Volume</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                  <span>15K+ Active Traders</span>
+                </div>
+              </div>
             </div>
-            <div className="text-center space-y-2">
-              <div className="text-3xl font-bold text-green-400">94%</div>
-              <div className="text-slate-400">AI Prediction Accuracy</div>
-            </div>
-            <div className="text-center space-y-2">
-              <div className="text-3xl font-bold text-purple-400">15K+</div>
-              <div className="text-slate-400">Active Traders</div>
+            
+            {/* Primary CTA */}
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xl px-12 py-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300"
+                  onClick={() => navigate('/auth')}
+                >
+                  Start Free Trial
+                  <ArrowRight className="ml-3 h-6 w-6" />
+                </Button>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 border-slate-600 text-slate-300 hover:bg-slate-800 text-xl px-12 py-8 rounded-2xl backdrop-blur-sm"
+                  onClick={() => navigate('/events')}
+                >
+                  <Play className="mr-3 h-6 w-6" />
+                  Watch Demo
+                </Button>
+              </div>
+              
+              <p className="text-slate-500 text-sm">
+                No credit card required • 14-day free trial • Cancel anytime
+              </p>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Live Market Preview */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Live Market in Action
+          </h2>
+          <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+            See real-time price movements and AI predictions for today's hottest events
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { name: "Taylor Swift - Eras Tour", price: "$245", change: "+104.2%", confidence: "98%", status: "🔥 Trending" },
+            { name: "Drake - World Tour", price: "$180", change: "+13.3%", confidence: "92%", status: "📈 Rising" },
+            { name: "Hamilton Broadway", price: "$195", change: "-2.5%", confidence: "78%", status: "💎 Stable" }
+          ].map((event, index) => (
+            <Card key={index} className="bg-slate-900/50 border-slate-700 backdrop-blur-sm hover:bg-slate-900/70 transition-all duration-300 cursor-pointer transform hover:scale-105">
+              <CardContent className="p-8">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <Badge className="bg-blue-600/20 text-blue-400 border-blue-500/30 mb-2">
+                      {event.status}
+                    </Badge>
+                    <h3 className="text-xl font-bold text-white">{event.name}</h3>
+                  </div>
+                  
+                  <div className="text-center space-y-2">
+                    <div className="text-3xl font-bold text-white">{event.price}</div>
+                    <div className="text-green-400 font-medium">{event.change}</div>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="text-sm text-slate-400">AI Confidence</div>
+                    <div className="text-lg font-semibold text-purple-400">{event.confidence}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        <div className="text-center mt-12">
+          <Button 
+            size="lg" 
+            className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6"
+            onClick={() => navigate('/events')}
+          >
+            View All Live Events
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="text-center space-y-4 mb-16">
-          <h2 className="text-4xl font-bold text-white">How It Works</h2>
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-            Advanced AI meets live entertainment to create the world's first ticket trading platform
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Why Choose TicketAI?
+          </h2>
+          <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+            Advanced technology meets live entertainment to create unprecedented opportunities
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
-              <CardHeader className="text-center pb-4">
-                <div className="flex justify-center mb-4">
-                  {feature.icon}
+            <Card key={index} className="bg-slate-900/30 border-slate-800 hover:bg-slate-900/50 transition-all duration-300 text-center p-8">
+              <CardContent className="space-y-6">
+                <div className="flex justify-center">
+                  <div className="p-4 bg-slate-800/50 rounded-2xl">
+                    {feature.icon}
+                  </div>
                 </div>
-                <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-300 text-center leading-relaxed">
-                  {feature.description}
-                </CardDescription>
+                <h3 className="text-xl font-bold text-white">{feature.title}</h3>
+                <p className="text-slate-400 leading-relaxed">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Testimonials */}
       <section className="max-w-7xl mx-auto px-6 py-20">
-        <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-slate-600">
-          <CardContent className="text-center py-16 space-y-6">
-            <h3 className="text-3xl font-bold text-white">Ready to Start Trading?</h3>
-            <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-              Join thousands of users who are already making money from event tickets. 
-              Sign up today and get your first trade bonus.
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Trusted by Thousands
+          </h2>
+          <p className="text-xl text-slate-400">
+            See what our community is saying about TicketAI
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <Card key={index} className="bg-slate-900/50 border-slate-700 p-8">
+              <CardContent className="space-y-6">
+                <div className="flex space-x-1">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-slate-300 text-lg italic">"{testimonial.content}"</p>
+                <div className="flex items-center space-x-4">
+                  <img 
+                    src={testimonial.image} 
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full"
+                  />
+                  <div>
+                    <div className="font-semibold text-white">{testimonial.name}</div>
+                    <div className="text-slate-400 text-sm">{testimonial.role}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Choose Your Plan
+          </h2>
+          <p className="text-xl text-slate-400">
+            Start free and scale as you grow
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {pricingPlans.map((plan, index) => (
+            <Card 
+              key={index} 
+              className={`relative ${plan.popular ? 'border-blue-500 bg-slate-900/70' : 'bg-slate-900/50 border-slate-700'} transition-all duration-300 hover:scale-105`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2">
+                    Most Popular
+                  </Badge>
+                </div>
+              )}
+              
+              <CardHeader className="text-center p-8">
+                <CardTitle className="text-2xl font-bold text-white mb-2">{plan.name}</CardTitle>
+                <div className="space-y-2">
+                  <div className="text-5xl font-bold text-white">
+                    {plan.price}
+                    <span className="text-lg font-normal text-slate-400">/{plan.period}</span>
+                  </div>
+                  <p className="text-slate-400">{plan.description}</p>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="space-y-6 p-8">
+                <ul className="space-y-4">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-slate-300">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <Button 
+                  className={`w-full py-6 text-lg ${
+                    plan.popular 
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white' 
+                      : 'bg-slate-800 hover:bg-slate-700 text-white'
+                  }`}
+                  onClick={() => navigate('/auth')}
+                >
+                  {plan.cta}
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-slate-700 p-12">
+          <div className="text-center space-y-8">
+            <h2 className="text-4xl font-bold text-white">Stay Ahead of the Market</h2>
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+              Get exclusive market insights, AI predictions, and early access to new features.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 text-lg px-6 py-4"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
               <Button 
-                size="lg" 
-                className="bg-blue-600 hover:bg-blue-700 px-8 py-6"
-                onClick={() => navigate('/auth')}
+                className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4"
+                onClick={handleNewsletterSignup}
               >
-                <DollarSign className="mr-2 h-5 w-5" />
-                Create Account
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-6"
-                onClick={() => navigate('/events')}
-              >
-                View Live Market
+                Subscribe
               </Button>
             </div>
-          </CardContent>
+            
+            <p className="text-slate-500 text-sm">
+              Join 15,000+ traders getting weekly insights • Unsubscribe anytime
+            </p>
+          </div>
         </Card>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-700 bg-slate-900/50">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Ticket className="h-6 w-6 text-blue-500" />
-              <span className="text-lg font-semibold text-white">TicketAI</span>
+      {/* Professional Footer */}
+      <footer className="border-t border-slate-800 bg-slate-950/50">
+        <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+            {/* Company Info */}
+            <div className="space-y-6">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl">
+                  <Ticket className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  TicketAI
+                </span>
+              </div>
+              <p className="text-slate-400 leading-relaxed">
+                Revolutionizing event ticketing through AI-powered predictions and blockchain security.
+              </p>
+              <div className="flex space-x-4">
+                <Twitter className="w-6 h-6 text-slate-400 hover:text-blue-400 cursor-pointer transition-colors" />
+                <Linkedin className="w-6 h-6 text-slate-400 hover:text-blue-400 cursor-pointer transition-colors" />
+                <Instagram className="w-6 h-6 text-slate-400 hover:text-pink-400 cursor-pointer transition-colors" />
+              </div>
             </div>
+            
+            {/* Product Links */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-white">Product</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">API</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Security</a></li>
+              </ul>
+            </div>
+            
+            {/* Company Links */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-white">Company</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">About</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Press</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Partners</a></li>
+              </ul>
+            </div>
+            
+            {/* Contact & Support */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-white">Support</h3>
+              <ul className="space-y-3">
+                <li className="flex items-center space-x-2 text-slate-400">
+                  <Mail className="w-4 h-4" />
+                  <span>hello@ticketai.com</span>
+                </li>
+                <li className="flex items-center space-x-2 text-slate-400">
+                  <Phone className="w-4 h-4" />
+                  <span>+1 (555) 123-4567</span>
+                </li>
+                <li className="flex items-center space-x-2 text-slate-400">
+                  <MapPin className="w-4 h-4" />
+                  <span>San Francisco, CA</span>
+                </li>
+              </ul>
+              
+              {/* Indiegogo CTA */}
+              <Button 
+                className="w-full bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 text-white"
+                onClick={() => window.open('https://indiegogo.com', '_blank')}
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Support Our Campaign
+              </Button>
+            </div>
+          </div>
+          
+          <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-slate-400 text-sm">
-              © 2025 TicketAI. All rights reserved.
+              © 2025 TicketAI Inc. All rights reserved.
+            </div>
+            <div className="flex space-x-6 text-sm text-slate-400">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
             </div>
           </div>
         </div>
