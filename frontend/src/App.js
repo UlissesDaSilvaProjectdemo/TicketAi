@@ -45,6 +45,7 @@ function App() {
           <Route path="/merchandise" element={<Merchandise />} />
         </Routes>
         <Toaster />
+        <GlobalComponents />
       </Router>
     </div>
   );
