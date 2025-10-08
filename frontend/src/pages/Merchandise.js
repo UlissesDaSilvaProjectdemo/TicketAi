@@ -18,6 +18,8 @@ const Merchandise = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cart, setCart] = useState([]);
+  const [showFeeModal, setShowFeeModal] = useState(false);
+  const [pendingPurchase, setPendingPurchase] = useState(null);
 
   useEffect(() => {
     // Check if user is logged in
