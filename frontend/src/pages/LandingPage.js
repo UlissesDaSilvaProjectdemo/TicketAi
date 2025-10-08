@@ -310,6 +310,18 @@ const LandingPage = () => {
                 >
                   Explore Events
                 </button>
+                <button 
+                  className="text-slate-300 hover:text-white transition-colors"
+                  onClick={() => navigate('/my-tickets')}
+                >
+                  My Tickets
+                </button>
+                <button 
+                  className="text-slate-300 hover:text-white transition-colors"
+                  onClick={() => navigate('/merchandise')}
+                >
+                  Merchandise
+                </button>
               </div>
             </div>
             
