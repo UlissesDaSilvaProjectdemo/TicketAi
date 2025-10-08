@@ -404,10 +404,20 @@ const Merchandise = () => {
               <Shield className="h-8 w-8 text-blue-400 flex-shrink-0" />
               <div>
                 <h3 className="font-semibold text-white mb-2">🛡️ Trusted Marketplace Integration</h3>
-                <p className="text-slate-300 text-sm">
+                <p className="text-slate-300 text-sm mb-3">
                   We partner with verified platforms like Etsy, Redbubble, official band stores, and Reverb 
                   to bring you authentic merchandise. All external purchases are secured by platform guarantees.
                 </p>
+                <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <CreditCard className="h-4 w-4 text-yellow-400" />
+                    <span className="font-semibold text-yellow-400">Credit-Based Access</span>
+                  </div>
+                  <p className="text-xs text-slate-300">
+                    <span className="text-green-400 font-semibold">Official Stores:</span> Free access • 
+                    <span className="text-yellow-400 font-semibold"> External Platforms (Etsy, Redbubble, Reverb):</span> {PLATFORM_FEE} credits per purchase
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
