@@ -189,15 +189,7 @@ const PricingPage = () => {
     }
   ];
 
-  const yearlyPlans = monthlyPlans.map(plan => ({
-    ...plan,
-    price: plan.name === "Starter" ? "$0" : 
-           plan.name === "Pro Trader" ? "$290" : "$2,990",
-    originalPrice: plan.name === "Pro Trader" ? "$348" : "$3,588",
-    savings: plan.name === "Pro Trader" ? "Save $58" : "Save $598"
-  }));
-
-  const currentPlans = billingCycle === 'monthly' ? monthlyPlans : yearlyPlans;
+  // Remove yearly plans as we're focusing on credits and subscriptions
 
   const features = [
     {
