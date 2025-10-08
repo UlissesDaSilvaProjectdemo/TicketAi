@@ -455,6 +455,31 @@ const LandingPage = () => {
           </div>
         </div>
 
+        {/* Debug Button */}
+        <div className="max-w-4xl mx-auto mb-8 text-center">
+          <button 
+            onClick={() => {
+              console.log('Manual trigger: Setting showResults to true');
+              setShowResults(true);
+              setSearchResults([{
+                id: 'manual-test',
+                name: 'Manual Test Event',
+                venue: 'Test Venue',
+                date: 'Dec 15, 2024',
+                price: '$99',
+                category: 'Test',
+                image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop'
+              }]);
+            }}
+            className="bg-red-600 text-white px-4 py-2 rounded"
+          >
+            DEBUG: Show Results Manually
+          </button>
+          <div className="mt-2 text-white">
+            showResults: {showResults.toString()}, searchResults.length: {searchResults.length}
+          </div>
+        </div>
+
         {/* Search Results */}
         {showResults && (
           <div className="max-w-6xl mx-auto mb-16">
