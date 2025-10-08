@@ -577,6 +577,90 @@ const Merchandise = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Credit Fee Confirmation Modal */}
+        {showFeeModal && pendingPurchase && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <Card className="bg-slate-900 border-slate-700 max-w-md w-full">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="p-3 bg-yellow-600/20 rounded-full">
+                    <AlertCircle className="h-8 w-8 text-yellow-400" />
+                  </div>
+                </div>
+                <CardTitle className="text-white text-xl">External Platform Purchase</CardTitle>
+                <CardDescription className="text-slate-400">
+                  Confirm your purchase to continue to {platforms[pendingPurchase.platform].name}
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-6">
+                <div className="bg-slate-800/50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <img 
+                        src={pendingPurchase.image} 
+                        alt={pendingPurchase.name}
+                        className="w-12 h-12 object-cover rounded-lg"
+                      />
+                      <div>
+                        <h4 className="font-semibold text-white">{pendingPurchase.name}</h4>
+                        <p className="text-slate-400 text-sm">{pendingPurchase.artist}</p>
+                      </div>
+                    </div>
+                    <Badge className={`${platforms[pendingPurchase.platform].color} text-white border-0`}>
+                      {platforms[pendingPurchase.platform].name}
+                    </Badge>
+                  </div>
+                  <div className="text-xl font-bold text-white">${pendingPurchase.price}</div>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Platform Access Fee</h4>
+                      <p className="text-slate-400 text-sm">Secure purchasing through external platforms</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold text-blue-400">{PLATFORM_FEE} 💳</div>
+                      <div className="text-xs text-slate-500">Credits</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/30 rounded-lg p-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-400">Current Credits:</span>
+                    <span className="text-white font-semibold">{user?.credits || 0} 💳</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-400">After Purchase:</span>
+                    <span className="text-green-400 font-semibold">
+                      {(user?.credits || 0) - PLATFORM_FEE} 💳
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-800"
+                    onClick={cancelPurchase}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    onClick={confirmPurchase}
+                  >
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Confirm & Continue
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
