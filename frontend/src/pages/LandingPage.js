@@ -31,6 +31,45 @@ const LandingPage = () => {
     }
   };
 
+  const handleAIRecommendations = async (e) => {
+    e.preventDefault();
+    if (!interests.trim()) return;
+    
+    setIsGettingRecommendations(true);
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-recommendations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          interests: interests,
+          location: location || null
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Recommendations failed');
+      }
+      
+      const data = await response.json();
+      
+      // Store recommendations and navigate to events page
+      // For now, we'll just show an alert and navigate
+      alert(`Got ${data.recommendations?.length || 0} personalized recommendations! Redirecting to events page...`);
+      navigate('/events');
+      
+    } catch (error) {
+      console.error('AI recommendations error:', error);
+      // Fallback behavior
+      alert('Got your preferences! Redirecting to events page...');
+      navigate('/events');
+    } finally {
+      setIsGettingRecommendations(false);
+    }
+  };
+
   const mockSearchResults = {
     'rock concerts': [
       { id: 1, name: 'Arctic Monkeys Live', venue: 'Madison Square Garden', date: 'Dec 15, 2024', price: '$89', category: 'Music', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop' },
