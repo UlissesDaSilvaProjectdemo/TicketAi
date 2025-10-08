@@ -380,10 +380,10 @@ const LandingPage = () => {
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Trusted by Thousands
+            Loved by Event-Goers
           </h2>
           <p className="text-xl text-slate-400">
-            See what our community is saying about TicketAI
+            See how TicketAI is helping people discover amazing experiences
           </p>
         </div>
 
