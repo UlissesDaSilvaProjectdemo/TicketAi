@@ -198,8 +198,11 @@ const PromoterDashboard = () => {
   const stats = {
     totalEvents: events.length,
     activeEvents: events.filter(e => e.status === 'active').length,
-    boostedEvents: events.filter(e => e.boosted).length,
-    creditsSpent: events.length * 1.5
+    boostedEvents: events.filter(e => e.boosted && e.boostExpiry && new Date(e.boostExpiry) > new Date()).length,
+    creditsSpent: events.length * 1.5 + events.filter(e => e.boosted).reduce((total, event) => {
+      const boostCosts = { basic: 5, premium: 15, platinum: 30 };
+      return total + (boostCosts[event.boostLevel] || 0);
+    }, 0)
   };
 
   if (!user) {
