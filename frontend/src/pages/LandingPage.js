@@ -502,7 +502,7 @@ const LandingPage = () => {
             </div>
             
             <p className="text-slate-500 text-sm">
-              Join 15,000+ traders getting weekly insights • Unsubscribe anytime
+              Join 25,000+ event lovers getting personalized recommendations • Unsubscribe anytime
             </p>
           </div>
         </Card>
