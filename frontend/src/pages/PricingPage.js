@@ -226,24 +226,24 @@ const PricingPage = () => {
 
   const faqs = [
     {
-      question: "Can I change plans anytime?",
-      answer: "Yes, you can upgrade, downgrade, or cancel your plan at any time. Changes take effect immediately, and we'll prorate any billing adjustments."
+      question: "How do credits work?",
+      answer: "Each AI search uses 1 credit. Credits are deducted only when you perform searches, not for browsing or viewing results."
     },
     {
-      question: "What payment methods do you accept?",
-      answer: "We accept all major credit cards, PayPal, and cryptocurrency payments. Enterprise customers can also pay via bank transfer or purchase orders."
+      question: "Do credits expire?", 
+      answer: "Credits are valid for 12 months from the purchase date. They automatically roll over so you never lose unused credits."
     },
     {
-      question: "Is there a free trial?",
-      answer: "Yes! Pro Trader plans come with a 14-day free trial. No credit card required to start, and you can cancel anytime during the trial period."
+      question: "Can I upgrade or buy more credits anytime?",
+      answer: "Yes! You can purchase additional credit packs anytime. Credits from different purchases stack together."
     },
     {
-      question: "How accurate are the AI predictions?",
-      answer: "Our AI models achieve 94% accuracy in price prediction across all event types. We continuously train our models on real market data and user behavior patterns."
+      question: "Is there an API rate limit?",
+      answer: "No strict rate limits, but we monitor for abuse. Enterprise plans include dedicated rate limits and priority processing."
     },
     {
-      question: "Do you offer refunds?",
-      answer: "We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, we'll provide a full refund with no questions asked."
+      question: "What data sources do you use?",
+      answer: "We integrate with Ticketmaster, local event providers, and maintain our own curated database of verified events."
     }
   ];
 
