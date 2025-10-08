@@ -156,10 +156,10 @@ const Merchandise = () => {
   ];
 
   const platforms = {
-    official: { name: 'Official Store', color: 'bg-green-600', icon: Shield },
-    etsy: { name: 'Etsy', color: 'bg-orange-600', icon: Store },
-    redbubble: { name: 'Redbubble', color: 'bg-red-600', icon: Shirt },
-    reverb: { name: 'Reverb', color: 'bg-blue-600', icon: Music }
+    official: { name: 'Official Store', color: 'bg-green-600', icon: Shield, free: true },
+    etsy: { name: 'Etsy', color: 'bg-orange-600', icon: Store, free: false },
+    redbubble: { name: 'Redbubble', color: 'bg-red-600', icon: Shirt, free: false },
+    reverb: { name: 'Reverb', color: 'bg-blue-600', icon: Music, free: false }
   };
 
   const filteredMerchandise = mockMerchandise.filter(item => {
