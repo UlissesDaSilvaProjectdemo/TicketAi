@@ -18,6 +18,8 @@ import Marketplace from "./pages/Marketplace";
 import SellTicket from "./pages/SellTicket";
 import PromoterLogin from "./pages/PromoterLogin";
 import PromoterDashboard from "./pages/PromoterDashboard";
+import MyTickets from "./pages/MyTickets";
+import Merchandise from "./pages/Merchandise";
 
 function App() {
   return (
