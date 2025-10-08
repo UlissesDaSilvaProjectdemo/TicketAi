@@ -438,6 +438,35 @@ const PromoterDashboard = () => {
               </Button>
             </div>
 
+            {/* Boost Info Banner */}
+            <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-blue-500/30">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Rocket className="h-6 w-6 text-blue-400" />
+                    <div>
+                      <h3 className="font-semibold text-white">🚀 Boost Your Events</h3>
+                      <p className="text-sm text-slate-300">Increase visibility and reach more potential attendees</p>
+                    </div>
+                  </div>
+                  <div className="flex space-x-4 text-xs">
+                    <div className="text-center">
+                      <div className="text-blue-400 font-semibold">Basic (5💳)</div>
+                      <div className="text-slate-400">1.5x reach</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-purple-400 font-semibold">Premium (15💳)</div>
+                      <div className="text-slate-400">3x reach</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-yellow-400 font-semibold">Platinum (30💳)</div>
+                      <div className="text-slate-400">5x reach</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {events.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {events.map((event) => (
