@@ -189,28 +189,28 @@ const LandingPage = () => {
             {/* Main Headline */}
             <div className="space-y-6">
               <h1 className="text-6xl md:text-8xl font-bold text-white leading-tight">
-                The Future of
+                Discover Amazing
                 <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Event Trading
+                  Events
                 </span>
               </h1>
               
               <p className="text-2xl md:text-3xl text-slate-300 max-w-4xl mx-auto font-light leading-relaxed">
-                Transform event tickets into investable assets. Our AI predicts demand, you profit from the insights.
+                Find and book tickets for the most exciting events from local venues and TicketMaster. Powered by AI to match you with perfect experiences.
               </p>
               
               <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-lg text-slate-400">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-6 h-6 text-green-400" />
-                  <span>94% Prediction Accuracy</span>
+                  <span>Smart AI Search</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-6 h-6 text-green-400" />
-                  <span>$2.4M+ Trading Volume</span>
+                  <span>50K+ Events Listed</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-6 h-6 text-green-400" />
-                  <span>15K+ Active Traders</span>
+                  <span>Instant Booking</span>
                 </div>
               </div>
             </div>
