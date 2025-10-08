@@ -32,10 +32,11 @@ const LandingPage = () => {
   };
 
   const handleAIRecommendations = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!interests.trim()) return;
     
     setIsGettingRecommendations(true);
+    console.log('Getting AI recommendations for:', interests);
     
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-recommendations`, {
