@@ -60,6 +60,55 @@ const PromoterDashboard = () => {
     navigate('/');
   };
 
+  const handleBoostEvent = (eventId, boostPackage) => {
+    const costs = {
+      basic: 5,
+      premium: 15,
+      platinum: 30
+    };
+    
+    const cost = costs[boostPackage];
+    
+    if (user.credits < cost) {
+      toast({
+        title: "Insufficient Credits",
+        description: `You need ${cost} credits for ${boostPackage} boost. Current balance: ${user.credits}`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Update event with boost
+    const updatedEvents = events.map(event => {
+      if (event.id === eventId) {
+        const multiplier = { basic: 1.5, premium: 3, platinum: 5 }[boostPackage];
+        return {
+          ...event,
+          boosted: true,
+          boostLevel: boostPackage,
+          boostExpiry: new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)).toISOString(), // 7 days
+          interestedCount: Math.floor(event.interestedCount * multiplier),
+          views: Math.floor(event.views * multiplier) + Math.floor(Math.random() * 100)
+        };
+      }
+      return event;
+    });
+
+    // Deduct credits
+    const updatedUser = { ...user, credits: user.credits - cost };
+
+    // Update state and localStorage
+    setEvents(updatedEvents);
+    setUser(updatedUser);
+    localStorage.setItem(`events_${user.id}`, JSON.stringify(updatedEvents));
+    localStorage.setItem('promoterUser', JSON.stringify(updatedUser));
+
+    toast({
+      title: "Event Boosted! 🚀",
+      description: `Your event has been boosted with ${boostPackage} package for 7 days!`,
+    });
+  };
+
   const handleInputChange = (field, value) => {
     setEventForm(prev => ({ ...prev, [field]: value }));
   };
