@@ -217,6 +217,238 @@ async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**parse_from_mongo(status_check)) for status_check in status_checks]
 
+# Events endpoints
+@api_router.get("/events", response_model=List[Event])
+async def get_events():
+    """Get all events (currently returns mock data)"""
+    try:
+        # For now, return mock data. Later we'll fetch from database
+        events = []
+        for event_data in MOCK_EVENTS:
+            event = Event(**event_data)
+            events.append(event)
+        return events
+    except Exception as e:
+        logger.error(f"Error getting events: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get events")
+
+@api_router.post("/events", response_model=Event)
+async def create_event(event: EventCreate):
+    """Create a new event"""
+    try:
+        event_dict = event.dict()
+        event_obj = Event(**event_dict)
+        prepared_dict = prepare_for_mongo(event_obj.dict())
+        
+        # Store in database
+        result = await db.events.insert_one(prepared_dict)
+        
+        return event_obj
+    except Exception as e:
+        logger.error(f"Error creating event: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create event")
+
+@api_router.post("/ai-search")
+async def ai_search(request: AISearchRequest):
+    """AI-powered event search using natural language"""
+    try:
+        # Get all available events (mock data for now)
+        events_data = MOCK_EVENTS
+        
+        # Create a structured prompt for the AI
+        events_json = json.dumps([{
+            "id": event["id"],
+            "name": event["name"],
+            "description": event["description"],
+            "venue": event["venue"],
+            "location": event["location"],
+            "date": event["date"],
+            "time": event["time"],
+            "category": event["category"],
+            "price": event["price"],
+            "tags": event["tags"]
+        } for event in events_data], indent=2)
+        
+        prompt = f"""
+        User Query: "{request.query}"
+        Location Preference: {request.location or "Any location"}
+        
+        Available Events:
+        {events_json}
+        
+        Based on the user's query, find the most relevant events. Consider:
+        - Keywords in the query matching event names, descriptions, categories, or tags
+        - Date preferences if mentioned
+        - Price preferences if mentioned
+        - Location if specified
+        - Category preferences
+        
+        Return ONLY a JSON array of event IDs that match the query, ordered by relevance.
+        Example: ["event-id-1", "event-id-2"]
+        
+        If no events match well, return an empty array: []
+        """
+        
+        # Get AI response
+        chat = get_llm_chat()
+        user_message = UserMessage(text=prompt)
+        ai_response = await chat.send_message(user_message)
+        
+        # Parse AI response to get event IDs
+        try:
+            # Extract JSON from AI response
+            response_text = ai_response.strip()
+            if response_text.startswith("```json"):
+                response_text = response_text[7:-3].strip()
+            elif response_text.startswith("```"):
+                response_text = response_text[3:-3].strip()
+            
+            selected_ids = json.loads(response_text)
+            
+            # Filter events by selected IDs
+            matching_events = []
+            for event in events_data:
+                if event["id"] in selected_ids:
+                    matching_events.append(Event(**event))
+            
+            # If no specific matches, do keyword-based fallback
+            if not matching_events:
+                query_lower = request.query.lower()
+                for event in events_data:
+                    if (any(keyword in event["name"].lower() or 
+                           keyword in event["description"].lower() or 
+                           keyword in event["category"].lower() or
+                           keyword in " ".join(event["tags"]).lower()
+                           for keyword in query_lower.split()) or
+                        query_lower in event["name"].lower() or
+                        query_lower in event["description"].lower()):
+                        matching_events.append(Event(**event))
+                        if len(matching_events) >= 6:  # Limit results
+                            break
+            
+            return {
+                "query": request.query,
+                "results": matching_events[:6],  # Return max 6 results
+                "total_found": len(matching_events)
+            }
+            
+        except json.JSONDecodeError:
+            # Fallback to keyword matching if AI response is not valid JSON
+            logger.warning("AI response was not valid JSON, using keyword fallback")
+            query_lower = request.query.lower()
+            matching_events = []
+            
+            for event in events_data:
+                if (any(keyword in event["name"].lower() or 
+                       keyword in event["description"].lower() or 
+                       keyword in event["category"].lower() or
+                       keyword in " ".join(event["tags"]).lower()
+                       for keyword in query_lower.split()) or
+                    query_lower in event["name"].lower() or
+                    query_lower in event["description"].lower()):
+                    matching_events.append(Event(**event))
+                    if len(matching_events) >= 6:
+                        break
+            
+            return {
+                "query": request.query,
+                "results": matching_events,
+                "total_found": len(matching_events)
+            }
+        
+    except Exception as e:
+        logger.error(f"Error in AI search: {e}")
+        raise HTTPException(status_code=500, detail=f"AI search failed: {str(e)}")
+
+@api_router.post("/ai-recommendations")
+async def ai_recommendations(request: AIRecommendationRequest):
+    """Get AI-powered event recommendations based on user interests"""
+    try:
+        # Get all available events (mock data for now)
+        events_data = MOCK_EVENTS
+        
+        # Create a structured prompt for the AI
+        events_json = json.dumps([{
+            "id": event["id"],
+            "name": event["name"],
+            "description": event["description"],
+            "venue": event["venue"],
+            "location": event["location"],
+            "date": event["date"],
+            "time": event["time"],
+            "category": event["category"],
+            "price": event["price"],
+            "tags": event["tags"]
+        } for event in events_data], indent=2)
+        
+        prompt = f"""
+        User Interests: "{request.interests}"
+        Location Preference: {request.location or "Any location"}
+        
+        Available Events:
+        {events_json}
+        
+        Based on the user's interests, recommend the most suitable events. Consider:
+        - How well the events match their stated interests
+        - Variety in recommendations (different categories if appropriate)
+        - Quality and relevance of the match
+        - Location preference if specified
+        
+        Return ONLY a JSON array of event IDs that you recommend, ordered by relevance.
+        Example: ["event-id-1", "event-id-2", "event-id-3"]
+        
+        Recommend 3-5 events maximum.
+        """
+        
+        # Get AI response
+        chat = get_llm_chat()
+        user_message = UserMessage(text=prompt)
+        ai_response = await chat.send_message(user_message)
+        
+        # Parse AI response to get event IDs
+        try:
+            # Extract JSON from AI response
+            response_text = ai_response.strip()
+            if response_text.startswith("```json"):
+                response_text = response_text[7:-3].strip()
+            elif response_text.startswith("```"):
+                response_text = response_text[3:-3].strip()
+            
+            selected_ids = json.loads(response_text)
+            
+            # Filter events by selected IDs
+            recommended_events = []
+            for event in events_data:
+                if event["id"] in selected_ids:
+                    recommended_events.append(Event(**event))
+            
+            # If no specific matches, provide general recommendations
+            if not recommended_events:
+                recommended_events = [Event(**event) for event in events_data[:3]]
+            
+            return {
+                "interests": request.interests,
+                "location": request.location,
+                "recommendations": recommended_events[:5],  # Max 5 recommendations
+                "total_found": len(recommended_events)
+            }
+            
+        except json.JSONDecodeError:
+            # Fallback to returning first few events
+            logger.warning("AI response was not valid JSON, using fallback recommendations")
+            recommended_events = [Event(**event) for event in events_data[:3]]
+            
+            return {
+                "interests": request.interests,
+                "location": request.location,
+                "recommendations": recommended_events,
+                "total_found": len(recommended_events)
+            }
+        
+    except Exception as e:
+        logger.error(f"Error in AI recommendations: {e}")
+        raise HTTPException(status_code=500, detail=f"AI recommendations failed: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
