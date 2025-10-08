@@ -4,6 +4,8 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
+import { Label } from '../components/ui/label';
 import { 
   Ticket, TrendingUp, Zap, Shield, Users, ArrowRight, DollarSign, Star, 
   CheckCircle, Play, BarChart3, Globe, Award, Mail, Phone, MapPin,
