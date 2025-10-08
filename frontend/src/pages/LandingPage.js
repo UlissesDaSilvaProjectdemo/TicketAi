@@ -118,7 +118,12 @@ const LandingPage = () => {
       }
       
       const data = await response.json();
-      setSearchResults(data.results || []);
+      // Map backend response to frontend expected format
+      const mappedResults = (data.results || []).map(event => ({
+        ...event,
+        image: event.image_url || event.image, // Map image_url to image for compatibility
+      }));
+      setSearchResults(mappedResults);
       setIsSearching(false);
       setShowResults(true);
       
