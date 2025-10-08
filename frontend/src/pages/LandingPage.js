@@ -105,10 +105,12 @@ const LandingPage = () => {
   const handleAISearch = async () => {
     if (!searchQuery.trim()) return;
     
+    console.log('Starting AI search for:', searchQuery);
     setIsSearching(true);
     setShowResults(false);
     
     try {
+      console.log('Making fetch request to:', `${process.env.REACT_APP_BACKEND_URL}/api/ai-search`);
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-search`, {
         method: 'POST',
         headers: {
@@ -120,16 +122,25 @@ const LandingPage = () => {
         })
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
       if (!response.ok) {
-        throw new Error('Search failed');
+        throw new Error(`Search failed with status: ${response.status}`);
       }
       
       const data = await response.json();
+      console.log('API Response data:', data);
+      
       // Map backend response to frontend expected format
       const mappedResults = (data.results || []).map(event => ({
         ...event,
         image: event.image_url || event.image, // Map image_url to image for compatibility
       }));
+      
+      console.log('Mapped results:', mappedResults);
+      console.log('Setting search results and showing results');
+      
       setSearchResults(mappedResults);
       setIsSearching(false);
       setShowResults(true);
