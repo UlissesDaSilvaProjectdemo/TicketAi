@@ -193,34 +193,34 @@ const PricingPage = () => {
 
   const features = [
     {
-      icon: <Zap className="h-6 w-6 text-amber-500" />,
-      title: "AI-Powered Predictions",
-      description: "Machine learning algorithms with 94% accuracy"
+      icon: <Zap className="h-8 w-8 text-blue-500" />,
+      title: "Smart AI Search",
+      description: "Natural language understanding powered by OpenAI for accurate event discovery"
     },
     {
-      icon: <Shield className="h-6 w-6 text-green-500" />,
-      title: "Blockchain Security",
-      description: "Every transaction verified and protected"
+      icon: <Globe className="h-8 w-8 text-green-500" />,
+      title: "Live Data Integration", 
+      description: "Real-time integration with Ticketmaster and premium event providers"
     },
     {
-      icon: <Smartphone className="h-6 w-6 text-blue-500" />,
-      title: "Mobile Trading",
-      description: "Trade on-the-go with our mobile app"
+      icon: <TrendingUp className="h-8 w-8 text-purple-500" />,
+      title: "Boost Conversions",
+      description: "More relevant results mean higher conversions and happier customers"
     },
     {
-      icon: <Globe className="h-6 w-6 text-purple-500" />,
-      title: "Global Markets",
-      description: "Access events worldwide in 50+ countries"
+      icon: <Code className="h-8 w-8 text-amber-500" />,
+      title: "Easy Integration",
+      description: "Simple APIs and low-code platform integration via Emergent.sh"
     },
     {
-      icon: <Headphones className="h-6 w-6 text-pink-500" />,
-      title: "24/7 Support",
-      description: "Round-the-clock customer assistance"
+      icon: <Shield className="h-8 w-8 text-red-500" />,
+      title: "Scalable & Secure", 
+      description: "Enterprise-grade infrastructure supporting business growth"
     },
     {
-      icon: <Award className="h-6 w-6 text-orange-500" />,
-      title: "Web Summit Winner",
-      description: "Award-winning platform trusted by thousands"
+      icon: <BarChart3 className="h-8 w-8 text-pink-500" />,
+      title: "Analytics Insights",
+      description: "Track usage, performance, and optimization opportunities"
     }
   ];
 
