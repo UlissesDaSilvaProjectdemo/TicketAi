@@ -414,65 +414,65 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* How It Works Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Choose Your Plan
+            How It Works
           </h2>
           <p className="text-xl text-slate-400">
-            Start free and scale as you grow
+            Finding your perfect event is as easy as asking a question
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {pricingPlans.map((plan, index) => (
-            <Card 
-              key={index} 
-              className={`relative ${plan.popular ? 'border-blue-500 bg-slate-900/70' : 'bg-slate-900/50 border-slate-700'} transition-all duration-300 hover:scale-105`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2">
-                    Most Popular
-                  </Badge>
+          <Card className="bg-slate-900/50 border-slate-700 text-center p-8">
+            <CardContent className="space-y-6">
+              <div className="flex justify-center">
+                <div className="p-4 bg-blue-600/20 rounded-2xl">
+                  <Search className="h-12 w-12 text-blue-500" />
                 </div>
-              )}
-              
-              <CardHeader className="text-center p-8">
-                <CardTitle className="text-2xl font-bold text-white mb-2">{plan.name}</CardTitle>
-                <div className="space-y-2">
-                  <div className="text-5xl font-bold text-white">
-                    {plan.price}
-                    <span className="text-lg font-normal text-slate-400">/{plan.period}</span>
-                  </div>
-                  <p className="text-slate-400">{plan.description}</p>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-4">1. Ask Naturally</h3>
+                <p className="text-slate-300">
+                  Just type what you're looking for in plain English. "Rock concerts this weekend" or "free tech events near me" - our AI understands it all.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 border-slate-700 text-center p-8">
+            <CardContent className="space-y-6">
+              <div className="flex justify-center">
+                <div className="p-4 bg-purple-600/20 rounded-2xl">
+                  <Zap className="h-12 w-12 text-purple-500" />
                 </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-6 p-8">
-                <ul className="space-y-4">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-slate-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <Button 
-                  className={`w-full py-6 text-lg ${
-                    plan.popular 
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white' 
-                      : 'bg-slate-800 hover:bg-slate-700 text-white'
-                  }`}
-                  onClick={() => navigate('/auth')}
-                >
-                  {plan.cta}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-4">2. Get Smart Results</h3>
+                <p className="text-slate-300">
+                  Our AI instantly searches through thousands of events from TicketMaster and local venues, matching your exact preferences and budget.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 border-slate-700 text-center p-8">
+            <CardContent className="space-y-6">
+              <div className="flex justify-center">
+                <div className="p-4 bg-green-600/20 rounded-2xl">
+                  <CheckCircle className="h-12 w-12 text-green-500" />
+                </div>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-4">3. Book Instantly</h3>
+                <p className="text-slate-300">
+                  Compare prices, read reviews, and book your tickets directly. Safe, secure, and hassle-free - just the way it should be.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
