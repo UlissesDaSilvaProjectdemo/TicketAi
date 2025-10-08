@@ -24,24 +24,24 @@ const LandingPage = () => {
 
   const features = [
     {
-      icon: <TrendingUp className="h-12 w-12 text-blue-500" />,
-      title: "AI-Powered Predictions",
-      description: "Our machine learning algorithms analyze market trends, artist popularity, and demand patterns to predict ticket price movements with 94% accuracy."
+      icon: <Zap className="h-12 w-12 text-blue-500" />,
+      title: "Smart AI Search",
+      description: "Ask in natural language and our AI understands exactly what you're looking for. Find events by mood, budget, location, or any criteria you can think of."
     },
     {
-      icon: <Zap className="h-12 w-12 text-amber-500" />,
-      title: "Real-Time Trading",
-      description: "Buy and sell tickets instantly with dynamic pricing. Watch your investments grow as demand increases for popular events."
+      icon: <Globe className="h-12 w-12 text-amber-500" />,
+      title: "TicketMaster Integration",
+      description: "Access official tickets from TicketMaster plus local venues in one place. Compare prices and find the best deals instantly."
     },
     {
       icon: <Shield className="h-12 w-12 text-green-500" />,
-      title: "Blockchain Security",
-      description: "Every ticket is verified on the blockchain, ensuring authenticity and preventing fraud. Your investments are protected."
+      title: "Verified Events",
+      description: "Every event is verified and authenticated. Book with confidence knowing you're getting legitimate tickets from trusted sources."
     },
     {
       icon: <Users className="h-12 w-12 text-purple-500" />,
-      title: "Community Insights",
-      description: "Join thousands of traders sharing market insights, predictions, and investment strategies in our community."
+      title: "Personalized Recommendations",
+      description: "Our AI learns your preferences and suggests events you'll love. Discover hidden gems and never miss out on perfect matches."
     }
   ];
 
