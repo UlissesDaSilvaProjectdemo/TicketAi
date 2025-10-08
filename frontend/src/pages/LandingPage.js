@@ -355,7 +355,7 @@ const LandingPage = () => {
             Why Choose TicketAI?
           </h2>
           <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-            Advanced technology meets live entertainment to create unprecedented opportunities
+            The smartest way to discover, compare, and book tickets for amazing events
           </p>
         </div>
 
