@@ -138,10 +138,7 @@ const LandingPage = () => {
         image: event.image_url || event.image, // Map image_url to image for compatibility
       }));
       
-      console.log('Mapped results:', mappedResults);
-      console.log('Setting search results and showing results');
-      console.log('Current showResults state before update:', showResults);
-      console.log('Current searchResults length before update:', searchResults.length);
+      console.log('AI search successful:', mappedResults.length, 'results found');
       
       setSearchResults(mappedResults);
       setIsSearching(false);
