@@ -53,18 +53,39 @@ const LandingPage = () => {
     ]
   };
 
-  const handleAISearch = () => {
+  const handleAISearch = async () => {
     if (!searchQuery.trim()) return;
     
     setIsSearching(true);
     setShowResults(false);
     
-    // Simulate AI processing delay
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-search`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: searchQuery,
+          location: null // We can add location input later
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Search failed');
+      }
+      
+      const data = await response.json();
+      setSearchResults(data.results || []);
+      setIsSearching(false);
+      setShowResults(true);
+      
+    } catch (error) {
+      console.error('AI search error:', error);
+      // Fallback to mock data if API fails
       const query = searchQuery.toLowerCase();
       let results = [];
       
-      // Simple keyword matching for demo
       if (query.includes('rock') || query.includes('music') || query.includes('concert')) {
         results = mockSearchResults['rock concerts'];
       } else if (query.includes('tech') || query.includes('conference') || query.includes('startup')) {
@@ -76,7 +97,6 @@ const LandingPage = () => {
       } else if (query.includes('sport') || query.includes('game') || query.includes('basketball') || query.includes('hockey')) {
         results = mockSearchResults['sports'];
       } else {
-        // Default mixed results for any other query
         results = [
           ...mockSearchResults['rock concerts'].slice(0, 2),
           ...mockSearchResults['tech events'].slice(0, 2),
@@ -87,7 +107,7 @@ const LandingPage = () => {
       setSearchResults(results);
       setIsSearching(false);
       setShowResults(true);
-    }, 1500);
+    }
   };
 
   const features = [
