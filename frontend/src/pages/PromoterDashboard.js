@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { 
   Ticket, User, Calendar, DollarSign, BarChart3, Plus, Settings, 
   LogOut, CreditCard, TrendingUp, Users, Zap, MapPin, Clock,
-  Image as ImageIcon, Tag, Trash2, Eye, Edit
+  Image as ImageIcon, Tag, Trash2, Eye, Edit, Rocket, Star
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
