@@ -56,14 +56,20 @@ const LandingPage = () => {
       const data = await response.json();
       
       // Store recommendations and navigate to events page
-      // For now, we'll just show an alert and navigate
-      alert(`Got ${data.recommendations?.length || 0} personalized recommendations! Redirecting to events page...`);
-      navigate('/events');
+      console.log('AI Recommendations received:', data.recommendations);
+      
+      // Navigate to events page - recommendations could be passed via state or localStorage
+      navigate('/events', { 
+        state: { 
+          recommendations: data.recommendations,
+          userInterests: interests,
+          userLocation: location 
+        }
+      });
       
     } catch (error) {
       console.error('AI recommendations error:', error);
-      // Fallback behavior
-      alert('Got your preferences! Redirecting to events page...');
+      // Fallback behavior - still navigate to events page
       navigate('/events');
     } finally {
       setIsGettingRecommendations(false);
