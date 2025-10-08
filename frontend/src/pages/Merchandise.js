@@ -509,14 +509,21 @@ const Merchandise = () => {
                           Add to Cart
                         </Button>
                       ) : (
-                        <Button 
-                          className="flex-1 bg-blue-600 hover:bg-blue-700"
-                          disabled={!item.inStock}
-                          onClick={() => handleBuyExternal(item)}
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Buy on {platform.name}
-                        </Button>
+                        <div className="flex-1 space-y-1">
+                          <Button 
+                            className="w-full bg-blue-600 hover:bg-blue-700"
+                            disabled={!item.inStock}
+                            onClick={() => handleBuyExternal(item)}
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Buy on {platform.name}
+                          </Button>
+                          {chargablePlatforms.includes(item.platform) && (
+                            <div className="text-xs text-center text-yellow-400">
+                              💳 {PLATFORM_FEE} credits
+                            </div>
+                          )}
+                        </div>
                       )}
                       <Button 
                         size="sm" 
