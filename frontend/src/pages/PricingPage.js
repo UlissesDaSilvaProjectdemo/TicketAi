@@ -322,9 +322,28 @@ const PricingPage = () => {
           </div>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-          {currentPlans.map((plan, index) => (
+        {/* Pricing Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex justify-center mb-12">
+            <TabsList className="bg-slate-800 border-slate-700 p-2">
+              <TabsTrigger value="credits" className="data-[state=active]:bg-slate-700 text-white px-8 py-3">
+                Pay-As-You-Go
+              </TabsTrigger>
+              <TabsTrigger value="subscriptions" className="data-[state=active]:bg-slate-700 text-white px-8 py-3">
+                Subscriptions
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          {/* Subscription Plans */}
+          <TabsContent value="subscriptions" className="space-y-12">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-white mb-4">Subscription Plans</h2>
+              <p className="text-xl text-slate-400">Unlimited searches • Priority support • Advanced features</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {subscriptionPlans.map((plan, index) => (
             <Card 
               key={index} 
               className={`relative ${
