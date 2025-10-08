@@ -7,7 +7,7 @@ import { Input } from '../components/ui/input';
 import { 
   Ticket, TrendingUp, Zap, Shield, Users, ArrowRight, DollarSign, Star, 
   CheckCircle, Play, BarChart3, Globe, Award, Mail, Phone, MapPin,
-  Twitter, Linkedin, Instagram, ExternalLink
+  Twitter, Linkedin, Instagram, ExternalLink, Search
 } from 'lucide-react';
 
 const LandingPage = () => {
