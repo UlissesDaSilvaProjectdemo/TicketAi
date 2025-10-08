@@ -6,7 +6,8 @@ import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { 
   Ticket, CheckCircle, ArrowLeft, Zap, Shield, Users, BarChart3,
-  Crown, Building, Smartphone, Globe, Headphones, Award
+  Crown, Building, Smartphone, Globe, Headphones, Award, Phone,
+  Mail, DollarSign, Star, Code, TrendingUp, Gift, Calculator
 } from 'lucide-react';
 
 const PricingPage = () => {
