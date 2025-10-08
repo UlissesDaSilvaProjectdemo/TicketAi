@@ -15,6 +15,10 @@ import {
 const LandingPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
   const handleNewsletterSignup = () => {
     if (email) {
