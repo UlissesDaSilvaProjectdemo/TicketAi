@@ -9,7 +9,7 @@ import {
   ShoppingCart, Heart, Star, Search, Filter, Truck, 
   Shield, ExternalLink, User, Shirt, Music, Camera,
   Tag, DollarSign, MapPin, Clock, Ticket, CreditCard,
-  LogOut, Plus, Eye, TrendingUp, Store
+  LogOut, Plus, Eye, TrendingUp, Store, AlertCircle
 } from 'lucide-react';
 
 const Merchandise = () => {
