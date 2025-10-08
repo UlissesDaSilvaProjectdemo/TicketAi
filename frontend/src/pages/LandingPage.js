@@ -9,7 +9,7 @@ import { Label } from '../components/ui/label';
 import { 
   Ticket, TrendingUp, Zap, Shield, Users, ArrowRight, DollarSign, Star, 
   CheckCircle, Play, BarChart3, Globe, Award, Mail, Phone, MapPin,
-  Twitter, Linkedin, Instagram, ExternalLink, Search
+  Twitter, Linkedin, Instagram, ExternalLink, Search, Calendar
 } from 'lucide-react';
 
 const LandingPage = () => {
