@@ -121,6 +121,70 @@ class DonationRequest(BaseModel):
     custom_amount: Optional[float] = None
     origin_url: str
 
+# Live Streaming Models
+class StreamEvent(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str
+    description: str
+    organizer_id: str
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    ingest_rtmp_url: Optional[str] = None
+    stream_key: Optional[str] = None
+    playback_id: Optional[str] = None
+    status: str = "scheduled"  # scheduled, live, ended
+    price: float
+    ticket_type: str = "pay_per_view"  # pay_per_view, subscription, vip
+    thumbnail_url: Optional[str] = None
+    quality: str = "HD"
+    features: List[str] = []
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class StreamEventCreate(BaseModel):
+    title: str
+    description: str
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    price: float
+    ticket_type: str = "pay_per_view"
+    thumbnail_url: Optional[str] = None
+    quality: str = "HD"
+    features: List[str] = []
+
+class StreamTicket(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    stream_event_id: str
+    user_id: str
+    ticket_type: str
+    price: float
+    purchased_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    access_expires: Optional[datetime] = None
+    stripe_payment_intent_id: Optional[str] = None
+
+class PlaybackToken(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    stream_ticket_id: str
+    token: str
+    expires_at: datetime
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class StreamAnalytics(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    stream_event_id: str
+    user_id: Optional[str] = None
+    event_type: str  # viewer_joined, viewer_left, chat_message, tip_sent, etc.
+    payload: dict = {}
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class PlaybackTokenRequest(BaseModel):
+    stream_event_id: str
+    user_id: str
+
+class StreamPurchaseRequest(BaseModel):
+    stream_event_id: str
+    user_id: str
+    origin_url: str
+
 # Mock event data for development
 MOCK_EVENTS = [
     {
