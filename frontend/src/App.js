@@ -21,6 +21,7 @@ import PromoterLogin from "./pages/PromoterLogin";
 import PromoterDashboard from "./pages/PromoterDashboard";
 import MyTickets from "./pages/MyTickets";
 import Merchandise from "./pages/Merchandise";
+import DonationSuccess from "./pages/DonationSuccess";
 
 function App() {
   return (
