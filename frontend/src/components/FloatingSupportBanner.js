@@ -241,7 +241,9 @@ const FloatingSupportBanner = () => {
                             <div className="text-xs opacity-90">{tier.description}</div>
                           </div>
                         </div>
-                        <div className="font-bold text-lg">{tier.amount}</div>
+                        <div className="font-bold text-lg">
+                          {isProcessingPayment ? '...' : tier.amount}
+                        </div>
                       </div>
                     </Button>
                   );
