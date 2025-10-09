@@ -46,6 +46,7 @@ function App() {
           <Route path="/my-tickets" element={<MyTickets />} />
           <Route path="/merchandise" element={<Merchandise />} />
           <Route path="/donation/success" element={<DonationSuccess />} />
+          <Route path="/live-streaming" element={<LiveStreaming />} />
         </Routes>
         <Toaster />
         <GlobalComponents />
