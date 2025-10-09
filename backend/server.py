@@ -218,6 +218,19 @@ def get_llm_chat():
         system_message="You are an AI assistant that helps users find events. You analyze user queries and match them with relevant events. Always respond in JSON format with event recommendations."
     ).with_model("openai", "gpt-5")
 
+# Donation packages - defined on backend for security
+DONATION_PACKAGES = {
+    "coffee": 5.0,
+    "super": 15.0,
+    "champion": 50.0
+}
+
+# Initialize Stripe
+def get_stripe_checkout(host_url: str):
+    api_key = os.environ.get('STRIPE_API_KEY')
+    webhook_url = f"{host_url}/api/webhook/stripe"
+    return StripeCheckout(api_key=api_key, webhook_url=webhook_url)
+
 # Basic routes
 @api_router.get("/")
 async def root():
