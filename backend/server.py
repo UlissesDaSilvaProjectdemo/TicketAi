@@ -834,8 +834,8 @@ async def create_playback_token(stream_id: str, request: PlaybackTokenRequest):
             "ticket_id": ticket["id"]
         }
         
-        token = jwt.sign(payload, os.environ.get('PLAYBACK_JWT_SECRET', 'change-me'), 
-                        algorithm='HS256', expires=timedelta(minutes=10))
+        token = jwt.encode(payload, os.environ.get('PLAYBACK_JWT_SECRET', 'change-me'), 
+                          algorithm='HS256')
         
         # Store playback token
         playback_token = PlaybackToken(
