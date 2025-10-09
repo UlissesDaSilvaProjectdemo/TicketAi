@@ -253,12 +253,8 @@ const FloatingSupportBanner = () => {
                 <Button
                   variant="outline"
                   className="w-full border-slate-600 text-slate-300 hover:bg-slate-800"
-                  onClick={() => {
-                    const amount = prompt("Enter custom amount (USD):");
-                    if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
-                      window.open(`https://donate.stripe.com/example?amount=${Math.round(parseFloat(amount) * 100)}`, '_blank');
-                    }
-                  }}
+                  onClick={handleCustomDonation}
+                  disabled={isProcessingPayment}
                 >
                   <DollarSign className="w-4 h-4 mr-2" />
                   Custom Amount
