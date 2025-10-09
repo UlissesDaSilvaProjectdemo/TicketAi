@@ -259,7 +259,7 @@ const FloatingSupportBanner = () => {
                   disabled={isProcessingPayment}
                 >
                   <DollarSign className="w-4 h-4 mr-2" />
-                  Custom Amount
+                  {isProcessingPayment ? 'Processing...' : 'Custom Amount'}
                 </Button>
               </div>
 
