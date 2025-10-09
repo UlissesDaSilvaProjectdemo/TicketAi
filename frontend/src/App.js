@@ -44,6 +44,7 @@ function App() {
           <Route path="/promoter-dashboard" element={<PromoterDashboard />} />
           <Route path="/my-tickets" element={<MyTickets />} />
           <Route path="/merchandise" element={<Merchandise />} />
+          <Route path="/donation/success" element={<DonationSuccess />} />
         </Routes>
         <Toaster />
         <GlobalComponents />
