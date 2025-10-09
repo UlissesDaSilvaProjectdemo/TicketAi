@@ -48,6 +48,7 @@ function App() {
           <Route path="/merchandise" element={<Merchandise />} />
           <Route path="/donation/success" element={<DonationSuccess />} />
           <Route path="/live-streaming" element={<LiveStreaming />} />
+          <Route path="/stream/success" element={<StreamSuccess />} />
         </Routes>
         <Toaster />
         <GlobalComponents />
