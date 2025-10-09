@@ -684,6 +684,254 @@ async def stripe_webhook(request: Request):
         logger.error(f"Error processing stripe webhook: {e}")
         raise HTTPException(status_code=400, detail="Webhook processing failed")
 
+# Live Streaming endpoints
+@api_router.get("/streams", response_model=List[StreamEvent])
+async def get_streams():
+    """Get all streaming events (live and upcoming)"""
+    try:
+        # For now, return mock data. In production, fetch from database
+        mock_streams = [
+            {
+                "id": str(uuid.uuid4()),
+                "title": "Arctic Monkeys - Live from Studio",
+                "description": "Exclusive live performance from the legendary indie rock band",
+                "organizer_id": str(uuid.uuid4()),
+                "start_time": datetime.now(timezone.utc) - timedelta(hours=1),
+                "status": "live",
+                "price": 19.99,
+                "ticket_type": "pay_per_view",
+                "thumbnail_url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop",
+                "quality": "HD",
+                "features": ["Multi-camera", "Live Chat", "Backstage Access"],
+                "created_at": datetime.now(timezone.utc)
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "title": "Foo Fighters - World Tour Finale",
+                "description": "The epic finale of the world tour with special guests",
+                "organizer_id": str(uuid.uuid4()),
+                "start_time": datetime.now(timezone.utc) + timedelta(days=5),
+                "status": "scheduled",
+                "price": 24.99,
+                "ticket_type": "vip_access",
+                "thumbnail_url": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=250&fit=crop",
+                "quality": "4K",
+                "features": ["4K Stream", "Backstage Pass", "Meet & Greet", "Exclusive Merch"],
+                "created_at": datetime.now(timezone.utc)
+            }
+        ]
+        
+        return [StreamEvent(**stream) for stream in mock_streams]
+        
+    except Exception as e:
+        logger.error(f"Error getting streams: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get streams")
+
+@api_router.post("/streams", response_model=StreamEvent)
+async def create_stream_event(stream: StreamEventCreate, organizer_id: str):
+    """Create a new streaming event (for organizers)"""
+    try:
+        stream_dict = stream.dict()
+        stream_dict["organizer_id"] = organizer_id
+        stream_obj = StreamEvent(**stream_dict)
+        
+        # In production, this would:
+        # 1. Create Mux live input for RTMP ingest
+        # 2. Generate stream key and RTMP URL
+        # 3. Store in database
+        
+        prepared_dict = prepare_for_mongo(stream_obj.dict())
+        result = await db.stream_events.insert_one(prepared_dict)
+        
+        logger.info(f"Created stream event: {stream_obj.id}")
+        return stream_obj
+        
+    except Exception as e:
+        logger.error(f"Error creating stream event: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create stream event")
+
+@api_router.post("/streams/{stream_id}/purchase")
+async def purchase_stream_access(stream_id: str, request: StreamPurchaseRequest):
+    """Create Stripe checkout session for stream access"""
+    try:
+        # Find stream event
+        stream = await db.stream_events.find_one({"id": stream_id})
+        if not stream:
+            raise HTTPException(status_code=404, detail="Stream not found")
+        
+        # Get host URL
+        origin_url = request.origin_url
+        success_url = f"{origin_url}/stream/success?session_id={{CHECKOUT_SESSION_ID}}"
+        cancel_url = f"{origin_url}/live-streaming"
+        
+        # Create Stripe checkout session
+        stripe_session = await stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': stream['title'],
+                        'description': f"Access to live stream: {stream['title']}"
+                    },
+                    'unit_amount': int(stream['price'] * 100),
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                'type': 'stream_access',
+                'stream_id': stream_id,
+                'user_id': request.user_id
+            }
+        )
+        
+        # Create pending stream ticket
+        ticket = StreamTicket(
+            stream_event_id=stream_id,
+            user_id=request.user_id,
+            ticket_type=stream['ticket_type'],
+            price=stream['price'],
+            stripe_payment_intent_id=stripe_session.payment_intent
+        )
+        
+        ticket_dict = prepare_for_mongo(ticket.dict())
+        await db.stream_tickets.insert_one(ticket_dict)
+        
+        logger.info(f"Created stream purchase session: {stripe_session.id}")
+        
+        return {"url": stripe_session.url, "session_id": stripe_session.id}
+        
+    except Exception as e:
+        logger.error(f"Error creating stream purchase: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create stream purchase")
+
+@api_router.post("/streams/{stream_id}/playback-token")
+async def create_playback_token(stream_id: str, request: PlaybackTokenRequest):
+    """Generate playback token for authenticated stream access"""
+    try:
+        # Check if user has valid ticket for this stream
+        ticket = await db.stream_tickets.find_one({
+            "stream_event_id": stream_id,
+            "user_id": request.user_id,
+            "$or": [
+                {"access_expires": {"$gte": datetime.now(timezone.utc)}},
+                {"access_expires": None}
+            ]
+        })
+        
+        if not ticket:
+            raise HTTPException(status_code=403, detail="No valid access ticket found")
+        
+        # Generate JWT playback token
+        payload = {
+            "sub": request.user_id,
+            "stream_id": stream_id,
+            "ticket_id": ticket["id"]
+        }
+        
+        token = jwt.sign(payload, os.environ.get('PLAYBACK_JWT_SECRET', 'change-me'), 
+                        algorithm='HS256', expires=timedelta(minutes=10))
+        
+        # Store playback token
+        playback_token = PlaybackToken(
+            stream_ticket_id=ticket["id"],
+            token=token,
+            expires_at=datetime.now(timezone.utc) + timedelta(minutes=10)
+        )
+        
+        token_dict = prepare_for_mongo(playback_token.dict())
+        await db.playback_tokens.insert_one(token_dict)
+        
+        # In production, this would return signed CloudFront URLs or Mux playback URLs
+        playback_url = f"https://stream.example.com/hls/{stream_id}/index.m3u8?token={token}"
+        
+        return {
+            "token": token,
+            "playback_url": playback_url,
+            "expires_at": playback_token.expires_at,
+            "expires_in": 600
+        }
+        
+    except Exception as e:
+        logger.error(f"Error creating playback token: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create playback token")
+
+@api_router.post("/streams/{stream_id}/analytics")
+async def log_stream_analytics(stream_id: str, event_type: str, payload: dict = {}):
+    """Log streaming analytics events"""
+    try:
+        analytics = StreamAnalytics(
+            stream_event_id=stream_id,
+            user_id=payload.get('user_id'),
+            event_type=event_type,
+            payload=payload
+        )
+        
+        analytics_dict = prepare_for_mongo(analytics.dict())
+        await db.stream_analytics.insert_one(analytics_dict)
+        
+        # Update real-time metrics if needed
+        if event_type == "viewer_joined":
+            await db.stream_events.update_one(
+                {"id": stream_id},
+                {"$inc": {"current_viewers": 1, "total_viewers": 1}}
+            )
+        elif event_type == "viewer_left":
+            await db.stream_events.update_one(
+                {"id": stream_id},
+                {"$inc": {"current_viewers": -1}}
+            )
+        
+        return {"status": "logged"}
+        
+    except Exception as e:
+        logger.error(f"Error logging analytics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to log analytics")
+
+@api_router.get("/streams/{stream_id}/metrics")
+async def get_stream_metrics(stream_id: str):
+    """Get real-time stream metrics"""
+    try:
+        # Get current stream info
+        stream = await db.stream_events.find_one({"id": stream_id})
+        if not stream:
+            raise HTTPException(status_code=404, detail="Stream not found")
+        
+        # Get analytics summary
+        total_viewers = await db.stream_analytics.count_documents({
+            "stream_event_id": stream_id,
+            "event_type": "viewer_joined"
+        })
+        
+        current_viewers = stream.get("current_viewers", 0)
+        
+        # Get engagement metrics
+        chat_messages = await db.stream_analytics.count_documents({
+            "stream_event_id": stream_id,
+            "event_type": "chat_message"
+        })
+        
+        tips_sent = await db.stream_analytics.count_documents({
+            "stream_event_id": stream_id,
+            "event_type": "tip_sent"
+        })
+        
+        return {
+            "stream_id": stream_id,
+            "current_viewers": current_viewers,
+            "total_viewers": total_viewers,
+            "chat_messages": chat_messages,
+            "tips_sent": tips_sent,
+            "status": stream.get("status", "scheduled")
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting stream metrics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get metrics")
+
 # Include the router in the main app
 app.include_router(api_router)
 
