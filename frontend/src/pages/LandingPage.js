@@ -312,6 +312,12 @@ const LandingPage = () => {
                 </button>
                 <button 
                   className="text-slate-300 hover:text-white transition-colors"
+                  onClick={() => navigate('/live-streaming')}
+                >
+                  Live Streaming
+                </button>
+                <button 
+                  className="text-slate-300 hover:text-white transition-colors"
                   onClick={() => navigate('/my-tickets')}
                 >
                   My Tickets
