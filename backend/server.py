@@ -481,6 +481,145 @@ async def ai_recommendations(request: AIRecommendationRequest):
         logger.error(f"Error in AI recommendations: {e}")
         raise HTTPException(status_code=500, detail=f"AI recommendations failed: {str(e)}")
 
+# Donation endpoints
+@api_router.post("/donations/checkout", response_model=CheckoutSessionResponse)
+async def create_donation_checkout(request: DonationRequest, http_request: Request):
+    try:
+        # Validate donation amount
+        amount = None
+        if request.package_id:
+            if request.package_id not in DONATION_PACKAGES:
+                raise HTTPException(status_code=400, detail="Invalid donation package")
+            amount = DONATION_PACKAGES[request.package_id]
+        elif request.custom_amount:
+            if request.custom_amount < 1.0 or request.custom_amount > 1000.0:
+                raise HTTPException(status_code=400, detail="Custom amount must be between $1 and $1000")
+            amount = float(request.custom_amount)
+        else:
+            raise HTTPException(status_code=400, detail="Either package_id or custom_amount is required")
+
+        # Get host URL from request
+        host_url = str(http_request.base_url).rstrip('/')
+        
+        # Create success and cancel URLs
+        success_url = f"{request.origin_url}/donation/success?session_id={{CHECKOUT_SESSION_ID}}"
+        cancel_url = f"{request.origin_url}"
+        
+        # Initialize Stripe
+        stripe_checkout = get_stripe_checkout(host_url)
+        
+        # Create checkout session
+        checkout_request = CheckoutSessionRequest(
+            amount=amount,
+            currency="usd",
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                "type": "donation",
+                "package_id": request.package_id or "custom",
+                "amount": str(amount)
+            }
+        )
+        
+        session = await stripe_checkout.create_checkout_session(checkout_request)
+        
+        # Create payment transaction record
+        transaction = PaymentTransaction(
+            session_id=session.session_id,
+            amount=amount,
+            currency="usd",
+            package_id=request.package_id,
+            payment_status="pending",
+            status="initiated",
+            metadata=checkout_request.metadata
+        )
+        
+        # Store transaction in database
+        transaction_dict = prepare_for_mongo(transaction.dict())
+        await db.payment_transactions.insert_one(transaction_dict)
+        
+        logger.info(f"Created donation checkout session: {session.session_id} for amount: ${amount}")
+        
+        return session
+        
+    except Exception as e:
+        logger.error(f"Error creating donation checkout: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create checkout session")
+
+@api_router.get("/donations/status/{session_id}", response_model=CheckoutStatusResponse)
+async def get_donation_status(session_id: str, http_request: Request):
+    try:
+        # Get host URL from request
+        host_url = str(http_request.base_url).rstrip('/')
+        
+        # Initialize Stripe
+        stripe_checkout = get_stripe_checkout(host_url)
+        
+        # Get checkout status from Stripe
+        checkout_status = await stripe_checkout.get_checkout_status(session_id)
+        
+        # Find transaction in database
+        transaction = await db.payment_transactions.find_one({"session_id": session_id})
+        
+        if transaction:
+            # Update transaction status if payment is successful and not already processed
+            if (checkout_status.payment_status == "paid" and 
+                transaction.get("payment_status") != "paid"):
+                
+                await db.payment_transactions.update_one(
+                    {"session_id": session_id},
+                    {
+                        "$set": {
+                            "payment_status": checkout_status.payment_status,
+                            "status": checkout_status.status,
+                            "updated_at": datetime.now(timezone.utc).isoformat()
+                        }
+                    }
+                )
+                logger.info(f"Updated donation transaction {session_id} to paid status")
+        
+        return checkout_status
+        
+    except Exception as e:
+        logger.error(f"Error getting donation status: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get payment status")
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    try:
+        body = await request.body()
+        signature = request.headers.get("Stripe-Signature")
+        
+        # Get host URL from request
+        host_url = str(request.base_url).rstrip('/')
+        
+        # Initialize Stripe
+        stripe_checkout = get_stripe_checkout(host_url)
+        
+        # Handle webhook
+        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        
+        # Process webhook event
+        if webhook_response.event_type == "checkout.session.completed":
+            # Update transaction in database
+            await db.payment_transactions.update_one(
+                {"session_id": webhook_response.session_id},
+                {
+                    "$set": {
+                        "payment_status": webhook_response.payment_status,
+                        "status": "completed",
+                        "updated_at": datetime.now(timezone.utc).isoformat()
+                    }
+                }
+            )
+            logger.info(f"Webhook updated donation transaction {webhook_response.session_id}")
+        
+        return {"status": "success"}
+        
+    except Exception as e:
+        logger.error(f"Error processing stripe webhook: {e}")
+        raise HTTPException(status_code=400, detail="Webhook processing failed")
+
 # Include the router in the main app
 app.include_router(api_router)
 
