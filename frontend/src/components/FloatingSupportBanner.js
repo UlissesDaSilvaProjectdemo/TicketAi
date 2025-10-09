@@ -28,10 +28,13 @@ const FloatingSupportBanner = () => {
 
   if (!isVisible) return null;
 
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+
   const supportTiers = [
     {
       name: "Coffee Supporter",
       amount: "$5",
+      packageId: "coffee",
       icon: Coffee,
       color: "from-amber-600 to-orange-600",
       description: "Buy us a coffee!"
@@ -39,6 +42,7 @@ const FloatingSupportBanner = () => {
     {
       name: "Super Fan",
       amount: "$15",
+      packageId: "super",
       icon: Star,
       color: "from-blue-600 to-purple-600",
       description: "Help us grow!"
@@ -46,6 +50,7 @@ const FloatingSupportBanner = () => {
     {
       name: "Champion",
       amount: "$50",
+      packageId: "champion",
       icon: Zap,
       color: "from-purple-600 to-pink-600",
       description: "Supercharge our mission!"
