@@ -22,6 +22,7 @@ import PromoterDashboard from "./pages/PromoterDashboard";
 import MyTickets from "./pages/MyTickets";
 import Merchandise from "./pages/Merchandise";
 import DonationSuccess from "./pages/DonationSuccess";
+import LiveStreaming from "./pages/LiveStreaming";
 
 function App() {
   return (
