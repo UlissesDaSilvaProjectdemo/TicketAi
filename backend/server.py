@@ -13,6 +13,8 @@ from emergentintegrations.llm.chat import LlmChat, UserMessage
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
 import json
 import asyncio
+import jwt
+from datetime import timedelta
 
 
 ROOT_DIR = Path(__file__).parent
