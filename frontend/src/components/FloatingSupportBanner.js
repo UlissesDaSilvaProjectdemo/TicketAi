@@ -24,7 +24,107 @@ const FloatingSupportBanner = () => {
     } else {
       setHasSeenBanner(true);
     }
+
+    // Check if returning from Stripe payment
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    if (sessionId && window.location.pathname.includes('/donation/success')) {
+      handlePaymentSuccess(sessionId);
+    }
   }, []);
+
+  const handlePaymentSuccess = async (sessionId) => {
+    try {
+      // Poll payment status
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/donations/status/${sessionId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.payment_status === 'paid') {
+          alert('🎉 Thank you for your generous support! Your contribution helps us build amazing features.');
+          // Clean up URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+    }
+  };
+
+  const handleDonation = async (tier) => {
+    if (isProcessingPayment) return;
+
+    setIsProcessingPayment(true);
+    try {
+      const originUrl = window.location.origin;
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/donations/checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          package_id: tier.packageId,
+          origin_url: originUrl
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session');
+      }
+
+      const data = await response.json();
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Sorry, there was an error processing your donation. Please try again.');
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+
+  const handleCustomDonation = async () => {
+    const amount = prompt("Enter custom amount (USD):");
+    if (!amount || isNaN(amount) || parseFloat(amount) < 1) {
+      if (amount !== null) { // Only show error if user didn't cancel
+        alert('Please enter a valid amount of $1 or more.');
+      }
+      return;
+    }
+
+    if (isProcessingPayment) return;
+
+    setIsProcessingPayment(true);
+    try {
+      const originUrl = window.location.origin;
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/donations/checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          custom_amount: parseFloat(amount),
+          origin_url: originUrl
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session');
+      }
+
+      const data = await response.json();
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Sorry, there was an error processing your donation. Please try again.');
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
 
   if (!isVisible) return null;
 
