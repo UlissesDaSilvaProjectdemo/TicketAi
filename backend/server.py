@@ -103,6 +103,24 @@ class AIRecommendationRequest(BaseModel):
     interests: str
     location: Optional[str] = None
 
+class PaymentTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str
+    amount: float
+    currency: str = "usd"
+    package_id: Optional[str] = None
+    payment_status: str = "pending"
+    status: str = "initiated"
+    metadata: Optional[dict] = None
+    user_email: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class DonationRequest(BaseModel):
+    package_id: Optional[str] = None
+    custom_amount: Optional[float] = None
+    origin_url: str
+
 # Mock event data for development
 MOCK_EVENTS = [
     {
