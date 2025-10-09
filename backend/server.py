@@ -293,6 +293,8 @@ DONATION_PACKAGES = {
 }
 
 # Initialize Stripe
+stripe.api_key = os.environ.get('STRIPE_API_KEY', 'sk_test_emergent')
+
 def get_stripe_checkout(host_url: str):
     api_key = os.environ.get('STRIPE_API_KEY')
     webhook_url = f"{host_url}/api/webhook/stripe"
