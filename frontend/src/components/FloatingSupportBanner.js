@@ -230,10 +230,8 @@ const FloatingSupportBanner = () => {
                     <Button
                       key={index}
                       className={`w-full bg-gradient-to-r ${tier.color} hover:scale-105 transition-all duration-200 p-3 h-auto`}
-                      onClick={() => {
-                        // This would integrate with payment processing
-                        window.open(`https://donate.stripe.com/example?amount=${tier.amount.replace('$', '')}00`, '_blank');
-                      }}
+                      onClick={() => handleDonation(tier)}
+                      disabled={isProcessingPayment}
                     >
                       <div className="flex items-center justify-between w-full">
                         <div className="flex items-center space-x-2">
