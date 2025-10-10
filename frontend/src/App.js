@@ -26,6 +26,7 @@ import LiveStreaming from "./pages/LiveStreaming";
 import StreamSuccess from "./pages/StreamSuccess";
 import PromoterCRM from "./pages/PromoterCRM";
 import PromotersVenues from "./pages/PromotersVenues";
+import DemoCRM from "./pages/DemoCRM";
 
 function App() {
   return (
