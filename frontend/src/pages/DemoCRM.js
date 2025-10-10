@@ -17,66 +17,180 @@ import {
 const DemoCRM = () => {
   const navigate = useNavigate();
   const [showContactPopup, setShowContactPopup] = useState(false);
-  const [showPricingModal, setShowPricingModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [newPost, setNewPost] = useState({ content: '', image: '', location: '', hashtags: '' });
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('home');
 
-  // Check trial status on component mount
+  // Initialize user and load community data
   useEffect(() => {
-    const trialData = localStorage.getItem('crmTrialData');
-    if (trialData) {
-      const { startDate, daysRemaining } = JSON.parse(trialData);
-      const daysSinceStart = Math.floor((Date.now() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
-      
-      if (daysSinceStart >= 30) {
-        // Trial expired - show pricing modal
-        setShowPricingModal(true);
-      }
+    // Create/get community user
+    let user = localStorage.getItem('communityUser');
+    if (!user) {
+      user = {
+        id: `user_${Date.now()}`,
+        username: 'eventlover_' + Math.floor(Math.random() * 1000),
+        name: 'Event Enthusiast',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+        followers: 1250,
+        following: 890,
+        posts: 45,
+        bio: '🎵 Music lover | 🎪 Event organizer | 📍 LA'
+      };
+      localStorage.setItem('communityUser', JSON.stringify(user));
+    } else {
+      user = JSON.parse(user);
     }
+    setCurrentUser(user);
+
+    // Load demo posts
+    loadCommunityPosts();
   }, []);
 
-  const startFreeTrial = () => {
-    // Start 30-day free trial
-    const trialData = {
-      startDate: new Date().toISOString(),
-      daysRemaining: 30,
-      plan: 'free_trial'
-    };
-    
-    localStorage.setItem('crmTrialData', JSON.stringify(trialData));
-    
-    // Create demo user
-    const demoUser = {
-      id: 'test-promoter-1',
-      email: 'demo@ticketai.com',
-      name: 'Demo User',
-      credits: 42,
-      company: 'TicketAI Demo',
-      trialStatus: 'active',
-      trialDaysRemaining: 30
-    };
-    
-    localStorage.setItem('promoterUser', JSON.stringify(demoUser));
-    
-    // Navigate to CRM
-    navigate('/promoter-crm');
+  const loadCommunityPosts = () => {
+    const demoPosts = [
+      {
+        id: 'post_1',
+        user: {
+          username: 'musicfest2024',
+          name: 'LA Music Festival',
+          avatar: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=150&h=150&fit=crop',
+          verified: true
+        },
+        content: "🎵 Just wrapped up an AMAZING weekend at our music festival! Over 50,000 attendees and the energy was absolutely electric! Thanks to @ticketai for helping us manage everything seamlessly 🚀",
+        image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=600&fit=crop',
+        location: 'Los Angeles, CA',
+        likes: 1543,
+        comments: 89,
+        shares: 156,
+        hashtags: ['#musicfest', '#LA', '#ticketai', '#livemusic'],
+        timestamp: '2 hours ago',
+        liked: false,
+        bookmarked: false
+      },
+      {
+        id: 'post_2',
+        user: {
+          username: 'techconf_pro',
+          name: 'Sarah Chen',
+          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b373?w=150&h=150&fit=crop&crop=face',
+          verified: false
+        },
+        content: "Pro tip for event organizers: The analytics dashboard in TicketAI is a game changer! 📊 We increased our ticket sales by 40% just by understanding our audience better. Who else is using data-driven strategies? 🤔",
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop',
+        location: 'San Francisco, CA',
+        likes: 892,
+        comments: 67,
+        shares: 94,
+        hashtags: ['#eventmarketing', '#analytics', '#ticketsales', '#growth'],
+        timestamp: '6 hours ago',
+        liked: true,
+        bookmarked: true
+      },
+      {
+        id: 'post_3',
+        user: {
+          username: 'comedynight_sf',
+          name: 'Comedy Central SF',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+          verified: true
+        },
+        content: "Last night's comedy show was SOLD OUT! 🎭 The crowd was incredible and the laughs were non-stop. Already planning our next event - drop a 🤣 if you want early access tickets!",
+        image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&h=600&fit=crop',
+        location: 'San Francisco Comedy Club',
+        likes: 456,
+        comments: 34,
+        shares: 28,
+        hashtags: ['#comedy', '#standup', '#SF', '#soldout'],
+        timestamp: '1 day ago',
+        liked: false,
+        bookmarked: false
+      },
+      {
+        id: 'post_4',
+        user: {
+          username: 'artgallery_nyc',
+          name: 'Modern Art Collective',
+          avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+          verified: false
+        },
+        content: "Opening night was absolutely magical! ✨ Over 300 art lovers joined us to celebrate emerging artists. The community response has been overwhelming. Next exhibition drops next month! 🎨",
+        image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
+        location: 'Chelsea, NYC',
+        likes: 678,
+        comments: 45,
+        shares: 62,
+        hashtags: ['#artexhibition', '#NYC', '#modernart', '#community'],
+        timestamp: '2 days ago',
+        liked: true,
+        bookmarked: false
+      },
+      {
+        id: 'post_5',
+        user: {
+          username: 'startup_events',
+          name: 'Startup Networking Hub',
+          avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face',
+          verified: true
+        },
+        content: "🚀 Incredible networking session last night! Investors, founders, and dreamers all in one room. Three new partnerships were formed right on the spot! The power of bringing the right people together 💼",
+        image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&h=600&fit=crop',
+        location: 'Silicon Valley',
+        likes: 1204,
+        comments: 156,
+        shares: 203,
+        hashtags: ['#startup', '#networking', '#siliconvalley', '#innovation'],
+        timestamp: '3 days ago',
+        liked: false,
+        bookmarked: true
+      }
+    ];
+    setPosts(demoPosts);
   };
 
   const handleContactSubmit = (formData) => {
-    console.log('Lead captured:', formData);
-    // Store lead data but don't block access
+    console.log('Community lead captured:', formData);
   };
 
-  const handleUpgrade = (plan) => {
-    // Handle subscription upgrade
-    console.log('Upgrading to plan:', plan);
-    setShowPricingModal(false);
+  const handleLike = (postId) => {
+    setPosts(prev => prev.map(post => 
+      post.id === postId 
+        ? { ...post, liked: !post.liked, likes: post.liked ? post.likes - 1 : post.likes + 1 }
+        : post
+    ));
+  };
+
+  const handleBookmark = (postId) => {
+    setPosts(prev => prev.map(post => 
+      post.id === postId 
+        ? { ...post, bookmarked: !post.bookmarked }
+        : post
+    ));
+  };
+
+  const handleCreatePost = () => {
+    if (!newPost.content.trim()) return;
     
-    // Update user data with new plan
-    const userData = JSON.parse(localStorage.getItem('promoterUser') || '{}');
-    userData.plan = plan;
-    userData.trialStatus = 'subscribed';
-    localStorage.setItem('promoterUser', JSON.stringify(userData));
+    const post = {
+      id: `post_${Date.now()}`,
+      user: currentUser,
+      content: newPost.content,
+      image: newPost.image || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=600&fit=crop',
+      location: newPost.location,
+      likes: Math.floor(Math.random() * 100),
+      comments: Math.floor(Math.random() * 20),
+      shares: Math.floor(Math.random() * 30),
+      hashtags: newPost.hashtags.split(' ').filter(tag => tag.startsWith('#')),
+      timestamp: 'Just now',
+      liked: false,
+      bookmarked: false
+    };
     
-    navigate('/promoter-crm');
+    setPosts(prev => [post, ...prev]);
+    setNewPost({ content: '', image: '', location: '', hashtags: '' });
+    setShowCreatePost(false);
   };
 
   const features = [
