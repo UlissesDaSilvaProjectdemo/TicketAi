@@ -304,6 +304,19 @@ class CRMApiUsage(BaseModel):
     billing_period: str  # daily, monthly
     metadata: dict = {}
 
+class ContactInquiry(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    phone: str
+    company: Optional[str] = None
+    event_type: Optional[str] = None
+    message: Optional[str] = None
+    source: str = "website"  # landing_page_crm_popup, contact_form, etc.
+    status: str = "new"  # new, contacted, qualified, converted
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    notes: Optional[str] = None
+
 class PlaybackTokenRequest(BaseModel):
     stream_event_id: str
     user_id: str
