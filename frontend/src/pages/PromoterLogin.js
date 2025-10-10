@@ -42,7 +42,7 @@ const PromoterLogin = () => {
     // Demo login validation
     if (loginForm.email === 'testpromoter@demo.com' && loginForm.password === 'demo123') {
       const userData = {
-        id: 'demo_promoter_001',
+        id: 'test-promoter-1', // This matches our seeded CRM data
         name: 'Test Promoter',
         email: 'testpromoter@demo.com',
         company: 'Demo Events LLC',
