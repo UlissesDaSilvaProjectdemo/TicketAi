@@ -1009,9 +1009,9 @@ const LandingPage = () => {
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-white">Company</h3>
               <ul className="space-y-3">
+                <li><button onClick={() => navigate('/contact')} className="text-slate-400 hover:text-white transition-colors">Contact</button></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition-colors">About</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Press</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Partners</a></li>
               </ul>
             </div>
