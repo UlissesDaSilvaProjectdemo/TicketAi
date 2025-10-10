@@ -1086,6 +1086,14 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Contact Popup */}
+      <ContactPopup
+        isOpen={showContactPopup}
+        onClose={() => setShowContactPopup(false)}
+        onSubmit={handleContactSubmit}
+        trigger="crm_demo"
+      />
     </div>
   );
 };
