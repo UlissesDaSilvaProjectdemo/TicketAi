@@ -104,7 +104,7 @@ const PromoterLogin = () => {
       description: `Welcome ${signupForm.name}! You've received 10 welcome credits.`,
     });
     
-    navigate('/promoter-dashboard');
+    navigate('/promoter-crm');
     setIsLoading(false);
   };
 
