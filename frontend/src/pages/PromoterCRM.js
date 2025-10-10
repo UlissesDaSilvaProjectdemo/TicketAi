@@ -96,47 +96,111 @@ const PromoterCRM = () => {
     }
   };
 
-  const loadEvents = () => {
-    // Mock events data
-    const mockEvents = [
-      {
-        id: 'event-1',
-        name: 'TechFest 2025',
-        status: 'active',
-        date: '2024-12-15',
-        ticketsSold: 950,
-        capacity: 1200,
-        revenue: 11400,
-        streamViewers: 2340,
-        engagement: 85,
-        category: 'Technology'
-      },
-      {
-        id: 'event-2',
-        name: 'Music Night LA',
-        status: 'scheduled',
-        date: '2024-12-20',
-        ticketsSold: 400,
-        capacity: 800,
-        revenue: 6000,
-        streamViewers: 0,
-        engagement: 92,
-        category: 'Music'
-      },
-      {
-        id: 'event-3',
-        name: 'Comedy Jam',
-        status: 'completed',
-        date: '2024-11-25',
-        ticketsSold: 320,
-        capacity: 350,
-        revenue: 3200,
-        streamViewers: 890,
-        engagement: 78,
-        category: 'Comedy'
+  const loadEvents = async () => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/crm/events/${user.id}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const formattedEvents = data.map(event => ({
+          id: event.id,
+          name: event.name,
+          status: event.status,
+          date: event.date,
+          ticketsSold: event.tickets_sold,
+          capacity: event.capacity,
+          revenue: event.revenue,
+          streamViewers: event.stream_viewers,
+          engagement: event.engagement_score,
+          category: event.category
+        }));
+        setEvents(formattedEvents);
+      } else {
+        // Fallback to mock data
+        const mockEvents = [
+          {
+            id: 'event-1',
+            name: 'TechFest 2025',
+            status: 'active',
+            date: '2024-12-15',
+            ticketsSold: 950,
+            capacity: 1200,
+            revenue: 11400,
+            streamViewers: 2340,
+            engagement: 85,
+            category: 'Technology'
+          },
+          {
+            id: 'event-2',
+            name: 'Music Night LA',
+            status: 'scheduled',
+            date: '2024-12-20',
+            ticketsSold: 400,
+            capacity: 800,
+            revenue: 6000,
+            streamViewers: 0,
+            engagement: 92,
+            category: 'Music'
+          },
+          {
+            id: 'event-3',
+            name: 'Comedy Jam',
+            status: 'completed',
+            date: '2024-11-25',
+            ticketsSold: 320,
+            capacity: 350,
+            revenue: 3200,
+            streamViewers: 890,
+            engagement: 78,
+            category: 'Comedy'
+          }
+        ];
+        setEvents(mockEvents);
       }
-    ];
-    setEvents(mockEvents);
+    } catch (error) {
+      console.error('Error loading events:', error);
+      // Fallback to mock data
+      const mockEvents = [
+        {
+          id: 'event-1',
+          name: 'TechFest 2025',
+          status: 'active',
+          date: '2024-12-15',
+          ticketsSold: 950,
+          capacity: 1200,
+          revenue: 11400,
+          streamViewers: 2340,
+          engagement: 85,
+          category: 'Technology'
+        },
+        {
+          id: 'event-2',
+          name: 'Music Night LA',
+          status: 'scheduled',
+          date: '2024-12-20',
+          ticketsSold: 400,
+          capacity: 800,
+          revenue: 6000,
+          streamViewers: 0,
+          engagement: 92,
+          category: 'Music'
+        },
+        {
+          id: 'event-3',
+          name: 'Comedy Jam',
+          status: 'completed',
+          date: '2024-11-25',
+          ticketsSold: 320,
+          capacity: 350,
+          revenue: 3200,
+          streamViewers: 890,
+          engagement: 78,
+          category: 'Comedy'
+        }
+      ];
+      setEvents(mockEvents);
+    }
   };
 
   const loadContacts = () => {
