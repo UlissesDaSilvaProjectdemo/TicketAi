@@ -377,6 +377,12 @@ const LandingPage = () => {
               >
                 Sign In
               </Button>
+              <button
+                className="inline-flex items-center px-5 py-2.5 border-2 border-green-300 text-green-700 bg-transparent rounded font-medium transition-all duration-300 ease-in-out hover:bg-green-300 hover:text-white hidden md:inline-flex"
+                onClick={() => navigate('/demo-crm')}
+              >
+                Explore CRM
+              </button>
               <Button 
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
                 onClick={() => navigate('/demo-crm')}
