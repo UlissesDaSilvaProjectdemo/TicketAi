@@ -412,6 +412,35 @@ const PromoterCRM = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Trial Status Banner */}
+      {user?.trialDaysRemaining !== undefined && user?.trialDaysRemaining > 0 && (
+        <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white text-center py-2 px-4">
+          <p className="text-sm font-medium">
+            🎉 Free Trial Active: {user.trialDaysRemaining} days remaining • 
+            <button 
+              className="ml-2 underline hover:no-underline"
+              onClick={() => navigate('/demo-crm')}
+            >
+              Upgrade Now
+            </button>
+          </p>
+        </div>
+      )}
+      
+      {user?.trialStatus === 'expired' && (
+        <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white text-center py-2 px-4">
+          <p className="text-sm font-medium">
+            ⚠️ Free Trial Expired • Limited Access Mode • 
+            <button 
+              className="ml-2 underline hover:no-underline font-semibold"
+              onClick={() => navigate('/demo-crm')}
+            >
+              Upgrade Now
+            </button>
+          </p>
+        </div>
+      )}
+
       {/* Header */}
       <nav className="border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 py-4">
