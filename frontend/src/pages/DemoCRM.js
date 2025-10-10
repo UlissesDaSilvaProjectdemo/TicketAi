@@ -193,34 +193,21 @@ const DemoCRM = () => {
     setShowCreatePost(false);
   };
 
-  const features = [
-    { icon: BarChart3, title: "Analytics Dashboard", desc: "Real-time revenue, ticket sales, and audience insights" },
-    { icon: Users, title: "Audience Management", desc: "Contact segmentation and engagement tracking" },
-    { icon: DollarSign, title: "Revenue Optimization", desc: "Multiple revenue streams and automated payouts" },
-    { icon: Calendar, title: "Event Management", desc: "Complete event lifecycle management and performance tracking" },
-    { icon: Target, title: "Marketing Campaigns", desc: "Email marketing, automation, and campaign analytics" },
-    { icon: TrendingUp, title: "Growth Analytics", desc: "AI-powered insights and recommendation engine" }
+  const categories = [
+    { icon: Music, label: 'Music', color: 'from-pink-500 to-rose-500' },
+    { icon: Coffee, label: 'Food', color: 'from-amber-500 to-orange-500' },
+    { icon: Palette, label: 'Art', color: 'from-purple-500 to-indigo-500' },
+    { icon: Gamepad2, label: 'Gaming', color: 'from-green-500 to-emerald-500' },
+    { icon: Users, label: 'Network', color: 'from-blue-500 to-cyan-500' },
+    { icon: Calendar, label: 'Business', color: 'from-slate-500 to-gray-500' }
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      company: "Elite Events",
-      feedback: "TicketAI CRM increased our ticket sales by 65% in just 3 months. The audience insights are game-changing!",
-      revenue: "+$120K"
-    },
-    {
-      name: "Michael Chen",  
-      company: "Music Collective",
-      feedback: "The marketing automation saved us 20 hours per week. ROI was immediate.",
-      revenue: "+$85K"
-    },
-    {
-      name: "Emma Davis",
-      company: "Corporate Events Plus",
-      feedback: "Finally, a CRM built specifically for event promoters. The streaming integration is brilliant.",
-      revenue: "+$200K"
-    }
+  const trendingHashtags = [
+    { tag: '#musicfest', posts: '12.5K' },
+    { tag: '#ticketai', posts: '8.9K' },
+    { tag: '#liveevents', posts: '15.2K' },
+    { tag: '#eventpromo', posts: '6.7K' },
+    { tag: '#community', posts: '25.1K' }
   ];
 
   return (
