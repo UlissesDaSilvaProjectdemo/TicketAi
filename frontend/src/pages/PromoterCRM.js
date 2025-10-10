@@ -203,41 +203,97 @@ const PromoterCRM = () => {
     }
   };
 
-  const loadContacts = () => {
-    // Mock contacts data
-    const mockContacts = [
-      {
-        id: 'contact-1',
-        name: 'Sarah Johnson',
-        email: 'sarah@example.com',
-        purchaseHistory: 4,
-        lastEvent: 'TechFest 2025',
-        engagementScore: 95,
-        totalSpent: 180,
-        location: 'Los Angeles, CA'
-      },
-      {
-        id: 'contact-2',
-        name: 'Michael Chen',
-        email: 'michael@example.com',
-        purchaseHistory: 7,
-        lastEvent: 'Music Night LA',
-        engagementScore: 88,
-        totalSpent: 315,
-        location: 'San Francisco, CA'
-      },
-      {
-        id: 'contact-3',
-        name: 'Emma Davis',
-        email: 'emma@example.com',
-        purchaseHistory: 2,
-        lastEvent: 'Comedy Jam',
-        engagementScore: 72,
-        totalSpent: 90,
-        location: 'New York, NY'
+  const loadContacts = async () => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/crm/contacts/${user.id}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const formattedContacts = data.map(contact => ({
+          id: contact.id,
+          name: contact.name,
+          email: contact.email,
+          purchaseHistory: contact.purchase_history,
+          lastEvent: contact.last_event,
+          engagementScore: contact.engagement_score,
+          totalSpent: contact.total_spent,
+          location: contact.location
+        }));
+        setContacts(formattedContacts);
+      } else {
+        // Fallback to mock data
+        const mockContacts = [
+          {
+            id: 'contact-1',
+            name: 'Sarah Johnson',
+            email: 'sarah@example.com',
+            purchaseHistory: 4,
+            lastEvent: 'TechFest 2025',
+            engagementScore: 95,
+            totalSpent: 180,
+            location: 'Los Angeles, CA'
+          },
+          {
+            id: 'contact-2',
+            name: 'Michael Chen',
+            email: 'michael@example.com',
+            purchaseHistory: 7,
+            lastEvent: 'Music Night LA',
+            engagementScore: 88,
+            totalSpent: 315,
+            location: 'San Francisco, CA'
+          },
+          {
+            id: 'contact-3',
+            name: 'Emma Davis',
+            email: 'emma@example.com',
+            purchaseHistory: 2,
+            lastEvent: 'Comedy Jam',
+            engagementScore: 72,
+            totalSpent: 90,
+            location: 'New York, NY'
+          }
+        ];
+        setContacts(mockContacts);
       }
-    ];
-    setContacts(mockContacts);
+    } catch (error) {
+      console.error('Error loading contacts:', error);
+      // Fallback to mock data
+      const mockContacts = [
+        {
+          id: 'contact-1',
+          name: 'Sarah Johnson',
+          email: 'sarah@example.com',
+          purchaseHistory: 4,
+          lastEvent: 'TechFest 2025',
+          engagementScore: 95,
+          totalSpent: 180,
+          location: 'Los Angeles, CA'
+        },
+        {
+          id: 'contact-2',
+          name: 'Michael Chen',
+          email: 'michael@example.com',
+          purchaseHistory: 7,
+          lastEvent: 'Music Night LA',
+          engagementScore: 88,
+          totalSpent: 315,
+          location: 'San Francisco, CA'
+        },
+        {
+          id: 'contact-3',
+          name: 'Emma Davis',
+          email: 'emma@example.com',
+          purchaseHistory: 2,
+          lastEvent: 'Comedy Jam',
+          engagementScore: 72,
+          totalSpent: 90,
+          location: 'New York, NY'
+        }
+      ];
+      setContacts(mockContacts);
+    }
   };
 
   const loadCampaigns = () => {
