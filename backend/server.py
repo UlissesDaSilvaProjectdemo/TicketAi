@@ -313,6 +313,207 @@ class StreamPurchaseRequest(BaseModel):
     user_id: str
     origin_url: str
 
+# Mock CRM data for development
+MOCK_CRM_EVENTS = [
+    {
+        "id": "crm-event-1",
+        "promoter_id": "test-promoter-1",
+        "name": "TechFest 2025",
+        "description": "Annual technology conference and expo",
+        "category": "Technology",
+        "venue": "Convention Center",
+        "location": "San Francisco, CA",
+        "date": "2024-12-15",
+        "time": "09:00",
+        "price": 125.00,
+        "capacity": 1200,
+        "status": "active",
+        "tickets_sold": 950,
+        "revenue": 11875.00,
+        "stream_viewers": 2340,
+        "engagement_score": 85.0,
+        "boost_level": 2,
+        "image_url": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
+        "tags": ["tech", "conference", "networking"],
+        "created_at": datetime.now(timezone.utc) - timedelta(days=30)
+    },
+    {
+        "id": "crm-event-2", 
+        "promoter_id": "test-promoter-1",
+        "name": "Music Night LA",
+        "description": "Live music and entertainment",
+        "category": "Music",
+        "venue": "The Grand Theater",
+        "location": "Los Angeles, CA",
+        "date": "2024-12-20",
+        "time": "19:00",
+        "price": 75.00,
+        "capacity": 800,
+        "status": "scheduled",
+        "tickets_sold": 400,
+        "revenue": 6000.00,
+        "stream_viewers": 0,
+        "engagement_score": 92.0,
+        "boost_level": 1,
+        "image_url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+        "tags": ["music", "live", "concert"],
+        "created_at": datetime.now(timezone.utc) - timedelta(days=15)
+    },
+    {
+        "id": "crm-event-3",
+        "promoter_id": "test-promoter-1", 
+        "name": "Comedy Jam",
+        "description": "Stand-up comedy night",
+        "category": "Comedy",
+        "venue": "Comedy Club Downtown",
+        "location": "New York, NY",
+        "date": "2024-11-25",
+        "time": "20:30",
+        "price": 45.00,
+        "capacity": 350,
+        "status": "completed",
+        "tickets_sold": 320,
+        "revenue": 3200.00,
+        "stream_viewers": 890,
+        "engagement_score": 78.0,
+        "boost_level": 0,
+        "image_url": "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800",
+        "tags": ["comedy", "standup", "entertainment"],
+        "created_at": datetime.now(timezone.utc) - timedelta(days=45)
+    }
+]
+
+MOCK_CRM_CONTACTS = [
+    {
+        "id": "contact-1",
+        "promoter_id": "test-promoter-1",
+        "name": "Sarah Johnson",
+        "email": "sarah@example.com",
+        "phone": "+1-555-0123",
+        "location": "Los Angeles, CA",
+        "purchase_history": 4,
+        "total_spent": 180.00,
+        "last_event": "TechFest 2025",
+        "engagement_score": 95.0,
+        "segments": ["vip", "tech_enthusiast"],
+        "created_at": datetime.now(timezone.utc) - timedelta(days=120),
+        "last_interaction": datetime.now(timezone.utc) - timedelta(days=3)
+    },
+    {
+        "id": "contact-2",
+        "promoter_id": "test-promoter-1",
+        "name": "Michael Chen", 
+        "email": "michael@example.com",
+        "phone": "+1-555-0124",
+        "location": "San Francisco, CA",
+        "purchase_history": 7,
+        "total_spent": 315.00,
+        "last_event": "Music Night LA",
+        "engagement_score": 88.0,
+        "segments": ["regular", "music_lover"],
+        "created_at": datetime.now(timezone.utc) - timedelta(days=200),
+        "last_interaction": datetime.now(timezone.utc) - timedelta(days=7)
+    },
+    {
+        "id": "contact-3",
+        "promoter_id": "test-promoter-1",
+        "name": "Emma Davis",
+        "email": "emma@example.com", 
+        "phone": "+1-555-0125",
+        "location": "New York, NY",
+        "purchase_history": 2,
+        "total_spent": 90.00,
+        "last_event": "Comedy Jam",
+        "engagement_score": 72.0,
+        "segments": ["new_customer", "comedy_fan"],
+        "created_at": datetime.now(timezone.utc) - timedelta(days=60),
+        "last_interaction": datetime.now(timezone.utc) - timedelta(days=14)
+    }
+]
+
+MOCK_CRM_CAMPAIGNS = [
+    {
+        "id": "campaign-1",
+        "promoter_id": "test-promoter-1",
+        "name": "TechFest Early Bird",
+        "type": "email",
+        "status": "active",
+        "target_segments": ["tech_enthusiast", "vip"],
+        "content": {
+            "subject": "Early Bird Special - TechFest 2025",
+            "body": "Get your tickets now with 20% discount"
+        },
+        "sent_count": 2450,
+        "opened_count": 1840,
+        "clicked_count": 340,
+        "converted_count": 85,
+        "revenue": 4250.00,
+        "created_at": datetime.now(timezone.utc) - timedelta(days=10),
+        "scheduled_at": datetime.now(timezone.utc) - timedelta(days=8)
+    },
+    {
+        "id": "campaign-2",
+        "promoter_id": "test-promoter-1",
+        "name": "VIP Upgrade Offer",
+        "type": "notification",
+        "status": "completed",
+        "target_segments": ["regular"],
+        "content": {
+            "title": "Upgrade to VIP Access",
+            "message": "Limited time VIP upgrade available"
+        },
+        "sent_count": 950,
+        "opened_count": 720,
+        "clicked_count": 180,
+        "converted_count": 45,
+        "revenue": 2250.00,
+        "created_at": datetime.now(timezone.utc) - timedelta(days=25),
+        "completed_at": datetime.now(timezone.utc) - timedelta(days=20)
+    }
+]
+
+MOCK_CRM_TRANSACTIONS = [
+    {
+        "id": "tx-1",
+        "promoter_id": "test-promoter-1",
+        "event_id": "crm-event-1",
+        "contact_id": "contact-1",
+        "type": "ticket_sale",
+        "amount": 125.00,
+        "currency": "usd",
+        "status": "completed",
+        "payment_method": "stripe",
+        "description": "TechFest 2025 - General Admission",
+        "created_at": datetime.now(timezone.utc) - timedelta(days=5)
+    },
+    {
+        "id": "tx-2", 
+        "promoter_id": "test-promoter-1",
+        "event_id": "crm-event-2",
+        "contact_id": "contact-2",
+        "type": "stream_view",
+        "amount": 15.00,
+        "currency": "usd",
+        "status": "completed",
+        "payment_method": "stripe",
+        "description": "Music Night LA - Stream Access",
+        "created_at": datetime.now(timezone.utc) - timedelta(days=2)
+    },
+    {
+        "id": "tx-3",
+        "promoter_id": "test-promoter-1",
+        "event_id": "crm-event-3",
+        "contact_id": "contact-3",
+        "type": "tip",
+        "amount": 10.00,
+        "currency": "usd", 
+        "status": "completed",
+        "payment_method": "stripe",
+        "description": "Tip for Comedy Jam performance",
+        "created_at": datetime.now(timezone.utc) - timedelta(days=1)
+    }
+]
+
 # Mock event data for development
 MOCK_EVENTS = [
     {
