@@ -89,11 +89,34 @@ const ContactPopup = ({ isOpen, onClose, onSubmit, trigger = 'general' }) => {
               </p>
             </div>
             
-            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-4">
               <p className="text-blue-400 font-semibold text-sm mb-1">What's Next?</p>
               <p className="text-slate-300 text-sm">
                 Our team will contact you to discuss your event promotion needs and show you how TicketAI CRM can increase your revenue.
               </p>
+            </div>
+            
+            <div className="bg-gradient-to-r from-green-900/20 to-blue-900/20 border border-green-500/30 rounded-lg p-4">
+              <p className="text-green-400 font-semibold text-sm mb-2">🚀 Instant Demo Access</p>
+              <p className="text-slate-300 text-sm mb-3">
+                Want to see the CRM in action right now? Access our full demo with real event data.
+              </p>
+              <Button
+                onClick={() => {
+                  // Set demo user credentials and navigate to CRM
+                  localStorage.setItem('promoterUser', JSON.stringify({
+                    id: 'test-promoter-1',
+                    email: 'sarah.johnson@eliteevents.com',
+                    name: 'Sarah Johnson',
+                    credits: 42,
+                    company: 'Elite Event Productions'
+                  }));
+                  window.location.href = '/promoter-crm';
+                }}
+                className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white"
+              >
+                Access CRM Demo Now →
+              </Button>
             </div>
           </CardContent>
         </Card>
