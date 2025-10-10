@@ -1688,6 +1688,45 @@ async def register_crm_api_client(client_name: str, contact_email: str, plan: st
         logger.error(f"Error registering API client: {e}")
         raise HTTPException(status_code=500, detail="Failed to register client")
 
+# Development/Testing endpoint to seed CRM data
+@api_router.post("/crm/seed-data")
+async def seed_crm_data():
+    """Seed database with mock CRM data for testing"""
+    try:
+        # Clear existing test data
+        await db.crm_events.delete_many({"promoter_id": "test-promoter-1"})
+        await db.crm_contacts.delete_many({"promoter_id": "test-promoter-1"})
+        await db.crm_campaigns.delete_many({"promoter_id": "test-promoter-1"})
+        await db.crm_transactions.delete_many({"promoter_id": "test-promoter-1"})
+        
+        # Insert mock data
+        events_prepared = [prepare_for_mongo(event) for event in MOCK_CRM_EVENTS]
+        await db.crm_events.insert_many(events_prepared)
+        
+        contacts_prepared = [prepare_for_mongo(contact) for contact in MOCK_CRM_CONTACTS]
+        await db.crm_contacts.insert_many(contacts_prepared)
+        
+        campaigns_prepared = [prepare_for_mongo(campaign) for campaign in MOCK_CRM_CAMPAIGNS]
+        await db.crm_campaigns.insert_many(campaigns_prepared)
+        
+        transactions_prepared = [prepare_for_mongo(transaction) for transaction in MOCK_CRM_TRANSACTIONS]
+        await db.crm_transactions.insert_many(transactions_prepared)
+        
+        return {
+            "status": "success",
+            "message": "CRM test data seeded successfully",
+            "data": {
+                "events": len(MOCK_CRM_EVENTS),
+                "contacts": len(MOCK_CRM_CONTACTS), 
+                "campaigns": len(MOCK_CRM_CAMPAIGNS),
+                "transactions": len(MOCK_CRM_TRANSACTIONS)
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error seeding CRM data: {e}")
+        raise HTTPException(status_code=500, detail="Failed to seed test data")
+
 # Include the router in the main app
 app.include_router(api_router)
 
