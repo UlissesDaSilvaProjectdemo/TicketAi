@@ -482,7 +482,11 @@ const PromoterCRM = () => {
                 </div>
                 <div className="flex items-center space-x-1 text-green-400">
                   <CreditCard className="w-4 h-4" />
-                  <span className="font-semibold">{user.credits || 42} credits</span>
+                  <span className="font-semibold">
+                    {user?.trialStatus === 'active' ? `${user.trialDaysRemaining} days left` : 
+                     user?.trialStatus === 'expired' ? 'Trial Expired' : 
+                     `${user?.credits || 42} credits`}
+                  </span>
                 </div>
                 <Button 
                   size="sm" 
