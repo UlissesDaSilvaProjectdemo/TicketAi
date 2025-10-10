@@ -944,9 +944,9 @@ const LandingPage = () => {
               size="lg"
               variant="outline" 
               className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-6"
-              onClick={() => navigate('/promoters-venues')}
+              onClick={() => setShowContactPopup(true)}
             >
-              Learn More
+              Contact Sales
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
