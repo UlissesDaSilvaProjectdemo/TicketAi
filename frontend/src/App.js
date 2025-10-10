@@ -24,6 +24,8 @@ import Merchandise from "./pages/Merchandise";
 import DonationSuccess from "./pages/DonationSuccess";
 import LiveStreaming from "./pages/LiveStreaming";
 import StreamSuccess from "./pages/StreamSuccess";
+import PromoterCRM from "./pages/PromoterCRM";
+import PromotersVenues from "./pages/PromotersVenues";
 
 function App() {
   return (
