@@ -45,20 +45,55 @@ const PromoterCRM = () => {
     navigate('/');
   };
 
-  const loadDashboardData = () => {
-    // Mock dashboard data - in production, fetch from API
-    const mockData = {
-      totalRevenue: 18240,
-      ticketsSold: 3420,
-      activeEvents: 6,
-      streamRevenue: 1980,
-      pendingPayouts: 2560,
-      revenueGrowth: 12.5,
-      audienceGrowth: 8.3,
-      conversionRate: 3.2,
-      avgTicketPrice: 45.50
-    };
-    setDashboardData(mockData);
+  const loadDashboardData = async () => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/crm/dashboard/${user.id}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setDashboardData({
+          totalRevenue: data.total_revenue_mtd,
+          ticketsSold: data.tickets_sold,
+          activeEvents: data.active_events,
+          streamRevenue: data.stream_revenue,
+          pendingPayouts: data.pending_payouts,
+          revenueGrowth: data.revenue_growth,
+          audienceGrowth: data.audience_growth,
+          conversionRate: data.conversion_rate,
+          avgTicketPrice: data.avg_ticket_price
+        });
+      } else {
+        // Fallback to mock data if API fails
+        const mockData = {
+          totalRevenue: 18240,
+          ticketsSold: 3420,
+          activeEvents: 6,
+          streamRevenue: 1980,
+          pendingPayouts: 2560,
+          revenueGrowth: 12.5,
+          audienceGrowth: 8.3,
+          conversionRate: 3.2,
+          avgTicketPrice: 45.50
+        };
+        setDashboardData(mockData);
+      }
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+      // Fallback to mock data
+      const mockData = {
+        totalRevenue: 18240,
+        ticketsSold: 3420,
+        activeEvents: 6,
+        streamRevenue: 1980,
+        pendingPayouts: 2560,
+        revenueGrowth: 12.5,
+        audienceGrowth: 8.3,
+        conversionRate: 3.2,
+        avgTicketPrice: 45.50
+      };
+      setDashboardData(mockData);
+    }
   };
 
   const loadEvents = () => {
