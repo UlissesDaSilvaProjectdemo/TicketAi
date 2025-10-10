@@ -23,6 +23,7 @@ const LandingPage = () => {
   const [interests, setInterests] = useState('');
   const [location, setLocation] = useState('');
   const [isGettingRecommendations, setIsGettingRecommendations] = useState(false);
+  const [showContactPopup, setShowContactPopup] = useState(false);
 
   const handleNewsletterSignup = () => {
     if (email) {
