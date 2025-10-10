@@ -248,7 +248,21 @@ const DemoCRM = () => {
               
               <Button 
                 variant="outline"
-                onClick={() => navigate('/promoter-crm')}
+                onClick={() => {
+                  // Set up demo user session and navigate to CRM
+                  const demoUser = {
+                    id: 'test-promoter-1',
+                    email: 'demo@ticketai.com',
+                    name: 'Demo User',
+                    credits: 42,
+                    company: 'TicketAI Demo',
+                    trialStatus: 'active',
+                    trialDaysRemaining: 30
+                  };
+                  
+                  localStorage.setItem('promoterUser', JSON.stringify(demoUser));
+                  navigate('/promoter-crm');
+                }}
                 className="border-green-500 text-green-400 hover:bg-green-600 hover:text-white"
               >
                 Access CRM
