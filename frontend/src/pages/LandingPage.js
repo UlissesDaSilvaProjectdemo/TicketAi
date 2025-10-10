@@ -858,6 +858,75 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Promoter CRM Section */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-2xl p-12">
+          <div className="text-center mb-12">
+            <Badge className="bg-blue-600 text-white mb-6">For Event Promoters</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Grow Your Events with{' '}
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                TicketAI CRM
+              </span>
+            </h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-8">
+              Manage sales, streaming, audience data, and marketing from a single smart dashboard. 
+              Built for promoters and venues who want to maximize revenue and engagement.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-slate-800/50 border-slate-600">
+              <CardContent className="p-6 text-center">
+                <BarChart3 className="w-10 h-10 text-blue-400 mx-auto mb-4" />
+                <h3 className="font-bold text-white mb-2">Analytics & Insights</h3>
+                <p className="text-slate-400 text-sm">Real-time revenue tracking, audience analytics, and AI-powered recommendations</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-800/50 border-slate-600">
+              <CardContent className="p-6 text-center">
+                <Users className="w-10 h-10 text-purple-400 mx-auto mb-4" />
+                <h3 className="font-bold text-white mb-2">CRM & Marketing</h3>
+                <p className="text-slate-400 text-sm">Contact management, campaign automation, and audience segmentation</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-800/50 border-slate-600">
+              <CardContent className="p-6 text-center">
+                <DollarSign className="w-10 h-10 text-green-400 mx-auto mb-4" />
+                <h3 className="font-bold text-white mb-2">Revenue Optimization</h3>
+                <p className="text-slate-400 text-sm">Multiple revenue streams, automated payouts, and streaming monetization</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6"
+              onClick={() => navigate('/promoter-crm')}
+            >
+              <BarChart3 className="w-5 h-5 mr-2" />
+              Access CRM Dashboard
+            </Button>
+            <Button 
+              size="lg"
+              variant="outline" 
+              className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-6"
+              onClick={() => navigate('/promoters-venues')}
+            >
+              Learn More
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-slate-500 text-sm">
+              Join 2,500+ promoters using TicketAI CRM • Free plan available • No setup fees
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Newsletter Signup */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-slate-700 p-12">
