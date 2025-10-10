@@ -360,12 +360,6 @@ const LandingPage = () => {
                 >
                   Merchandise
                 </button>
-                <button 
-                  className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
-                  onClick={() => navigate('/demo-crm')}
-                >
-                  Demo CRM
-                </button>
               </div>
             </div>
             
