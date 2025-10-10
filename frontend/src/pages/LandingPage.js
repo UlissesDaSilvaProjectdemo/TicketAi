@@ -934,11 +934,11 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6"
-              onClick={() => setShowContactPopup(true)}
+              className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-lg px-8 py-6"
+              onClick={() => navigate('/demo-crm')}
             >
               <BarChart3 className="w-5 h-5 mr-2" />
-              Get CRM Demo
+              Start Free 30-Day Trial
             </Button>
             <Button 
               size="lg"
