@@ -56,10 +56,10 @@ const PromoterLogin = () => {
       
       toast({
         title: "Login Successful!",
-        description: "Welcome back to your promoter dashboard.",
+        description: "Welcome to your CRM dashboard with real event data!",
       });
       
-      navigate('/promoter-dashboard');
+      navigate('/promoter-crm');
     } else {
       toast({
         title: "Invalid Credentials",
