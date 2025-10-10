@@ -1030,8 +1030,8 @@ const LandingPage = () => {
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-white">For Promoters</h3>
               <ul className="space-y-3">
-                <li><button onClick={() => navigate('/promoter-crm')} className="text-slate-400 hover:text-white transition-colors">CRM Dashboard</button></li>
-                <li><button onClick={() => navigate('/promoters-venues')} className="text-slate-400 hover:text-white transition-colors">Promoters & Venues</button></li>
+                <li><button onClick={() => setShowContactPopup(true)} className="text-slate-400 hover:text-white transition-colors">Get CRM Access</button></li>
+                <li><button onClick={() => navigate('/promoters-venues')} className="text-slate-400 hover:text-white transition-colors">Learn About CRM</button></li>
                 <li><button onClick={() => navigate('/pricing')} className="text-slate-400 hover:text-white transition-colors">Pricing Plans</button></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition-colors">API Access</a></li>
               </ul>
