@@ -987,10 +987,21 @@ const LandingPage = () => {
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-white">Product</h3>
               <ul className="space-y-3">
-                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Features</a></li>
-                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">API</a></li>
-                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Security</a></li>
+                <li><button onClick={() => navigate('/events')} className="text-slate-400 hover:text-white transition-colors">AI Search</button></li>
+                <li><button onClick={() => navigate('/live-streaming')} className="text-slate-400 hover:text-white transition-colors">Live Streaming</button></li>
+                <li><button onClick={() => navigate('/my-tickets')} className="text-slate-400 hover:text-white transition-colors">My Tickets</button></li>
+                <li><button onClick={() => navigate('/merchandise')} className="text-slate-400 hover:text-white transition-colors">Merchandise</button></li>
+              </ul>
+            </div>
+
+            {/* Promoter Links */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-white">For Promoters</h3>
+              <ul className="space-y-3">
+                <li><button onClick={() => navigate('/promoter-crm')} className="text-slate-400 hover:text-white transition-colors">CRM Dashboard</button></li>
+                <li><button onClick={() => navigate('/promoters-venues')} className="text-slate-400 hover:text-white transition-colors">Promoters & Venues</button></li>
+                <li><button onClick={() => navigate('/pricing')} className="text-slate-400 hover:text-white transition-colors">Pricing Plans</button></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition-colors">API Access</a></li>
               </ul>
             </div>
             
