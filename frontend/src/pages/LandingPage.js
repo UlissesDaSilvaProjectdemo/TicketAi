@@ -362,9 +362,9 @@ const LandingPage = () => {
                 </button>
                 <button 
                   className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
-                  onClick={() => setShowContactPopup(true)}
+                  onClick={() => navigate('/demo-crm')}
                 >
-                  CRM
+                  Demo CRM
                 </button>
               </div>
             </div>
