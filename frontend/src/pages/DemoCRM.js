@@ -212,275 +212,349 @@ const DemoCRM = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
-        <div className="relative max-w-7xl mx-auto px-6 py-20">
-          <div className="text-center space-y-8">
-            <Badge className="bg-gradient-to-r from-green-600 to-blue-600 text-white text-lg px-6 py-2">
-              <Timer className="w-4 h-4 mr-2" />
-              30-Day Free Trial • No Credit Card Required
-            </Badge>
+      {/* Top Navigation */}
+      <nav className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-6 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl">
+                  <Ticket className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  TicketAI Community
+                </span>
+              </div>
+            </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
-              TicketAI{' '}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                CRM Demo
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-slate-300 max-w-4xl mx-auto leading-relaxed">
-              The complete event promotion platform trusted by 2,500+ promoters. 
-              Manage events, grow audiences, and maximize revenue with AI-powered insights.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-12">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                <Input
+                  placeholder="Search posts, events, hashtags..."
+                  className="pl-10 bg-slate-800/50 border-slate-600 text-white w-80"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              
               <Button 
-                size="lg"
-                onClick={startFreeTrial}
-                className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xl px-12 py-8 font-semibold"
+                onClick={() => setShowCreatePost(true)}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
               >
-                <Rocket className="w-6 h-6 mr-3" />
-                Start Free 30-Day Trial
+                <Plus className="w-4 h-4 mr-2" />
+                Post
               </Button>
               
               <Button 
-                size="lg"
                 variant="outline"
-                onClick={() => setShowContactPopup(true)}
-                className="border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white text-xl px-12 py-8"
+                onClick={() => navigate('/promoter-crm')}
+                className="border-green-500 text-green-400 hover:bg-green-600 hover:text-white"
               >
-                <Play className="w-6 h-6 mr-3" />
-                Watch Demo Video
+                Access CRM
               </Button>
             </div>
-
-            <div className="flex items-center justify-center space-x-8 mt-8 text-slate-400">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span>No Setup Fees</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span>Full Feature Access</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span>Cancel Anytime</span>
-              </div>
-            </div>
           </div>
         </div>
-      </section>
+      </nav>
 
-      {/* Features Grid */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-6">Everything You Need to Grow Events</h2>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-            From analytics to automation, manage your entire event business in one powerful platform
-          </p>
-        </div>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Left Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* User Profile Card */}
+            {currentUser && (
+              <Card className="bg-slate-800/50 border-slate-600">
+                <CardContent className="p-6 text-center">
+                  <img 
+                    src={currentUser.avatar} 
+                    alt={currentUser.name}
+                    className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-blue-500"
+                  />
+                  <h3 className="text-white font-bold text-lg">{currentUser.name}</h3>
+                  <p className="text-blue-400 text-sm mb-3">@{currentUser.username}</p>
+                  <p className="text-slate-400 text-sm mb-4">{currentUser.bio}</p>
+                  
+                  <div className="flex justify-around text-center">
+                    <div>
+                      <div className="text-white font-bold">{currentUser.posts}</div>
+                      <div className="text-slate-400 text-xs">Posts</div>
+                    </div>
+                    <div>
+                      <div className="text-white font-bold">{currentUser.followers}</div>
+                      <div className="text-slate-400 text-xs">Followers</div>
+                    </div>
+                    <div>
+                      <div className="text-white font-bold">{currentUser.following}</div>
+                      <div className="text-slate-400 text-xs">Following</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <Card key={index} className="bg-slate-800/50 border-slate-600 hover:border-blue-500/50 transition-colors">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
-                  <feature.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-slate-400 leading-relaxed">{feature.desc}</p>
+            {/* Categories */}
+            <Card className="bg-slate-800/50 border-slate-600">
+              <CardHeader>
+                <CardTitle className="text-white text-lg">Explore Categories</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {categories.map((category, index) => (
+                  <div key={index} className="flex items-center space-x-3 p-2 hover:bg-slate-700/50 rounded-lg cursor-pointer transition-colors">
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${category.color} flex items-center justify-center`}>
+                      <category.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-slate-300">{category.label}</span>
+                  </div>
+                ))}
               </CardContent>
             </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="bg-slate-900/30 py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-6">Trusted by Top Event Promoters</h2>
-            <p className="text-xl text-slate-400">
-              Join thousands of promoters who've grown their revenue with TicketAI CRM
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-slate-800/50 border-slate-600">
-                <CardContent className="p-8">
-                  <div className="flex items-center mb-4">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                    <Badge className="ml-auto bg-green-600 text-white">
-                      {testimonial.revenue}
-                    </Badge>
+          {/* Main Feed */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Create Post Modal */}
+            {showCreatePost && (
+              <Card className="bg-slate-800/50 border-slate-600">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white">Create New Post</CardTitle>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setShowCreatePost(false)}
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                    </Button>
                   </div>
-                  <p className="text-slate-300 mb-6 leading-relaxed">"{testimonial.feedback}"</p>
-                  <div>
-                    <div className="font-semibold text-white">{testimonial.name}</div>
-                    <div className="text-slate-400 text-sm">{testimonial.company}</div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Textarea
+                    placeholder="What's happening at your event?"
+                    className="bg-slate-900 border-slate-600 text-white min-h-[100px]"
+                    value={newPost.content}
+                    onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                  />
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      placeholder="📍 Location"
+                      className="bg-slate-900 border-slate-600 text-white"
+                      value={newPost.location}
+                      onChange={(e) => setNewPost({...newPost, location: e.target.value})}
+                    />
+                    <Input
+                      placeholder="#hashtags #events"
+                      className="bg-slate-900 border-slate-600 text-white"
+                      value={newPost.hashtags}
+                      onChange={(e) => setNewPost({...newPost, hashtags: e.target.value})}
+                    />
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex space-x-2">
+                      <Button variant="ghost" size="sm">
+                        <Camera className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Video className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Tag className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    
+                    <Button 
+                      onClick={handleCreatePost}
+                      className="bg-blue-600 hover:bg-blue-700"
+                      disabled={!newPost.content.trim()}
+                    >
+                      <Send className="w-4 h-4 mr-2" />
+                      Post
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Posts Feed */}
+            {posts.map((post) => (
+              <Card key={post.id} className="bg-slate-800/50 border-slate-600 hover:border-slate-500 transition-colors">
+                <CardContent className="p-0">
+                  {/* Post Header */}
+                  <div className="p-6 pb-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <img 
+                          src={post.user.avatar} 
+                          alt={post.user.name}
+                          className="w-12 h-12 rounded-full border-2 border-slate-600"
+                        />
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-white font-semibold">{post.user.name}</span>
+                            {post.user.verified && (
+                              <Badge className="bg-blue-600 text-xs">✓</Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2 text-slate-400 text-sm">
+                            <span>@{post.user.username}</span>
+                            <span>•</span>
+                            <span>{post.timestamp}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="w-5 h-5 text-slate-400" />
+                      </Button>
+                    </div>
+                    
+                    <p className="text-slate-300 leading-relaxed mb-4">{post.content}</p>
+                    
+                    {post.location && (
+                      <div className="flex items-center space-x-2 text-slate-400 text-sm mb-4">
+                        <MapPin className="w-4 h-4" />
+                        <span>{post.location}</span>
+                      </div>
+                    )}
+                    
+                    {post.hashtags && post.hashtags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {post.hashtags.map((tag, index) => (
+                          <Badge key={index} variant="outline" className="text-blue-400 border-blue-400">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Post Image */}
+                  {post.image && (
+                    <div className="relative">
+                      <img 
+                        src={post.image} 
+                        alt="Post content"
+                        className="w-full h-80 object-cover"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Post Actions */}
+                  <div className="p-6 pt-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-6">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleLike(post.id)}
+                          className={`flex items-center space-x-2 ${post.liked ? 'text-red-500' : 'text-slate-400'} hover:text-red-500`}
+                        >
+                          <Heart className={`w-5 h-5 ${post.liked ? 'fill-current' : ''}`} />
+                          <span>{post.likes}</span>
+                        </Button>
+                        
+                        <Button variant="ghost" size="sm" className="flex items-center space-x-2 text-slate-400 hover:text-blue-500">
+                          <MessageCircle className="w-5 h-5" />
+                          <span>{post.comments}</span>
+                        </Button>
+                        
+                        <Button variant="ghost" size="sm" className="flex items-center space-x-2 text-slate-400 hover:text-green-500">
+                          <Share2 className="w-5 h-5" />
+                          <span>{post.shares}</span>
+                        </Button>
+                      </div>
+                      
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleBookmark(post.id)}
+                        className={`${post.bookmarked ? 'text-yellow-500' : 'text-slate-400'} hover:text-yellow-500`}
+                      >
+                        <Bookmark className={`w-5 h-5 ${post.bookmarked ? 'fill-current' : ''}`} />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-3xl p-12 text-center">
-          <Badge className="bg-green-600 text-white mb-6">
-            <Sparkles className="w-4 h-4 mr-1" />
-            Limited Time Offer
-          </Badge>
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Start Growing Your Events Today
-          </h2>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Join 2,500+ successful promoters. Get full access to TicketAI CRM with our 30-day free trial.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button 
-              size="lg"
-              onClick={startFreeTrial}
-              className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-xl px-12 py-8"
-            >
-              <Timer className="w-6 h-6 mr-3" />
-              Claim Your Free Trial
-            </Button>
-            <Button 
-              size="lg"
-              variant="outline"
-              onClick={() => navigate('/promoters-venues')}
-              className="border-slate-600 text-slate-300 hover:bg-slate-800 text-xl px-12 py-8"
-            >
-              Learn More
-              <ArrowRight className="w-6 h-6 ml-3" />
-            </Button>
+          {/* Right Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Trending Hashtags */}
+            <Card className="bg-slate-800/50 border-slate-600">
+              <CardHeader>
+                <CardTitle className="text-white text-lg flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2 text-orange-500" />
+                  Trending
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {trendingHashtags.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 hover:bg-slate-700/50 rounded-lg cursor-pointer transition-colors">
+                    <div>
+                      <div className="text-blue-400 font-semibold">{item.tag}</div>
+                      <div className="text-slate-400 text-sm">{item.posts} posts</div>
+                    </div>
+                    <Fire className="w-4 h-4 text-orange-500" />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Community Stats */}
+            <Card className="bg-slate-800/50 border-slate-600">
+              <CardHeader>
+                <CardTitle className="text-white text-lg">Community Stats</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Active Members</span>
+                  <span className="text-white font-bold">12.5K</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Posts Today</span>
+                  <span className="text-white font-bold">1.2K</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Events Shared</span>
+                  <span className="text-white font-bold">890</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Success Stories</span>
+                  <span className="text-white font-bold">456</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* CTA Card */}
+            <Card className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 border-blue-500/30">
+              <CardContent className="p-6 text-center">
+                <Ticket className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                <h3 className="text-white font-bold mb-2">Ready to Grow?</h3>
+                <p className="text-slate-300 text-sm mb-4">
+                  Join our CRM and start maximizing your event success!
+                </p>
+                <Button 
+                  onClick={() => setShowContactPopup(true)}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  Get Started
+                </Button>
+              </CardContent>
+            </Card>
           </div>
-
-          <p className="text-slate-500 text-sm mt-6">
-            30-day free trial • No credit card required • Cancel anytime
-          </p>
         </div>
-      </section>
+      </div>
 
       {/* Contact Popup - Non-blocking */}
       <ContactPopup
         isOpen={showContactPopup}
         onClose={() => setShowContactPopup(false)}
         onSubmit={handleContactSubmit}
-        trigger="demo_crm_page"
+        trigger="community_page"
       />
-
-      {/* Pricing Modal - Shows after trial expiry */}
-      {showPricingModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <Card className="bg-slate-900 border-slate-700 max-w-4xl w-full mx-auto animate-in zoom-in-95 duration-200">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-white mb-2">
-                Your Free Trial Has Ended
-              </CardTitle>
-              <CardDescription className="text-slate-300 text-lg">
-                Continue growing your events with a paid subscription
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="p-8">
-              <div className="grid md:grid-cols-3 gap-6">
-                {/* Starter Plan */}
-                <Card className="border-slate-600 relative">
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-white">Starter</CardTitle>
-                    <div className="text-3xl font-bold text-white">
-                      $29<span className="text-lg text-slate-400">/month</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-slate-300 text-sm">✓ Up to 5 events/month</div>
-                    <div className="text-slate-300 text-sm">✓ 1,000 contacts</div>
-                    <div className="text-slate-300 text-sm">✓ Basic analytics</div>
-                    <div className="text-slate-300 text-sm">✓ Email support</div>
-                    <Button 
-                      className="w-full mt-4"
-                      onClick={() => handleUpgrade('starter')}
-                    >
-                      Select Starter
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Pro Plan */}
-                <Card className="border-blue-500 relative">
-                  <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-blue-600">
-                    Most Popular
-                  </Badge>
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-white">Pro</CardTitle>
-                    <div className="text-3xl font-bold text-white">
-                      $79<span className="text-lg text-slate-400">/month</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-slate-300 text-sm">✓ Unlimited events</div>
-                    <div className="text-slate-300 text-sm">✓ 10,000 contacts</div>
-                    <div className="text-slate-300 text-sm">✓ Advanced analytics</div>
-                    <div className="text-slate-300 text-sm">✓ Marketing automation</div>
-                    <div className="text-slate-300 text-sm">✓ Priority support</div>
-                    <Button 
-                      className="w-full mt-4 bg-blue-600 hover:bg-blue-700"
-                      onClick={() => handleUpgrade('pro')}
-                    >
-                      Select Pro
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Enterprise Plan */}
-                <Card className="border-slate-600 relative">
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-white">Enterprise</CardTitle>
-                    <div className="text-3xl font-bold text-white">
-                      $199<span className="text-lg text-slate-400">/month</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-slate-300 text-sm">✓ Everything in Pro</div>
-                    <div className="text-slate-300 text-sm">✓ Unlimited contacts</div>
-                    <div className="text-slate-300 text-sm">✓ White-label options</div>
-                    <div className="text-slate-300 text-sm">✓ API access</div>
-                    <div className="text-slate-300 text-sm">✓ Dedicated support</div>
-                    <Button 
-                      className="w-full mt-4"
-                      onClick={() => handleUpgrade('enterprise')}
-                    >
-                      Select Enterprise
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="text-center mt-8">
-                <Button 
-                  variant="ghost"
-                  onClick={() => setShowPricingModal(false)}
-                  className="text-slate-400 hover:text-white"
-                >
-                  Continue with Limited Access
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 };
