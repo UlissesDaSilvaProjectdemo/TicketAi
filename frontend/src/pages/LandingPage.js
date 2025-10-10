@@ -380,9 +380,9 @@ const LandingPage = () => {
               <Button 
                 variant="outline" 
                 className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white hidden md:inline-flex"
-                onClick={() => setShowContactPopup(true)}
+                onClick={() => navigate('/promoter-login')}
               >
-                Promoter Dashboard
+                CRM Login
               </Button>
               <Button 
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
