@@ -1740,6 +1740,90 @@ async def seed_crm_data():
         logger.error(f"Error seeding CRM data: {e}")
         raise HTTPException(status_code=500, detail="Failed to seed test data")
 
+# ======================= CONTACT & LEAD MANAGEMENT =======================
+
+@api_router.post("/contact/promoter-inquiry")
+async def submit_promoter_inquiry(inquiry: dict):
+    """Handle promoter contact form submissions"""
+    try:
+        # Create contact inquiry record
+        contact_inquiry = ContactInquiry(
+            name=inquiry.get('name', ''),
+            email=inquiry.get('email', ''),
+            phone=inquiry.get('phone', ''),
+            company=inquiry.get('company'),
+            event_type=inquiry.get('eventType'),
+            message=inquiry.get('message'),
+            source=inquiry.get('source', 'website')
+        )
+        
+        # Store in database
+        inquiry_dict = prepare_for_mongo(contact_inquiry.dict())
+        await db.contact_inquiries.insert_one(inquiry_dict)
+        
+        logger.info(f"New promoter inquiry received from {inquiry.get('email')} - {inquiry.get('name')}")
+        
+        # In production, you would:
+        # 1. Send notification email to sales team
+        # 2. Add to CRM system (Salesforce, HubSpot, etc.)
+        # 3. Send auto-response email to inquirer
+        # 4. Trigger marketing automation workflows
+        
+        return {
+            "status": "success",
+            "message": "Thank you for your inquiry! We'll be in touch within 24 hours.",
+            "inquiry_id": contact_inquiry.id
+        }
+        
+    except Exception as e:
+        logger.error(f"Error processing promoter inquiry: {e}")
+        raise HTTPException(status_code=500, detail="Failed to submit inquiry")
+
+@api_router.get("/contact/inquiries")
+async def get_contact_inquiries(status: Optional[str] = None, limit: int = 50):
+    """Get contact inquiries for admin/sales team"""
+    try:
+        query = {}
+        if status:
+            query["status"] = status
+            
+        inquiries = await db.contact_inquiries.find(query).sort("created_at", -1).limit(limit).to_list(None)
+        
+        return {
+            "inquiries": inquiries,
+            "total": len(inquiries)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting contact inquiries: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get inquiries")
+
+@api_router.put("/contact/inquiries/{inquiry_id}/status")
+async def update_inquiry_status(inquiry_id: str, status: str, notes: Optional[str] = None):
+    """Update inquiry status (for admin/sales team)"""
+    try:
+        update_data = {
+            "status": status,
+            "updated_at": datetime.now(timezone.utc)
+        }
+        
+        if notes:
+            update_data["notes"] = notes
+            
+        result = await db.contact_inquiries.update_one(
+            {"id": inquiry_id},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Inquiry not found")
+            
+        return {"status": "updated"}
+        
+    except Exception as e:
+        logger.error(f"Error updating inquiry status: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update inquiry")
+
 # Include the router in the main app
 app.include_router(api_router)
 
