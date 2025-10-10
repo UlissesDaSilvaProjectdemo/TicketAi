@@ -207,10 +207,28 @@ const PromoterLogin = () => {
                       {isLoading ? 'Signing in...' : 'Sign In to Dashboard'}
                     </Button>
 
-                    <div className="bg-slate-800/50 p-4 rounded-lg">
-                      <p className="text-slate-400 text-sm mb-2">Demo Credentials:</p>
-                      <p className="text-slate-300 text-sm">Email: testpromoter@demo.com</p>
-                      <p className="text-slate-300 text-sm">Password: demo123</p>
+                    <div className="space-y-3">
+                      <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 p-4 rounded-lg">
+                        <p className="text-blue-400 font-semibold text-sm mb-2">🚀 Quick Demo Access</p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full bg-blue-600/20 border-blue-500 text-blue-300 hover:bg-blue-600 hover:text-white"
+                          onClick={() => {
+                            setLoginForm({email: 'testpromoter@demo.com', password: 'demo123'});
+                            // Auto submit after a short delay
+                            setTimeout(() => handleLogin({preventDefault: () => {}}), 100);
+                          }}
+                        >
+                          Access CRM Demo (with real data)
+                        </Button>
+                      </div>
+                      
+                      <div className="bg-slate-800/50 p-4 rounded-lg">
+                        <p className="text-slate-400 text-sm mb-2">Or use manual credentials:</p>
+                        <p className="text-slate-300 text-sm">Email: testpromoter@demo.com</p>
+                        <p className="text-slate-300 text-sm">Password: demo123</p>
+                      </div>
                     </div>
                   </form>
                 </CardContent>
