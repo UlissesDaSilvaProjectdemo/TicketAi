@@ -33,6 +33,33 @@ const LandingPage = () => {
     }
   };
 
+  const handleContactSubmit = async (formData) => {
+    console.log('Contact form submitted:', formData);
+    
+    // Here you would typically send to your backend API
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/contact/promoter-inquiry`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          source: 'landing_page_crm_popup',
+          timestamp: new Date().toISOString()
+        })
+      });
+      
+      if (response.ok) {
+        console.log('Contact inquiry sent successfully');
+      }
+    } catch (error) {
+      console.error('Error sending contact inquiry:', error);
+      // Form still shows success message to user
+    }
+  };
+
   const handleAIRecommendations = async (e) => {
     if (e) e.preventDefault();
     if (!interests.trim()) return;
