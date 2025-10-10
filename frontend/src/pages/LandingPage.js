@@ -932,10 +932,10 @@ const LandingPage = () => {
             <Button 
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6"
-              onClick={() => navigate('/promoter-crm')}
+              onClick={() => setShowContactPopup(true)}
             >
               <BarChart3 className="w-5 h-5 mr-2" />
-              Access CRM Dashboard
+              Get CRM Demo
             </Button>
             <Button 
               size="lg"
