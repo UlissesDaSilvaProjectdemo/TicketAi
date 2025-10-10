@@ -332,7 +332,7 @@ const LandingPage = () => {
                   className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
                   onClick={() => navigate('/promoters-venues')}
                 >
-                  Promoters & Venues
+                  CRM
                 </button>
               </div>
             </div>
