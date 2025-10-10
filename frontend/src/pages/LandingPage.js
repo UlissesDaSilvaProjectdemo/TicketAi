@@ -377,32 +377,13 @@ const LandingPage = () => {
               >
                 Sign In
               </Button>
-              <div className="hidden md:flex items-center space-x-2">
-                <Button 
-                  variant="outline" 
-                  className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white"
-                  onClick={() => navigate('/promoter-login')}
-                >
-                  CRM Login
-                </Button>
-                <Button 
-                  variant="default" 
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                  onClick={() => {
-                    // Quick demo access
-                    localStorage.setItem('promoterUser', JSON.stringify({
-                      id: 'test-promoter-1',
-                      email: 'demo@ticketai.com',
-                      name: 'Demo User',
-                      credits: 42,
-                      company: 'TicketAI Demo'
-                    }));
-                    navigate('/promoter-crm');
-                  }}
-                >
-                  Demo CRM
-                </Button>
-              </div>
+              <Button 
+                variant="outline" 
+                className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white hidden md:inline-flex"
+                onClick={() => navigate('/demo-crm')}
+              >
+                Demo CRM
+              </Button>
               <Button 
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
                 onClick={() => navigate('/auth')}
