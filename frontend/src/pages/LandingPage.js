@@ -328,6 +328,12 @@ const LandingPage = () => {
                 >
                   Merchandise
                 </button>
+                <button 
+                  className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
+                  onClick={() => navigate('/promoters-venues')}
+                >
+                  Promoters & Venues
+                </button>
               </div>
             </div>
             
@@ -338,6 +344,13 @@ const LandingPage = () => {
                 onClick={() => navigate('/auth')}
               >
                 Sign In
+              </Button>
+              <Button 
+                variant="outline" 
+                className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white hidden md:inline-flex"
+                onClick={() => navigate('/promoter-crm')}
+              >
+                Promoter Dashboard
               </Button>
               <Button 
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
