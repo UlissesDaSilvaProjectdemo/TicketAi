@@ -11,7 +11,7 @@ import {
   Search, Bell, Home, Compass, User, Send, Camera, Video,
   MapPin, Tag, Smile, ArrowLeft, Filter, TrendingUp, Users,
   Calendar, Ticket, Music, Coffee, Gamepad2, Palette, Globe,
-  Fire, Star, Eye, ThumbsUp, UserPlus, Hash
+  Flame, Star, Eye, ThumbsUp, UserPlus, Hash
 } from 'lucide-react';
 
 const DemoCRM = () => {
