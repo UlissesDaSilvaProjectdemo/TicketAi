@@ -53,6 +53,9 @@ const LandingPage = () => {
       
       if (response.ok) {
         console.log('Contact inquiry sent successfully');
+        // After successful submission, allow access to CRM dashboard
+        localStorage.setItem('contactSubmitted', 'true');
+        localStorage.setItem('submittedEmail', formData.email);
       }
     } catch (error) {
       console.error('Error sending contact inquiry:', error);
