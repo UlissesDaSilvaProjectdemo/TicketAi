@@ -26,11 +26,23 @@ const PromoterCRM = () => {
     // Check if user is logged in as promoter
     const userData = localStorage.getItem('promoterUser');
     if (!userData) {
-      navigate('/promoter-login');
+      navigate('/demo-crm'); // Redirect to demo CRM instead of login
       return;
     }
 
     const parsedUser = JSON.parse(userData);
+    
+    // Check trial status
+    const trialData = localStorage.getItem('crmTrialData');
+    if (trialData) {
+      const { startDate } = JSON.parse(trialData);
+      const daysSinceStart = Math.floor((Date.now() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
+      const daysRemaining = Math.max(0, 30 - daysSinceStart);
+      
+      parsedUser.trialDaysRemaining = daysRemaining;
+      parsedUser.trialStatus = daysRemaining > 0 ? 'active' : 'expired';
+    }
+    
     setUser(parsedUser);
 
     // Load CRM data
