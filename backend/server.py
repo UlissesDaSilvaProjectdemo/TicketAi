@@ -1789,9 +1789,17 @@ async def get_contact_inquiries(status: Optional[str] = None, limit: int = 50):
             
         inquiries = await db.contact_inquiries.find(query).sort("created_at", -1).limit(limit).to_list(None)
         
+        # Clean up MongoDB ObjectId and other non-serializable fields
+        cleaned_inquiries = []
+        for inquiry in inquiries:
+            # Remove MongoDB's _id field which contains ObjectId
+            if '_id' in inquiry:
+                del inquiry['_id']
+            cleaned_inquiries.append(inquiry)
+        
         return {
-            "inquiries": inquiries,
-            "total": len(inquiries)
+            "inquiries": cleaned_inquiries,
+            "total": len(cleaned_inquiries)
         }
         
     except Exception as e:
