@@ -3,11 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
 import ContactPopup from '../components/ContactPopup';
 import { 
-  BarChart3, Users, DollarSign, Calendar, TrendingUp, Zap, 
-  CheckCircle, ArrowRight, Star, Clock, Shield, Sparkles,
-  Play, Target, Award, Rocket, Timer, CreditCard
+  Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, Plus,
+  Search, Bell, Home, Compass, User, Send, Camera, Video,
+  MapPin, Tag, Smile, ArrowLeft, Filter, TrendingUp, Users,
+  Calendar, Ticket, Music, Coffee, Gamepad2, Palette, Globe,
+  Fire, Star, Eye, ThumbsUp, UserPlus, Hash
 } from 'lucide-react';
 
 const DemoCRM = () => {
