@@ -1062,6 +1062,431 @@ async def get_stream_metrics(stream_id: str):
         logger.error(f"Error getting stream metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get metrics")
 
+# ======================= CRM API ENDPOINTS =======================
+
+# CRM Dashboard Analytics
+@api_router.get("/crm/dashboard/{promoter_id}", response_model=CRMDashboardData)
+async def get_crm_dashboard(promoter_id: str):
+    """Get comprehensive dashboard data for promoter CRM"""
+    try:
+        # Date range for current month
+        now = datetime.now(timezone.utc)
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        
+        # Get promoter's events
+        events = await db.crm_events.find({"promoter_id": promoter_id}).to_list(None)
+        
+        # Get promoter's transactions for MTD
+        transactions = await db.crm_transactions.find({
+            "promoter_id": promoter_id,
+            "created_at": {"$gte": month_start},
+            "status": "completed"
+        }).to_list(None)
+        
+        # Calculate metrics
+        total_revenue_mtd = sum(t.get("amount", 0) for t in transactions)
+        tickets_sold = sum(e.get("tickets_sold", 0) for e in events)
+        active_events = len([e for e in events if e.get("status") == "active"])
+        
+        # Stream revenue (last 24h)
+        day_ago = now - timedelta(days=1)
+        stream_transactions = await db.crm_transactions.find({
+            "promoter_id": promoter_id,
+            "type": {"$in": ["stream_view", "tip"]},
+            "created_at": {"$gte": day_ago},
+            "status": "completed"
+        }).to_list(None)
+        stream_revenue = sum(t.get("amount", 0) for t in stream_transactions)
+        
+        # Pending payouts
+        pending_payouts = await db.crm_payouts.find({
+            "promoter_id": promoter_id,
+            "status": "pending"
+        }).to_list(None)
+        pending_amount = sum(p.get("amount", 0) for p in pending_payouts)
+        
+        # Growth calculations (mock for now - would compare to previous period)
+        revenue_growth = 12.5
+        audience_growth = 8.3
+        conversion_rate = 3.2
+        avg_ticket_price = total_revenue_mtd / max(tickets_sold, 1)
+        
+        # Top events by revenue
+        top_events = sorted(events, key=lambda x: x.get("revenue", 0), reverse=True)[:3]
+        top_events_data = [
+            {
+                "id": e.get("id"),
+                "name": e.get("name"),
+                "revenue": e.get("revenue", 0),
+                "tickets_sold": e.get("tickets_sold", 0),
+                "status": e.get("status")
+            } for e in top_events
+        ]
+        
+        # Revenue breakdown
+        ticket_revenue = sum(t.get("amount", 0) for t in transactions if t.get("type") == "ticket_sale")
+        merchandise_revenue = sum(t.get("amount", 0) for t in transactions if t.get("type") == "merchandise")
+        
+        return CRMDashboardData(
+            total_revenue=total_revenue_mtd,
+            total_revenue_mtd=total_revenue_mtd,
+            tickets_sold=tickets_sold,
+            active_events=active_events,
+            stream_revenue=stream_revenue,
+            pending_payouts=pending_amount,
+            revenue_growth=revenue_growth,
+            audience_growth=audience_growth,
+            conversion_rate=conversion_rate,
+            avg_ticket_price=avg_ticket_price,
+            top_events=top_events_data,
+            revenue_breakdown={
+                "ticket_sales": ticket_revenue,
+                "live_streams": stream_revenue,
+                "merchandise": merchandise_revenue
+            },
+            period_start=month_start,
+            period_end=now
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting CRM dashboard: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get dashboard data")
+
+# CRM Events Management
+@api_router.get("/crm/events/{promoter_id}")
+async def get_crm_events(promoter_id: str, status: Optional[str] = None, limit: int = 50):
+    """Get events for promoter CRM"""
+    try:
+        query = {"promoter_id": promoter_id}
+        if status:
+            query["status"] = status
+            
+        events = await db.crm_events.find(query).limit(limit).to_list(None)
+        return [CRMEvent(**event) for event in events]
+        
+    except Exception as e:
+        logger.error(f"Error getting CRM events: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get events")
+
+@api_router.post("/crm/events")
+async def create_crm_event(event: CRMEvent):
+    """Create new event in CRM"""
+    try:
+        event_dict = prepare_for_mongo(event.dict())
+        await db.crm_events.insert_one(event_dict)
+        return {"status": "created", "id": event.id}
+        
+    except Exception as e:
+        logger.error(f"Error creating CRM event: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create event")
+
+@api_router.put("/crm/events/{event_id}")
+async def update_crm_event(event_id: str, updates: dict):
+    """Update event in CRM"""
+    try:
+        updates["updated_at"] = datetime.now(timezone.utc)
+        updates = prepare_for_mongo(updates)
+        
+        result = await db.crm_events.update_one(
+            {"id": event_id},
+            {"$set": updates}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Event not found")
+            
+        return {"status": "updated"}
+        
+    except Exception as e:
+        logger.error(f"Error updating CRM event: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update event")
+
+# CRM Audience Management
+@api_router.get("/crm/contacts/{promoter_id}")
+async def get_crm_contacts(promoter_id: str, segment: Optional[str] = None, limit: int = 100):
+    """Get contacts for promoter CRM"""
+    try:
+        query = {"promoter_id": promoter_id}
+        if segment:
+            query["segments"] = {"$in": [segment]}
+            
+        contacts = await db.crm_contacts.find(query).limit(limit).to_list(None)
+        return [CRMContact(**contact) for contact in contacts]
+        
+    except Exception as e:
+        logger.error(f"Error getting CRM contacts: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get contacts")
+
+@api_router.post("/crm/contacts")
+async def create_crm_contact(contact: CRMContact):
+    """Create new contact in CRM"""
+    try:
+        contact_dict = prepare_for_mongo(contact.dict())
+        await db.crm_contacts.insert_one(contact_dict)
+        return {"status": "created", "id": contact.id}
+        
+    except Exception as e:
+        logger.error(f"Error creating CRM contact: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create contact")
+
+@api_router.get("/crm/audience-analytics/{promoter_id}")
+async def get_audience_analytics(promoter_id: str):
+    """Get audience analytics for promoter"""
+    try:
+        # Get contact counts by segment
+        contacts = await db.crm_contacts.find({"promoter_id": promoter_id}).to_list(None)
+        
+        total_contacts = len(contacts)
+        avg_engagement = sum(c.get("engagement_score", 0) for c in contacts) / max(total_contacts, 1)
+        avg_customer_value = sum(c.get("total_spent", 0) for c in contacts) / max(total_contacts, 1)
+        
+        # Segment breakdown
+        segments = {}
+        for contact in contacts:
+            for segment in contact.get("segments", []):
+                segments[segment] = segments.get(segment, 0) + 1
+        
+        return {
+            "total_contacts": total_contacts,
+            "avg_engagement": round(avg_engagement, 1),
+            "avg_customer_value": round(avg_customer_value, 2),
+            "segment_breakdown": segments,
+            "growth_rate": 15.2  # Mock growth rate
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting audience analytics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get audience analytics")
+
+# CRM Marketing Campaigns
+@api_router.get("/crm/campaigns/{promoter_id}")
+async def get_crm_campaigns(promoter_id: str, status: Optional[str] = None):
+    """Get marketing campaigns for promoter"""
+    try:
+        query = {"promoter_id": promoter_id}
+        if status:
+            query["status"] = status
+            
+        campaigns = await db.crm_campaigns.find(query).to_list(None)
+        return [CRMCampaign(**campaign) for campaign in campaigns]
+        
+    except Exception as e:
+        logger.error(f"Error getting CRM campaigns: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get campaigns")
+
+@api_router.post("/crm/campaigns")
+async def create_crm_campaign(campaign: CRMCampaign):
+    """Create new marketing campaign"""
+    try:
+        campaign_dict = prepare_for_mongo(campaign.dict())
+        await db.crm_campaigns.insert_one(campaign_dict)
+        return {"status": "created", "id": campaign.id}
+        
+    except Exception as e:
+        logger.error(f"Error creating CRM campaign: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create campaign")
+
+@api_router.post("/crm/campaigns/{campaign_id}/launch")
+async def launch_crm_campaign(campaign_id: str):
+    """Launch marketing campaign"""
+    try:
+        # Update campaign status
+        result = await db.crm_campaigns.update_one(
+            {"id": campaign_id},
+            {"$set": {"status": "active", "scheduled_at": datetime.now(timezone.utc)}}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Campaign not found")
+        
+        # In production, this would trigger email/SMS sending
+        return {"status": "launched", "message": "Campaign launched successfully"}
+        
+    except Exception as e:
+        logger.error(f"Error launching campaign: {e}")
+        raise HTTPException(status_code=500, detail="Failed to launch campaign")
+
+# CRM Payouts & Transactions
+@api_router.get("/crm/payouts/{promoter_id}")
+async def get_crm_payouts(promoter_id: str, status: Optional[str] = None):
+    """Get payouts for promoter"""
+    try:
+        query = {"promoter_id": promoter_id}
+        if status:
+            query["status"] = status
+            
+        payouts = await db.crm_payouts.find(query).sort("created_at", -1).to_list(None)
+        return [CRMPayout(**payout) for payout in payouts]
+        
+    except Exception as e:
+        logger.error(f"Error getting CRM payouts: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get payouts")
+
+@api_router.post("/crm/payouts/request")
+async def request_payout(promoter_id: str, amount: float):
+    """Request payout for promoter"""
+    try:
+        # Validate available balance
+        # In production, calculate from transactions minus fees
+        
+        payout = CRMPayout(
+            promoter_id=promoter_id,
+            amount=amount,
+            status="pending"
+        )
+        
+        payout_dict = prepare_for_mongo(payout.dict())
+        await db.crm_payouts.insert_one(payout_dict)
+        
+        return {"status": "requested", "id": payout.id, "estimated_processing": "2-3 business days"}
+        
+    except Exception as e:
+        logger.error(f"Error requesting payout: {e}")
+        raise HTTPException(status_code=500, detail="Failed to request payout")
+
+@api_router.get("/crm/transactions/{promoter_id}")
+async def get_crm_transactions(promoter_id: str, limit: int = 50, transaction_type: Optional[str] = None):
+    """Get transaction history for promoter"""
+    try:
+        query = {"promoter_id": promoter_id}
+        if transaction_type:
+            query["type"] = transaction_type
+            
+        transactions = await db.crm_transactions.find(query).sort("created_at", -1).limit(limit).to_list(None)
+        return [CRMTransaction(**transaction) for transaction in transactions]
+        
+    except Exception as e:
+        logger.error(f"Error getting CRM transactions: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get transactions")
+
+# ======================= CRM AS A SERVICE API =======================
+# Pay-as-you-go API for external platforms using TicketAI CRM
+
+# API Usage tracking and billing
+PAYG_PRICING = {
+    "/api/crm/dashboard": 0.10,      # $0.10 per dashboard request
+    "/api/crm/events": 0.05,         # $0.05 per events request  
+    "/api/crm/contacts": 0.05,       # $0.05 per contacts request
+    "/api/crm/campaigns": 0.15,      # $0.15 per campaign request
+    "/api/crm/analytics": 0.20,      # $0.20 per analytics request
+    "/api/crm/payouts": 0.25,        # $0.25 per payout request
+    "default": 0.02                  # $0.02 for other endpoints
+}
+
+async def track_api_usage(client_id: str, client_name: str, endpoint: str):
+    """Track API usage for billing"""
+    try:
+        cost = PAYG_PRICING.get(endpoint, PAYG_PRICING["default"])
+        
+        usage = CRMApiUsage(
+            client_id=client_id,
+            client_name=client_name,
+            endpoint=endpoint,
+            billing_amount=cost
+        )
+        
+        usage_dict = prepare_for_mongo(usage.dict())
+        await db.api_usage.insert_one(usage_dict)
+        
+        return cost
+        
+    except Exception as e:
+        logger.error(f"Error tracking API usage: {e}")
+        return 0
+
+@api_router.get("/crm-api/pricing")
+async def get_crm_api_pricing():
+    """Get current CRM API pricing for external platforms"""
+    return {
+        "pricing_model": "pay_as_you_go",
+        "currency": "usd",
+        "endpoints": PAYG_PRICING,
+        "billing_cycle": "monthly",
+        "free_tier": {
+            "requests_per_month": 1000,
+            "description": "First 1000 requests free each month"
+        },
+        "enterprise_plans": {
+            "starter": {"monthly_fee": 99, "included_requests": 10000, "overage_rate": 0.01},
+            "professional": {"monthly_fee": 299, "included_requests": 50000, "overage_rate": 0.008},
+            "enterprise": {"monthly_fee": 999, "included_requests": 200000, "overage_rate": 0.005}
+        }
+    }
+
+@api_router.get("/crm-api/usage/{client_id}")
+async def get_api_usage(client_id: str, period: str = "current_month"):
+    """Get API usage stats for external client"""
+    try:
+        # Date range based on period
+        now = datetime.now(timezone.utc)
+        if period == "current_month":
+            start_date = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        else:
+            start_date = now - timedelta(days=30)
+        
+        usage_records = await db.api_usage.find({
+            "client_id": client_id,
+            "created_at": {"$gte": start_date}
+        }).to_list(None)
+        
+        total_requests = len(usage_records)
+        total_cost = sum(record.get("billing_amount", 0) for record in usage_records)
+        
+        # Breakdown by endpoint
+        endpoint_stats = {}
+        for record in usage_records:
+            endpoint = record.get("endpoint", "unknown")
+            if endpoint not in endpoint_stats:
+                endpoint_stats[endpoint] = {"requests": 0, "cost": 0}
+            endpoint_stats[endpoint]["requests"] += 1
+            endpoint_stats[endpoint]["cost"] += record.get("billing_amount", 0)
+        
+        return {
+            "client_id": client_id,
+            "period": period,
+            "total_requests": total_requests,
+            "total_cost": round(total_cost, 2),
+            "endpoint_breakdown": endpoint_stats,
+            "period_start": start_date,
+            "period_end": now
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting API usage: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get usage stats")
+
+@api_router.post("/crm-api/clients/register")
+async def register_crm_api_client(client_name: str, contact_email: str, plan: str = "pay_as_you_go"):
+    """Register new external platform for CRM API access"""
+    try:
+        client_id = str(uuid.uuid4())
+        api_key = f"crm_{uuid.uuid4().hex}"
+        
+        client_data = {
+            "id": client_id,
+            "client_name": client_name,
+            "contact_email": contact_email,
+            "plan": plan,
+            "api_key": api_key,
+            "status": "active",
+            "created_at": datetime.now(timezone.utc),
+            "usage_limit": 1000 if plan == "pay_as_you_go" else None
+        }
+        
+        await db.api_clients.insert_one(client_data)
+        
+        return {
+            "client_id": client_id,
+            "api_key": api_key,
+            "plan": plan,
+            "message": "Client registered successfully",
+            "docs_url": "https://docs.ticketai.com/crm-api"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error registering API client: {e}")
+        raise HTTPException(status_code=500, detail="Failed to register client")
+
 # Include the router in the main app
 app.include_router(api_router)
 
