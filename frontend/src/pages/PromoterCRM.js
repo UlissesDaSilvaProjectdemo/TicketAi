@@ -296,33 +296,82 @@ const PromoterCRM = () => {
     }
   };
 
-  const loadCampaigns = () => {
-    // Mock campaigns data
-    const mockCampaigns = [
-      {
-        id: 'campaign-1',
-        name: 'TechFest Early Bird',
-        type: 'email',
-        status: 'active',
-        sent: 2450,
-        opened: 1840,
-        clicked: 340,
-        converted: 85,
-        revenue: 4250
-      },
-      {
-        id: 'campaign-2',
-        name: 'VIP Upgrade Offer',
-        type: 'notification',
-        status: 'completed',
-        sent: 950,
-        opened: 720,
-        clicked: 180,
-        converted: 45,
-        revenue: 2250
+  const loadCampaigns = async () => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/crm/campaigns/${user.id}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const formattedCampaigns = data.map(campaign => ({
+          id: campaign.id,
+          name: campaign.name,
+          type: campaign.type,
+          status: campaign.status,
+          sent: campaign.sent_count,
+          opened: campaign.opened_count,
+          clicked: campaign.clicked_count,
+          converted: campaign.converted_count,
+          revenue: campaign.revenue
+        }));
+        setCampaigns(formattedCampaigns);
+      } else {
+        // Fallback to mock data
+        const mockCampaigns = [
+          {
+            id: 'campaign-1',
+            name: 'TechFest Early Bird',
+            type: 'email',
+            status: 'active',
+            sent: 2450,
+            opened: 1840,
+            clicked: 340,
+            converted: 85,
+            revenue: 4250
+          },
+          {
+            id: 'campaign-2',
+            name: 'VIP Upgrade Offer',
+            type: 'notification',
+            status: 'completed',
+            sent: 950,
+            opened: 720,
+            clicked: 180,
+            converted: 45,
+            revenue: 2250
+          }
+        ];
+        setCampaigns(mockCampaigns);
       }
-    ];
-    setCampaigns(mockCampaigns);
+    } catch (error) {
+      console.error('Error loading campaigns:', error);
+      // Fallback to mock data
+      const mockCampaigns = [
+        {
+          id: 'campaign-1',
+          name: 'TechFest Early Bird',
+          type: 'email',
+          status: 'active',
+          sent: 2450,
+          opened: 1840,
+          clicked: 340,
+          converted: 85,
+          revenue: 4250
+        },
+        {
+          id: 'campaign-2',
+          name: 'VIP Upgrade Offer',
+          type: 'notification',
+          status: 'completed',
+          sent: 950,
+          opened: 720,
+          clicked: 180,
+          converted: 45,
+          revenue: 2250
+        }
+      ];
+      setCampaigns(mockCampaigns);
+    }
   };
 
   const formatCurrency = (amount) => {
