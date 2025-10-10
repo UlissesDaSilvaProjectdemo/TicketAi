@@ -179,6 +179,131 @@ class StreamAnalytics(BaseModel):
     payload: dict = {}
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+# CRM Models for Promoter Dashboard
+class PromoterUser(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    name: Optional[str] = None
+    company: Optional[str] = None
+    credits: int = 0
+    plan: str = "free"  # free, pro, enterprise
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_login: Optional[datetime] = None
+    settings: dict = {}
+
+class CRMEvent(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    promoter_id: str
+    name: str
+    description: str
+    category: str
+    venue: str
+    location: str
+    date: str
+    time: str
+    price: float
+    capacity: int
+    status: str = "scheduled"  # scheduled, active, completed, cancelled
+    tickets_sold: int = 0
+    revenue: float = 0.0
+    stream_viewers: int = 0
+    engagement_score: float = 0.0
+    boost_level: int = 0  # 0=none, 1=basic, 2=premium, 3=max
+    boost_expires: Optional[datetime] = None
+    image_url: Optional[str] = None
+    tags: List[str] = []
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CRMContact(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    promoter_id: str
+    name: str
+    email: str
+    phone: Optional[str] = None
+    location: Optional[str] = None
+    purchase_history: int = 0
+    total_spent: float = 0.0
+    last_event: Optional[str] = None
+    engagement_score: float = 0.0
+    segments: List[str] = []  # vip, regular, new_customer, etc.
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_interaction: Optional[datetime] = None
+
+class CRMCampaign(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    promoter_id: str
+    name: str
+    type: str  # email, sms, push, social
+    status: str = "draft"  # draft, active, paused, completed
+    target_segments: List[str] = []
+    content: dict = {}  # subject, body, etc.
+    sent_count: int = 0
+    opened_count: int = 0
+    clicked_count: int = 0
+    converted_count: int = 0
+    revenue: float = 0.0
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    scheduled_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+
+class CRMPayout(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    promoter_id: str
+    amount: float
+    currency: str = "usd"
+    status: str = "pending"  # pending, processing, paid, failed
+    payout_method: str = "stripe"  # stripe, bank_transfer, paypal
+    transaction_ids: List[str] = []  # Related transaction IDs
+    stripe_payout_id: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    processed_at: Optional[datetime] = None
+    metadata: dict = {}
+
+class CRMTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    promoter_id: str
+    event_id: Optional[str] = None
+    contact_id: Optional[str] = None
+    type: str  # ticket_sale, stream_view, tip, merchandise, boost_payment, subscription
+    amount: float
+    currency: str = "usd"
+    status: str = "completed"  # pending, completed, failed, refunded
+    payment_method: str = "stripe"
+    stripe_payment_intent_id: Optional[str] = None
+    description: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    metadata: dict = {}
+
+class CRMDashboardData(BaseModel):
+    total_revenue: float
+    total_revenue_mtd: float
+    tickets_sold: int
+    active_events: int
+    stream_revenue: float
+    pending_payouts: float
+    revenue_growth: float
+    audience_growth: float
+    conversion_rate: float
+    avg_ticket_price: float
+    top_events: List[dict]
+    revenue_breakdown: dict
+    period_start: datetime
+    period_end: datetime
+
+class CRMApiUsage(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    client_id: str  # External platform using TicketAI CRM
+    client_name: str
+    plan: str = "pay_as_you_go"  # pay_as_you_go, monthly, enterprise
+    endpoint: str  # /api/crm/events, /api/crm/analytics, etc.
+    requests_count: int = 1
+    billing_amount: float = 0.0  # Cost per request
+    currency: str = "usd"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    billing_period: str  # daily, monthly
+    metadata: dict = {}
+
 class PlaybackTokenRequest(BaseModel):
     stream_event_id: str
     user_id: str
