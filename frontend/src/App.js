@@ -54,6 +54,7 @@ function App() {
           <Route path="/stream/success" element={<StreamSuccess />} />
           <Route path="/promoter-crm" element={<PromoterCRM />} />
           <Route path="/promoters-venues" element={<PromotersVenues />} />
+          <Route path="/demo-crm" element={<DemoCRM />} />
         </Routes>
         <Toaster />
         <GlobalComponents />
