@@ -497,7 +497,7 @@ const DemoCRM = () => {
                       <div className="text-blue-400 font-semibold">{item.tag}</div>
                       <div className="text-slate-400 text-sm">{item.posts} posts</div>
                     </div>
-                    <Fire className="w-4 h-4 text-orange-500" />
+                    <Flame className="w-4 h-4 text-orange-500" />
                   </div>
                 ))}
               </CardContent>
