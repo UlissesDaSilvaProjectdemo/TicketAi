@@ -67,10 +67,10 @@ const FloatingSupportBanner = () => {
   };
 
   const handleCustomDonation = async () => {
-    const amount = prompt("Enter custom amount (USD):");
+    const amount = prompt("Enter custom amount (GBP £):");
     if (!amount || isNaN(amount) || parseFloat(amount) < 1) {
       if (amount !== null) { // Only show error if user didn't cancel
-        alert('Please enter a valid amount of $1 or more.');
+        alert('Please enter a valid amount of £1 or more.');
       }
       return;
     }
