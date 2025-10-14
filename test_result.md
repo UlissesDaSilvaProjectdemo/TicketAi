@@ -309,6 +309,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "VERIFIED: FloatingSupportBanner updated with direct Stripe payment links for £5, £15, £50 donations. Currency changed from USD to GBP across all tiers and custom donation prompts. All payment buttons correctly redirect to Stripe checkout URLs. Visual testing confirms proper display and functionality."
+      - working: true
+        agent: "main"
+        comment: "UPDATED: Custom Amount button now also redirects to £5 Stripe link (https://buy.stripe.com/28E3cv6hI0U613v5jaaIM02) as per user request. All four buttons (£5, £15, £50, Custom Amount) now functional with direct Stripe redirects."
 
 metadata:
   created_by: "main_agent"
