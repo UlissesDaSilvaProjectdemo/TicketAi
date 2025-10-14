@@ -115,7 +115,7 @@ const FloatingSupportBanner = () => {
   const supportTiers = [
     {
       name: "Coffee Supporter",
-      amount: "$5",
+      amount: "£5",
       packageId: "coffee",
       icon: Coffee,
       color: "from-amber-600 to-orange-600",
@@ -123,7 +123,7 @@ const FloatingSupportBanner = () => {
     },
     {
       name: "Super Fan",
-      amount: "$15",
+      amount: "£15",
       packageId: "super",
       icon: Star,
       color: "from-blue-600 to-purple-600",
@@ -131,7 +131,7 @@ const FloatingSupportBanner = () => {
     },
     {
       name: "Champion",
-      amount: "$50",
+      amount: "£50",
       packageId: "champion",
       icon: Zap,
       color: "from-purple-600 to-pink-600",
