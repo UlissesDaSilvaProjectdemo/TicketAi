@@ -7,6 +7,7 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
 import ContactPopup from '../components/ContactPopup';
+import SubscriptionPopup from '../components/SubscriptionPopup';
 import { 
   Ticket, TrendingUp, Zap, Shield, Users, ArrowRight, DollarSign, Star, 
   CheckCircle, Play, BarChart3, Globe, Award, Mail, Phone, MapPin,
