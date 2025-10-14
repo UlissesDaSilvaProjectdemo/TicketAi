@@ -1842,6 +1842,76 @@ async def update_inquiry_status(inquiry_id: str, status: str, notes: Optional[st
         logger.error(f"Error updating inquiry status: {e}")
         raise HTTPException(status_code=500, detail="Failed to update inquiry")
 
+@api_router.post("/subscriptions")
+async def create_subscription(subscription_data: dict):
+    """Handle newsletter/community subscription"""
+    try:
+        # Check if email already exists
+        existing = await db.subscriptions.find_one({"email": subscription_data.get('email')})
+        if existing:
+            return {
+                "status": "success",
+                "message": "You're already subscribed!",
+                "subscription_id": existing.get('id')
+            }
+        
+        # Create subscription record
+        subscription = Subscription(
+            name=subscription_data.get('name', ''),
+            email=subscription_data.get('email', ''),
+            phone=subscription_data.get('phone', ''),
+            country_code=subscription_data.get('country_code', '+44'),
+            source=subscription_data.get('source', 'popup')
+        )
+        
+        # Store in database
+        subscription_dict = prepare_for_mongo(subscription.dict())
+        await db.subscriptions.insert_one(subscription_dict)
+        
+        logger.info(f"New subscription from {subscription.email} - {subscription.name}")
+        
+        # In production, you would:
+        # 1. Send welcome email with confirmation
+        # 2. Add to email marketing platform (Mailchimp, SendGrid, etc.)
+        # 3. Trigger welcome sequence
+        # 4. Send exclusive discount code
+        
+        return {
+            "status": "success",
+            "message": "Welcome to the TicketAI community! Check your email for exclusive perks.",
+            "subscription_id": subscription.id
+        }
+        
+    except Exception as e:
+        logger.error(f"Error processing subscription: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create subscription")
+
+@api_router.get("/subscriptions")
+async def get_subscriptions(status: Optional[str] = None, limit: int = 100):
+    """Get subscriptions for admin"""
+    try:
+        query = {}
+        if status:
+            query["status"] = status
+            
+        subscriptions = await db.subscriptions.find(query).sort("subscribed_at", -1).limit(limit).to_list(None)
+        
+        # Clean up MongoDB ObjectId
+        cleaned_subscriptions = []
+        for sub in subscriptions:
+            if '_id' in sub:
+                del sub['_id']
+            cleaned_subscriptions.append(sub)
+        
+        return {
+            "subscriptions": cleaned_subscriptions,
+            "total": len(cleaned_subscriptions)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting subscriptions: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get subscriptions")
+
 # Include the router in the main app
 app.include_router(api_router)
 
