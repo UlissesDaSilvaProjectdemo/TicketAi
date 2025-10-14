@@ -317,6 +317,16 @@ class ContactInquiry(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     notes: Optional[str] = None
 
+class Subscription(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    phone: str
+    country_code: str
+    subscribed_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    source: str = "popup"  # popup, footer, etc.
+    status: str = "active"  # active, unsubscribed
+
 class PlaybackTokenRequest(BaseModel):
     stream_event_id: str
     user_id: str
