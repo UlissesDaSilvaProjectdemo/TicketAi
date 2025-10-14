@@ -237,6 +237,18 @@ backend:
         agent: "main"
         comment: "VERIFIED: CRM-as-a-Service APIs working perfectly. /api/crm-api/pricing returns pay-as-you-go pricing ($0.05-$0.25 per endpoint), enterprise plans, free tier. Client registration successful with API key generation."
 
+  - task: "Implement Subscription API endpoints"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "VERIFIED: Subscription API endpoints working perfectly. POST /api/subscriptions stores subscriber data (name, email, phone, country_code) in MongoDB. Duplicate email check implemented. GET /api/subscriptions for admin access. Proper datetime handling and ObjectId cleanup."
+
 frontend:
   - task: "Update AI search to call real backend API instead of mock data"
     implemented: true
