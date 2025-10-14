@@ -237,7 +237,7 @@ const FloatingSupportBanner = () => {
                 <Button
                   variant="outline"
                   className="w-full border-slate-600 text-slate-300 hover:bg-slate-800"
-                  onClick={handleCustomDonation}
+                  onClick={() => window.location.href = 'https://buy.stripe.com/28E3cv6hI0U613v5jaaIM02'}
                   disabled={isProcessingPayment}
                 >
                   <DollarSign className="w-4 h-4 mr-2" />
