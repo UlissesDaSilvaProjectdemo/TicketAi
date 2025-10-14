@@ -297,6 +297,18 @@ frontend:
       - working: true
         agent: "main"
         comment: "VERIFIED: PromotersVenues landing page fully functional with hero section, feature benefits (Revenue Growth, Audience Intelligence, Marketing Automation), pricing tiers (Free, Pro $79, Enterprise), testimonials, and CTAs."
+  
+  - task: "Integrate direct Stripe payment links in FloatingSupportBanner"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/FloatingSupportBanner.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "VERIFIED: FloatingSupportBanner updated with direct Stripe payment links for £5, £15, £50 donations. Currency changed from USD to GBP across all tiers and custom donation prompts. All payment buttons correctly redirect to Stripe checkout URLs. Visual testing confirms proper display and functionality."
 
 metadata:
   created_by: "main_agent"
