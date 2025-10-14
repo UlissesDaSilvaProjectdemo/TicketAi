@@ -50,38 +50,20 @@ const FloatingSupportBanner = () => {
     }
   };
 
-  const handleDonation = async (tier) => {
+  const handleDonation = (tier) => {
     if (isProcessingPayment) return;
 
     setIsProcessingPayment(true);
-    try {
-      const originUrl = window.location.origin;
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/donations/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          package_id: tier.packageId,
-          origin_url: originUrl
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session');
-      }
-
-      const data = await response.json();
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert('Sorry, there was an error processing your donation. Please try again.');
-    } finally {
-      setIsProcessingPayment(false);
-    }
+    
+    // Direct Stripe checkout links
+    const stripeLinks = {
+      coffee: 'https://buy.stripe.com/28E3cv6hI0U613v5jaaIM02',
+      super: 'https://buy.stripe.com/fZu6oH6hI7iuaE59zqaIM01', 
+      champion: 'https://buy.stripe.com/9B6dR9dKafP03bD5jaaIM00'
+    };
+    
+    // Redirect to Stripe payment page
+    window.location.href = stripeLinks[tier.packageId];
   };
 
   const handleCustomDonation = async () => {
