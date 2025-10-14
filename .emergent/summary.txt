@@ -1,0 +1,68 @@
+<analysis>
+The AI engineer successfully progressed the TicketAI platform through multiple feature additions and refinements. Initially, the focus was on implementing the Promoter CRM (backend APIs, frontend pages, and integration). This involved creating new routes, securing pages, seeding mock data, and extensive testing. Following this, the user requested streamlining CRM access with a 30-day free trial, leading to the creation of a Demo CRM page and associated trial logic. A significant pivot then occurred, transforming the Demo CRM into an Instagram-style community page, which required substantial frontend restructuring and icon error resolution. Finally, the user requested integrating direct Stripe payment links for support, which is the current task, specifically updating the . Throughout the process, the engineer addressed navigation issues, handled authentication logic, and ensured backend API functionality.
+</analysis>
+
+<product_requirements>
+TicketAI is an evolving full-stack platform for event discovery and management, initially focused on Event Trading and later pivoting to AI-Powered Event Discovery. Key features include AI search and personalized recommendations, a Promoter Dashboard for event management and credit tracking (Boost My Post), and monetization via pricing, merchandise (with a 1.5 credit fee for external platforms), and Stripe donations (floating support banner). The platform also supports Live Streaming with monetization and analytics, and provides an enhanced user experience with a My Tickets page and an AI chatbot.
+The most recent development focused on a B2B Promoter CRM for sales, audience, and marketing management. This includes a 30-day free trial with top-up/subscription pricing, a social media-style community page for engagement, and a non-blocking contact popup for lead capture. The current request is to integrate direct Stripe payment links for the support banner for one-time payments (£5, £15, £50).
+</product_requirements>
+
+<key_technical_concepts>
+- **Full-stack Architecture**: React (Frontend), FastAPI (Backend), MongoDB (Database).
+- **Frontend Styling**: Tailwind CSS, Shadcn UI components.
+- **Client-Side Routing**: React Router DOM.
+- **API Communication**: Axios for HTTP requests.
+- **AI Integration**: OpenAI GPT-5 via .
+- **Payment Gateway**: Stripe for donations, and now direct payment links.
+- **Auth/Session Management**: Basic frontend session storage.
+- **JWT**: For live streaming token generation.
+</key_technical_concepts>
+
+<code_architecture>
+
+
+-   ****: Main entry point.
+    -   **Summary**: Manages all frontend routes.
+    -   **Changes**: Routes added for ,  (later deleted), . Imports updated accordingly.
+-   ****: Homepage.
+    -   **Summary**: Displays AI search, event recommendations, and main navigation.
+    -   **Changes**: Added navigation links for CRM and Promoters & Venues (later removed). Added a dedicated CRM CTA section. Modified footer links. Updated navigation to show Explore CRM button with custom styling, and removed Demo CRM from left nav. Integrated and triggered .
+-   ****: Promoter CRM dashboard.
+    -   **Summary**: Dashboard for event organizers to manage CRM aspects.
+    -   **Changes**: Initially created as a placeholder, then integrated with backend APIs for data display. Modified to display 30-day trial status banner.
+-   ****: (Initially Demo CRM page, now Community Page)
+    -   **Summary**: Initially provided a streamlined entry point for the CRM demo with trial activation. Now functions as an Instagram-style community feed.
+    -   **Changes**: Created from scratch. Implemented UI for trial status and calls to action. Later completely transformed into a social media community page with posts, user profiles, sidebars, and trending topics. Fixed  icon import error ( to ).
+-   ****:
+    -   **Summary**: Previously a landing page for event organizers.
+    -   **Changes**: Created as a placeholder, then fully **deleted** along with all references.
+-   ****: Promoter login page.
+    -   **Summary**: Handles promoter authentication.
+    -   **Changes**: Updated demo login to use  matching seeded data. Modified post-login redirection to . Added Access CRM Demo button.
+-   ****:
+    -   **Summary**: A floating banner for support and donations.
+    -   **Changes**: Currently being modified to integrate direct Stripe payment links and update currency to GBP for specified tiers.
+-   ****:
+    -   **Summary**: A modal for capturing user contact information for event support.
+    -   **Changes**: Newly created component. Collects name, company, email, phone, event types, and goals. Made non-blocking and provides direct CRM access after submission.
+-   ****: Central FastAPI backend.
+    -   **Summary**: Manages all API endpoints.
+    -   **Changes**: Added comprehensive CRM API endpoints (, , , , , , , ). Added  endpoint. Implemented  for lead capture and fixed  serialization issue for this endpoint.
+</code_architecture>
+
+<pending_tasks>
+- Full backend implementation for AI recommendations (partially done).
+- Backend integration for Promoter Dashboard's event creation/management and credit tracking (current boost logic is frontend-only).
+- Full backend for My Tickets and Merchandise credit deduction.
+- Backend logic for the Chatbot.
+- Fleshing out placeholder pages: , , , , .
+- API contracts in  for Promoter Dashboard features.
+</pending_tasks>
+
+<current_work>
+The previous AI engineer was in the process of integrating direct Stripe payment links into the existing  component for pay-as-you-go and subscription support options. The user provided three specific Stripe payment links for £5, £15, and £50 donations, along with the request to change the currency displayed to GBP (£). The engineer has identified the  file and is about to modify it to replace the existing Stripe integration logic with redirects to these provided direct payment links. This involves updating the UI to reflect the GBP currency and ensuring each tier's button correctly redirects to its respective Stripe checkout URL.
+</current_work>
+
+<optional_next_step>
+I will update the  to integrate the provided Stripe payment links.
+</optional_next_step>
