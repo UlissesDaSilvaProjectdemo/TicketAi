@@ -1094,6 +1094,9 @@ const LandingPage = () => {
         onSubmit={handleContactSubmit}
         trigger="crm_demo"
       />
+      
+      {/* Subscription Popup */}
+      <SubscriptionPopup />
     </div>
   );
 };
