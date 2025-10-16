@@ -249,6 +249,18 @@ backend:
         agent: "main"
         comment: "VERIFIED: Subscription API endpoints working perfectly. POST /api/subscriptions stores subscriber data (name, email, phone, country_code) in MongoDB. Duplicate email check implemented. GET /api/subscriptions for admin access. Proper datetime handling and ObjectId cleanup."
 
+  - task: "Integrate Stripe Live Keys and Configure Payment System"
+    implemented: true
+    working: true
+    file: "/app/backend/.env, /app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "VERIFIED: Stripe LIVE keys integrated successfully. Account verified (acct_1SGczcHVcxTnn561, GB, GBP, charges and payouts enabled). Updated backend to use STRIPE_SECRET_KEY. Direct payment links active for £5, £15, £50. Custom donation endpoint ready. Stripe webhooks configured."
+
 frontend:
   - task: "Update AI search to call real backend API instead of mock data"
     implemented: true
