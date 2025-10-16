@@ -647,11 +647,11 @@ DONATION_PACKAGES = {
     "champion": 50.0
 }
 
-# Initialize Stripe
-stripe.api_key = os.environ.get('STRIPE_API_KEY', 'sk_test_emergent')
+# Initialize Stripe with LIVE keys
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_emergent')
 
 def get_stripe_checkout(host_url: str):
-    api_key = os.environ.get('STRIPE_API_KEY')
+    api_key = os.environ.get('STRIPE_SECRET_KEY')
     webhook_url = f"{host_url}/api/webhook/stripe"
     return StripeCheckout(api_key=api_key, webhook_url=webhook_url)
 
